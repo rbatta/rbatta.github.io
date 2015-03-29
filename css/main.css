@@ -79,7 +79,7 @@ blockquote {
   color: #828282;
   border-left: 4px solid #e8e8e8;
   padding-left: 15px;
-  font-size: 18px;
+  font-size: 14px;
   letter-spacing: -1px;
   font-style: italic; }
   blockquote > :last-child {
@@ -90,7 +90,7 @@ blockquote {
  */
 pre,
 code {
-  font-size: 15px;
+  font-size: 14px;
   border: 1px solid #e8e8e8;
   border-radius: 3px;
   background-color: #eef; }
@@ -151,13 +151,13 @@ pre {
   min-height: 56px;
   position: relative; }
 
-.site-title {
+.site-name {
   font-size: 26px;
   line-height: 56px;
   letter-spacing: -1px;
   margin-bottom: 0;
   float: left; }
-  .site-title, .site-title:visited {
+  .site-name, .site-name:visited {
     color: #424242; }
 
 .site-nav {
