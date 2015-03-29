@@ -2,9 +2,17 @@
 title: "Integrating Monit to Slack"
 layout: post
 date:   2015-03-27
-tags: [slack, monit, devops]
-categories: devops monit slack
+tags: 
+- slack
+- monit
+- devops
+categories: 
+- devops 
+- monit 
+- slack
+- guide
 permalink: /integrate-monit-with-slack/
+summary: "Updated instructions using a Ruby file to send alerts to Slack from Monit"
 ---
 
 The conversation of what software are we going to choose for monitoring our apps and servers came up at work. We've all used New Relic and Nagios before, but not really Monit. New Relic is free to a certain point, but can get hella expensive if you've got multiple apps and want to check many different things. Both Nagios and Monit are open-source, which equates to _FREE_. Perfect for dev shops and small businesses.

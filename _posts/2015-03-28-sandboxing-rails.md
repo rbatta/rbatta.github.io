@@ -2,9 +2,17 @@
 title: "Sandboxing Rails"
 layout: post
 date:   2015-04-01
-tags: [rails, sandbox, console]
-categories: rails console sandbox
+tags:
+- rails
+- sandbox
+- console
+- tips
+categories: 
+- rails
+- console
+- tips
 permalink: /sandboxing-rails/
+summary: "On using the --sandbox option in Rails"
 ---
 
 Hey, did you know that there's an option called `--sandbox` that you can append to console? 

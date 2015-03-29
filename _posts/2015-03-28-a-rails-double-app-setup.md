@@ -2,9 +2,19 @@
 layout: post
 title:  "A Rails Double App Setup on Digital Ocean"
 date:   2015-03-29
-tags: [rails, nginx, digital ocean, setup, unicorn, double]
-categories: rails digital ocean nginx
+tags: 
+- rails
+- nginx
+- digital ocean
+- double setup
+- unicorn
+categories: 
+- rails 
+- digital ocean 
+- nginx
+- guide
 permalink: /a-rails-double-app-setup/
+summary: "A how-to guide to set up 2 rails apps using the Digital Ocean 1-click Rails template"
 ---
 
 I recently started using Digital Ocean because of work. Dat doing the devops bidness. Right. If you're unfamiliar with Digital Ocean, they are a virtual server provider that uses SSD hard drives and a really cheap pricing plan.  Since it's bare bones, you're responsible for everything, from security, to installation of whatever. That being said, they DO (haha) provide some templates to make things easier. One of them is their Rails 1-click template, which has Nginx, Unicorn, and MySQL already installed. Right on! 

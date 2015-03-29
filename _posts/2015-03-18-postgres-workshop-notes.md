@@ -2,8 +2,14 @@
 layout: post
 title:  "Postgres Workshop Notes"
 date:   2015-03-18
-categories: postgres
+categories: 
+- postgres
+- presentations
+- guide
+tags:
+- postgres
 permalink: /postgres-workshop-notes/
+summary: "I gave a Postgres Workshop for WWC Ruby Tuesdays. Here is the full notes from it."
 ---
 Hi there!
 
