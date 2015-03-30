@@ -1,7 +1,7 @@
 ---
 title: "Sandboxing Rails"
 layout: post
-date:   2015-04-01
+date:   2015-03-30
 tags:
 - rails
 - sandbox

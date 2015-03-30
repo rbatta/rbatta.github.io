@@ -4,8 +4,10 @@ layout: post
 date:   
 tags: [thing, thing, thing]
 categories: thing thing rails devops
-permalink: /perma-link-this-page/
+permalink: /:title/
+levelup: 15
 ---
+{% icon fa-angle-double-up %} Level up +{% post.levelup %}
 
 ***
 

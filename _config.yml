@@ -12,7 +12,7 @@ linkedin_username: risabatta
 # Build settings
 markdown: kramdown
 timezone: America/Los_Angeles
-future: false
+future: true
 # boilerplate stuff
 post:
   template: _post.md
