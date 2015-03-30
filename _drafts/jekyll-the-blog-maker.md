@@ -88,25 +88,40 @@ Let's start by adding in my favourite plugin, the [jekyll-font-awesome](https://
 
 Now you can add icons by using the syntax `{.% icon fa-something %}` (without the period in there).
 
-Once your blog is looking good to go and you're ready to publish it to Github for the whole wide world to see, you've got to do a couple of things. The method I've found to be the simplest (and makes sense to me) is this.
+Once your blog is looking good to go and you're ready to publish it to Github for the whole wide world to see, you've got to do a couple of things. The method I've found that makes the most sense to me is this:
 
-1. Jekyll build the site. This creates a _site folder which has the full ol' school HTML version of your site, ready to serve up anywhere.
-2. Switch branch to master and merge working-branches to master.
-3. Delete everything in the directory EXCEPT your _site dir. 
-4. Move the contents of the _site dir into root.
-5. Delete _site
-6. Git add, commit, and push.
+1. Git add, git commit.
+2. Switch branch to master and merge working-branches to master then delete the branch.
+3. Create a new branch, then switch back to master.
+4. Build the site with Jekyll.
+5. Delete everything in the directory EXCEPT your _site dir. 
+6. Move the contents of the _site dir into root.
+7. Delete _site
+8. Git add, commit, and push.
 
-And now, here are the commands.
+Yeah I admit the whole git branch thing is weird, but since I'm merging, the working-branch branch is going to be the same as master, and with all the edits, that'll get weird, fast. Basically every time I merge to master, I'm at a state where I'm ready to publish, so I create a new branch to keep my drafts folders and my Rakefile and the like. I'm sure there's an easier way like pushing up to github and pulling down....
+
+Anyway, here are the commands. After that I'll show my automation commands.
 
 {% highlight bash %}
-$ jekyll build
+$ git add .
+$ git commit -m "you know, some kinda commit message here about your new awesome post"
 $ git checkout master
 $ git merge working-branch
 # you will probably have a ton of conflicting merges if it's not your 1st time
-# fix them up with subl. usually it's to say that files that used to exist
-# no longer exist or were modified slightly
-
+# fix them up with your editor. usually it's to say that files that used to exist
+# no longer exist or were modified. no biggie.
+# commit any changes after the merge.
+$ git branch -D working-branch   # this deletes
+$ git checkout -b working-branch # and this recreates
+$ git checkout master
+$ jekyll build
+$ find . \( ! -path "./_site/*" ! -path "./.git/*" \) -delete
+$ mv _site/ .
+$ rm -rf _site
+$ git add .
+$ git commit -m "your awesome commit message before pushing to github"
+$ git push origin master
 {% endhighlight %}
 
 {% icon fa-angle-double-up %} Level up +5
