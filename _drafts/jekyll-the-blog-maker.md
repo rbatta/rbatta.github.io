@@ -124,6 +124,8 @@ $ git commit -m "your awesome commit message before pushing to github"
 $ git push origin master
 {% endhighlight %}
 
+Now check out your page, which should have been published by Github! It'll be at http://your-github-username.github.io!
+
 {% icon fa-angle-double-up %} Level up +5
 
 ***
