@@ -158,7 +158,9 @@ future: <span class="nb">false</span></code></pre></div>
 <span class="nv">$ </span>jekyll build
 <span class="nv">$ </span>git add .
 <span class="nv">$ </span>git commit -m <span class="s2">&quot;yeah your awesome message about your post&quot;</span>
-<span class="nv">$ </span>cp _site/* ../your-username.github.io/
+<span class="nv">$ </span>cp -r _site/* ../your-username.github.io/
+<span class="c"># on a Mac you&#39;ll have to say yes to overwriting everything</span>
+<span class="c"># annoying, I know. you can also sudo to overwrite.</span>
 <span class="nv">$ </span><span class="nb">cd</span> ../your-username.github.io
 <span class="c"># confirm that the contents of _site were copied over</span>
 <span class="c"># you may need to rm -rf Rakefile OR add a .gitignore file</span>
@@ -169,6 +171,22 @@ future: <span class="nb">false</span></code></pre></div>
 <span class="nv">$ </span>git push origin master</code></pre></div>
 
 <p>BOOM. You should be good to go now. Check out your site at http://your-username.github.io :)</p>
+
+<h3 id="laziness">&gt; Laziness</h3>
+<p>I like to make my workflow a lot easier by making aliases. The order of some of the commands won’t matter. So here’s the alias I created, using <code>sudo cp</code> to overwrite things properly. It involves putting in my password but that’s still less typing overall. Easy peasy. This alias will be put into your <code>~/.bash_profile</code> or <code>~/.zshrc</code> file.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">alias </span>copy-it<span class="o">=</span><span class="s1">&#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&#39;</span>
+<span class="nb">echo</span> <span class="s1">&#39;=======================&#39;</span>
+<span class="nb">echo</span> <span class="s1">&#39;Jekyll cheats&#39;</span>
+<span class="nb">echo</span> <span class="s1">&#39;=======================&#39;</span>
+<span class="nb">echo</span> <span class="s1">&#39;make sure you are in correct directory before running this&#39;</span>
+<span class="nb">echo</span> <span class="s1">&#39;copy-it = jekyll build then copy contents of _site to your-username master&#39;</span></code></pre></div>
+
+<p>Obviously change the directory names to fit your thing. Save it and source your file: <code>source ~/.bash_profile</code> or <code>source ~/.zshrc</code>. You should see the commands displayed in your terminal.</p>
+
+<p><em>Note: If you run <code>copy-it</code> you *MUST* be in the correct directory (your-sites-blog-name)!!</em></p>
+
+<p>Confirm with a <code>git diff</code>. Then commit and push that sucker up! You are on your way to blogging freedom now. (And so am I!)</p>
 
 <p><i class="fa fa-angle-double-up"></i> Level up +5</p>
 

@@ -6,8 +6,8 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 30 Mar 2015 22:16:22 -0700</pubDate>
-    <lastBuildDate>Mon, 30 Mar 2015 22:16:22 -0700</lastBuildDate>
+    <pubDate>Mon, 30 Mar 2015 22:52:59 -0700</pubDate>
+    <lastBuildDate>Mon, 30 Mar 2015 22:52:59 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -105,7 +105,9 @@ future: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jekyll build
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git add .
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&amp;quot;yeah your awesome message about your post&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cp _site/* ../your-username.github.io/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cp -r _site/* ../your-username.github.io/
+&lt;span class=&quot;c&quot;&gt;# on a Mac you&amp;#39;ll have to say yes to overwriting everything&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# annoying, I know. you can also sudo to overwrite.&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../your-username.github.io
 &lt;span class=&quot;c&quot;&gt;# confirm that the contents of _site were copied over&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# you may need to rm -rf Rakefile OR add a .gitignore file&lt;/span&gt;
@@ -116,6 +118,22 @@ future: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;BOOM. You should be good to go now. Check out your site at http://your-username.github.io :)&lt;/p&gt;
+
+&lt;h3 id=&quot;laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
+&lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won’t matter. So here’s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that’s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;copy-it&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;=======================&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Jekyll cheats&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;=======================&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;make sure you are in correct directory before running this&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;copy-it = jekyll build then copy contents of _site to your-username master&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Obviously change the directory names to fit your thing. Save it and source your file: &lt;code&gt;source ~/.bash_profile&lt;/code&gt; or &lt;code&gt;source ~/.zshrc&lt;/code&gt;. You should see the commands displayed in your terminal.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: If you run &lt;code&gt;copy-it&lt;/code&gt; you *MUST* be in the correct directory (your-sites-blog-name)!!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Confirm with a &lt;code&gt;git diff&lt;/code&gt;. Then commit and push that sucker up! You are on your way to blogging freedom now. (And so am I!)&lt;/p&gt;
 
 &lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
 
