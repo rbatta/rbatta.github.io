@@ -6,9 +6,70 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 30 Mar 2015 23:04:31 -0700</pubDate>
-    <lastBuildDate>Mon, 30 Mar 2015 23:04:31 -0700</lastBuildDate>
+    <pubDate>Fri, 03 Apr 2015 12:05:08 -0700</pubDate>
+    <lastBuildDate>Fri, 03 Apr 2015 12:05:08 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Creating new old-version Rails apps</title>
+        <description>&lt;p&gt;As always, a work story. Here at Team DevOps, we’ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We’re also Rails developers too, even if we don’t look like it. Admittedly, it’s been so long since I’ve started a Rails app from scratch I almost forgot how to do &lt;code&gt;rails new&lt;/code&gt;… Yeah, only slightly embarrassed.&lt;/p&gt;
+
+&lt;p&gt;I’m more familiar with Ruby 2.0.0 and Rails 4.0.x than 2.2.x and 4.2.x, so I decided to make my app using the older versions. Of course, I’ve since updated my rubies and rails versions, so without thinking much about it, I did &lt;code&gt;rails new&lt;/code&gt;. Figured I could just bundle update when I switched ruby/rails versions.&lt;/p&gt;
+
+&lt;p&gt;Oh god, that was a terrible, TERRIBLE mistake.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://www.nicknotas.com/wp-content/uploads/2013/04/Ive_Made_a_Huge_Mistake.jpg&quot; alt=&quot;Huge mistake&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What got created was an awesomely standard Rails 4.2.0 app with Ruby 2.2.0. No problem. In my Gemfile I added in &lt;code&gt;ruby 2.0.0&lt;/code&gt; and bundle updated and thought nothing of it. I moved on and edited my database.yml file and decided to add some of my standard gems I’d be using for TDD: guard and spork. But since it was rails 4.2, I wasn’t sure how my guard/spork setup would work, since I was plugging and chugging from an old 4.0.x app I had. Well, whatever.&lt;/p&gt;
+
+&lt;p&gt;I’ll just change rails 4.2.x to rails 4.0.x! No problemo!! Lemme bundle update and then run &lt;code&gt;guard init rspec&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://stream1.gifsoup.com/view/897102/mushroom-cloud-o.gif&quot; alt=&quot;Kaboom!&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What. Have. I. Done. Guard was complaining that I had started things up with a newer version so it wouldn’t be able to use the version 4.0.13 wanted (2.6). Not only that but &lt;code&gt;rails g anything&lt;/code&gt; wasn’t working either. Geezus. So I completely uninstalled guard and then installed only the correct version, but even then the Guardfile created seemed weird. Rails didn’t let me install rspec either without complaining. Not to mention Rake. Oy vey. How much had changed between Rails 4.0 and 4.2??! What is this business about &lt;code&gt;activejob_railties&lt;/code&gt;??&lt;/p&gt;
+
+&lt;p&gt;OK, there were some major changes that I haven’t really been paying attention to. ActiveJob was a new addition to 4.2. On top of that, the &lt;code&gt;config/initializers/application.rb&lt;/code&gt; file format had changed from referencing the &lt;code&gt;AppName::Application...&lt;/code&gt; to &lt;code&gt;Rails.application...&lt;/code&gt; Then there were the additional railties that were added in. This is just the tip of the iceberg…&lt;/p&gt;
+
+&lt;p&gt;Yeah let’s queue up the whole &lt;code&gt;I don&#39;t know what I&#39;m doing&lt;/code&gt; meme here. Seriously. At this point the only thing I could sensibly do was to completely start over and create a Rails 4.0.x app. But how would I do that??&lt;/p&gt;
+
+&lt;p&gt;The Rails guides didn’t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-way-of-the-old-rails-warrior&quot;&gt;The way of the old rails warrior&lt;/h3&gt;
+&lt;p&gt;I can just refer an older Rails version when doing &lt;code&gt;rails new&lt;/code&gt;! Since I wanted 4.0.13, I did this: &lt;code&gt;rails 4.0.13 new appname&lt;/code&gt;. This did not work.&lt;/p&gt;
+
+&lt;p&gt;My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn’t have gems for p643 so used p451.)&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv global 2.0.0-p451
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install rails 4.0.13
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rails _4.0.13_ new appname&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Please note the &lt;code&gt;_&lt;/code&gt; surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.&lt;/p&gt;
+
+&lt;p&gt;Now, how do I write new models again…?&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1 for super obscure learnings.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#116;&amp;#111;:&amp;#114;&amp;#105;&amp;#115;&amp;#097;&amp;#111;&amp;#110;&amp;#114;&amp;#097;&amp;#105;&amp;#108;&amp;#115;&amp;#064;&amp;#103;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#046;&amp;#099;&amp;#111;&amp;#109;&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 02 Apr 2015 00:00:00 -0700</pubDate>
+        <link>http://risaonrails.com/creating-new-old-version-rails-apps/</link>
+        <guid isPermaLink="true">http://risaonrails.com/creating-new-old-version-rails-apps/</guid>
+        
+        <category>rails</category>
+        
+        <category>tip</category>
+        
+        
+        <category>rails</category>
+        
+        <category>development</category>
+        
+        <category>tip</category>
+        
+      </item>
     
       <item>
         <title>Jekyll: The blog maker</title>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <title>Creating new old-version Rails apps</title>
+  <meta name="description" content="As always, a work story. Here at Team DevOps, we’ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We’re als...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/creating-new-old-version-rails-apps/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Creating new old-version Rails apps</h1>
+    <p class="post-meta">Apr 2, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>As always, a work story. Here at Team DevOps, we’ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We’re also Rails developers too, even if we don’t look like it. Admittedly, it’s been so long since I’ve started a Rails app from scratch I almost forgot how to do <code>rails new</code>… Yeah, only slightly embarrassed.</p>
+
+<p>I’m more familiar with Ruby 2.0.0 and Rails 4.0.x than 2.2.x and 4.2.x, so I decided to make my app using the older versions. Of course, I’ve since updated my rubies and rails versions, so without thinking much about it, I did <code>rails new</code>. Figured I could just bundle update when I switched ruby/rails versions.</p>
+
+<p>Oh god, that was a terrible, TERRIBLE mistake.</p>
+
+<p><img src="http://www.nicknotas.com/wp-content/uploads/2013/04/Ive_Made_a_Huge_Mistake.jpg" alt="Huge mistake" /></p>
+
+<p>What got created was an awesomely standard Rails 4.2.0 app with Ruby 2.2.0. No problem. In my Gemfile I added in <code>ruby 2.0.0</code> and bundle updated and thought nothing of it. I moved on and edited my database.yml file and decided to add some of my standard gems I’d be using for TDD: guard and spork. But since it was rails 4.2, I wasn’t sure how my guard/spork setup would work, since I was plugging and chugging from an old 4.0.x app I had. Well, whatever.</p>
+
+<p>I’ll just change rails 4.2.x to rails 4.0.x! No problemo!! Lemme bundle update and then run <code>guard init rspec</code>.</p>
+
+<p><img src="http://stream1.gifsoup.com/view/897102/mushroom-cloud-o.gif" alt="Kaboom!" /></p>
+
+<p>What. Have. I. Done. Guard was complaining that I had started things up with a newer version so it wouldn’t be able to use the version 4.0.13 wanted (2.6). Not only that but <code>rails g anything</code> wasn’t working either. Geezus. So I completely uninstalled guard and then installed only the correct version, but even then the Guardfile created seemed weird. Rails didn’t let me install rspec either without complaining. Not to mention Rake. Oy vey. How much had changed between Rails 4.0 and 4.2??! What is this business about <code>activejob_railties</code>??</p>
+
+<p>OK, there were some major changes that I haven’t really been paying attention to. ActiveJob was a new addition to 4.2. On top of that, the <code>config/initializers/application.rb</code> file format had changed from referencing the <code>AppName::Application...</code> to <code>Rails.application...</code> Then there were the additional railties that were added in. This is just the tip of the iceberg…</p>
+
+<p>Yeah let’s queue up the whole <code>I don't know what I'm doing</code> meme here. Seriously. At this point the only thing I could sensibly do was to completely start over and create a Rails 4.0.x app. But how would I do that??</p>
+
+<p>The Rails guides didn’t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.</p>
+
+<h3 id="the-way-of-the-old-rails-warrior">The way of the old rails warrior</h3>
+<p>I can just refer an older Rails version when doing <code>rails new</code>! Since I wanted 4.0.13, I did this: <code>rails 4.0.13 new appname</code>. This did not work.</p>
+
+<p>My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn’t have gems for p643 so used p451.)</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>rbenv global 2.0.0-p451
+<span class="nv">$ </span>gem install rails 4.0.13
+<span class="nv">$ </span>rails _4.0.13_ new appname</code></pre></div>
+
+<p>Please note the <code>_</code> surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.</p>
+
+<p>Now, how do I write new models again…?</p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +1 for super obscure learnings.</p>
+
+<hr />
+
+<p>Questions? Comments? Hit me up at <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#105;&#115;&#097;&#111;&#110;&#114;&#097;&#105;&#108;&#115;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
