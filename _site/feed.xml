@@ -6,8 +6,8 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 09 Apr 2015 22:20:13 -0700</pubDate>
-    <lastBuildDate>Thu, 09 Apr 2015 22:20:13 -0700</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2015 21:18:02 -0700</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2015 21:18:02 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -22,7 +22,7 @@
 
 &lt;p&gt;&lt;img src=&quot;http://swagct.com/generators/images/successkid_thumb.jpg&quot; alt=&quot;Success kid&quot;&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;training-day&quot;&gt;Training Day&lt;/h3&gt;
+&lt;h3&gt;Training Day&lt;/h3&gt;
 
 &lt;p&gt;The Summit/Training was held at RocketSpace in downtown SF. The space was really nice, and we were given a bunch of different swag (tees, water bottles, cute lil cars with M&amp;amp;Ms in them, an O&amp;#39;Reilly book about microservices, etc). The best part was the fact that the tables were lined with paper and had crayons. :D Oh yeah the 12-yr-old me was stoked!&lt;/p&gt;
 
@@ -36,7 +36,7 @@
 
 &lt;p&gt;Once training was over, the lightning talks began. Admittedly, this was where my interest wained, tho the guy talking about load testing with a thing called Bees with Machine Guns was really cool. My coworker and I opted not to stay until the end for the social hour and excused ourselves. &lt;/p&gt;
 
-&lt;h3 id=&quot;overall-thoughts&quot;&gt;Overall thoughts&lt;/h3&gt;
+&lt;h3&gt;Overall thoughts&lt;/h3&gt;
 
 &lt;p&gt;Seriously, this training was kind of amazingly perfect timing for my coworker and myself. Would I recommend it? Hellz yes! It&amp;#39;s the perfect beginner course to anyone getting to know and understand Nginx. It&amp;#39;s really simple to use, now that I understand it better. It was also validating to know that the things we were teaching ourselves by fiddling around with the servers were all correct.&lt;/p&gt;
 
@@ -91,7 +91,7 @@
 
 &lt;p&gt;The Rails guides didn&amp;#39;t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.&lt;/p&gt;
 
-&lt;h3 id=&quot;the-way-of-the-old-rails-warrior&quot;&gt;The way of the old rails warrior&lt;/h3&gt;
+&lt;h3&gt;The way of the old rails warrior&lt;/h3&gt;
 
 &lt;p&gt;I can just refer an older Rails version when doing &lt;code&gt;rails new&lt;/code&gt;! Since I wanted 4.0.13, I did this: &lt;code&gt;rails 4.0.13 new appname&lt;/code&gt;. This did not work.&lt;/p&gt;
 
@@ -138,7 +138,7 @@
 
 &lt;p&gt;Anyway, here&amp;#39;s what I&amp;#39;ve learned thus far with using Jekyll and Github Pages. Maybe this will help you out, too. I hope to expand my knowledge as well.  Glad that it&amp;#39;s written in Ruby, so implementation of things are much easier to understand (for me).&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-github-pages-overview&quot;&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
 
 &lt;p&gt;First issue I did not realize, and maybe I should have actually &lt;em&gt;read&lt;/em&gt; the instructions better,... there is a HUGE difference between creating a Github Page for a repo and for your account. I wanted to create one for my account but made it for my repo instead. Whoops.&lt;/p&gt;
 
@@ -148,7 +148,7 @@
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;&amp;gt;-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
 
 &lt;p&gt;Create a new repo in Github called &amp;quot;your-github-username.github.io&amp;quot;. In my case it&amp;#39;s a repo called &amp;quot;rbatta.github.io&amp;quot; since my Github username is rbatta. When you git clone to your local machine, your &lt;code&gt;master&lt;/code&gt; branch will be the one Github uses to publish your site. You get that? &lt;em&gt;Master branch is what Github uses to publish your site.&lt;/em&gt; Git clone your new repo and hop into that directory.&lt;/p&gt;
 
@@ -165,7 +165,7 @@
 
 &lt;p&gt;&lt;strong&gt;But wait!&lt;/strong&gt; Why are we in &lt;code&gt;your-sites-blog-name&lt;/code&gt; and not in &lt;code&gt;your-username.github.io&lt;/code&gt; directory? Well, like I said before, the &lt;code&gt;master&lt;/code&gt; branch is what Github uses to publish your blog. &lt;strong&gt;&lt;em&gt;NOT&lt;/em&gt;&lt;/strong&gt; publish your repo. We&amp;#39;ll keep the &lt;code&gt;master&lt;/code&gt; directory clean until we&amp;#39;re ready to push things up. So in the meantime, we&amp;#39;ll use the &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory to do all of our work.&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-jekyll-setup&quot;&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
 
 &lt;p&gt;Create a new Jekyll site by running &lt;code&gt;jekyll new .&lt;/code&gt; Make sure you&amp;#39;ve got that period in there, since that creates it within this directory.&lt;/p&gt;
 
@@ -179,7 +179,7 @@
 
 &lt;p&gt;This is probably a good time to do &lt;code&gt;git init&lt;/code&gt; and do your initial commit.&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-_config.yml&quot;&gt;&amp;gt; _config.yml&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; _config.yml&lt;/h3&gt;
 
 &lt;p&gt;Fill in the information given. For &lt;code&gt;baseurl:&lt;/code&gt; keep that as blank quotes so that when you serve up your site, it&amp;#39;ll load at &lt;code&gt;127.0.0.1:4000&lt;/code&gt; instead of &lt;code&gt;127.0.0.1:4000/baseurl-you-gave-it&lt;/code&gt;.&lt;/p&gt;
 
@@ -187,7 +187,7 @@
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;&amp;gt;-_posts/-and-_drafts/&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
 
 &lt;p&gt;By default, anything that you put in the _posts directory will be published. Of course you need to make sure it&amp;#39;s in the format of &lt;code&gt;yyyy-mm-dd-post-name&lt;/code&gt; with whatever extension you use. I prefer markdown so all my posts end with &lt;code&gt;.md&lt;/code&gt;. You&amp;#39;re the author of your blogposts so choose whatever format you&amp;#39;d like: Textile or Markdown are the two default choices Jekyll supports. You can choose others with plugins.&lt;/p&gt;
 
@@ -200,7 +200,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In your &lt;code&gt;_post.md&lt;/code&gt; file, you need to ensure that you&amp;#39;ve got the YAML markup at the beginning with the --- thing. If you need a template, copy paste it from the Rakefile site or use the welcome-to-jekyll post&amp;#39;s YAML header. Think of this as your template for ALL your posts. Update as you see fit.&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-_plugins&quot;&gt;&amp;gt; _plugins&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; _plugins&lt;/h3&gt;
 
 &lt;p&gt;There are some cool plugins for added functionality for Jekyll. However when publishing to Github, that&amp;#39;s stripped away and is not built when the site is published. Something something safety precautions. Ehhh. This is why we created a separate directory to work in. The &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory has all your drafts and posts and plugins and directories, but we will be creating the &amp;#39;static&amp;#39; website and pushing that to the &lt;code&gt;your-username.github.io&lt;/code&gt; directory for the master branch, to deploy to Github to publish. Wow, that came off a bit more complicated than I expected. Here&amp;#39;s the workflow.  We&amp;#39;ll go more into detail later on with this.&lt;/p&gt;
 
@@ -211,7 +211,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now you can add icons by using the syntax &lt;code&gt;{.% icon fa-something %}&lt;/code&gt; (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-publishing&quot;&gt;&amp;gt; Publishing&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Publishing&lt;/h3&gt;
 
 &lt;p&gt;When you are ready to publish, build the site with Jekyll by running &lt;code&gt;jekyll build&lt;/code&gt;.  This creates a directory called &lt;code&gt;_site/&lt;/code&gt; which houses the raw ol&amp;#39; school HTML of your posts with a css directory that the pages reference.&lt;/p&gt;
 
@@ -237,9 +237,9 @@
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&amp;quot;your msg about your post that&amp;#39;s ready for Github&amp;quot;&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;BOOM. You should be good to go now. Check out your site at &lt;a href=&quot;http://your-username.github.io&quot;&gt;http://your-username.github.io&lt;/a&gt; :)&lt;/p&gt;
+&lt;p&gt;BOOM. You should be good to go now. Check out your site at http://your-username.github.io :)&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Laziness&lt;/h3&gt;
 
 &lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won&amp;#39;t matter. So here&amp;#39;s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that&amp;#39;s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; or &lt;code&gt;~/.bashrc&lt;/code&gt; file.  &lt;/p&gt;
 
@@ -283,7 +283,7 @@
 
 &lt;p&gt;Yuuuup, you can run &lt;code&gt;rails console --sandbox&lt;/code&gt; when you load up your console. What&amp;#39;s it for? Simple -- to ensure that any changes you make to the database are &lt;em&gt;rolled back&lt;/em&gt; on exit.&lt;/p&gt;
 
-&lt;h3 id=&quot;why-use-this?&quot;&gt;Why use this?&lt;/h3&gt;
+&lt;h3&gt;Why use this?&lt;/h3&gt;
 
 &lt;p&gt;Well, what if you&amp;#39;re going into your production box and need to poke around with the data. The site&amp;#39;s live, y&amp;#39;know. It&amp;#39;s great to be able to go into a production box, run &lt;code&gt;rails c&lt;/code&gt; and not have to worry that you may have accidentally deleted an entry or updated a value. Think of it as an extra safety net. Here&amp;#39;s what it&amp;#39;d look like.&lt;/p&gt;
 
@@ -363,11 +363,11 @@
 
 &lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; I basically doubled all the unicorn conf files and doubled the server blocks in nginx.&lt;/p&gt;
 
-&lt;h2 id=&quot;digital-ocean-1-click-rails-template&quot;&gt;Digital Ocean 1-Click Rails Template&lt;/h2&gt;
+&lt;h2&gt;Digital Ocean 1-Click Rails Template&lt;/h2&gt;
 
 &lt;p&gt;Start with your standard Ubuntu setup and click the Rails template. Deploy. The DO template comes with a user already created called Rails. They have a great doc on &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-use-the-1-click-ruby-on-rails-on-ubuntu-14-04-image&quot;&gt;how to set your own Rails app with their template&lt;/a&gt;, but here&amp;#39;s my modifications.  Since our apps are on the LEPUR stack, there&amp;#39;s a bit of extra work.&lt;/p&gt;
 
-&lt;h3 id=&quot;bash-setup&quot;&gt;Bash setup&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Bash setup&lt;/h3&gt;
 
 &lt;p&gt;First, start by installing git and Postgres. Skip the Postgres install if you&amp;#39;re sticking with LEMUR. I dropped the &lt;code&gt;sudo&lt;/code&gt; part since I&amp;#39;m logged in as &lt;code&gt;root&lt;/code&gt; user.&lt;/p&gt;
 
@@ -387,7 +387,7 @@
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chsh -s /bin/bash rails
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir /var/sockets&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;two-rails-apps-setup&quot;&gt;Two Rails apps setup&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Two Rails apps setup&lt;/h3&gt;
 
 &lt;p&gt;Now we add our 2 apps. For simplicity sake, I&amp;#39;m adding both of them into the /home/rails/ directory, once I empty it out. If you accidentally deleted the entire rails folder, just &lt;code&gt;mkdir rails&lt;/code&gt; in &lt;code&gt;/home&lt;/code&gt;.&lt;/p&gt;
 
@@ -406,7 +406,7 @@
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chown rails:www-data -R /home/rails&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;unicorn&quot;&gt;Unicorn&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Unicorn&lt;/h3&gt;
 
 &lt;p&gt;I struggled and searched the internet far and wide for someone who took the DO 1-click template to create 2 apps. Their template has a non-standard unicorn and nginx configuration (in terms of files and locations). Again, we work with what we got. The easiest way I found was to duplicate the unicorn files, which are located in two different places: &lt;code&gt;/etc/default/unicorn&lt;/code&gt; and &lt;code&gt;/home/unicorn/unicorn.conf&lt;/code&gt;. We&amp;#39;ll start with the latter. Out of sheer simplicity, the dupes had 2 appended to the end of it. I also use nano as my editor, so don&amp;#39;t judge. :)&lt;/p&gt;
 
@@ -500,7 +500,7 @@ check_config&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot
 
 &lt;p&gt;You can confirm that both are running by checking &lt;code&gt;top -c&lt;/code&gt; then press &lt;code&gt;shift-M&lt;/code&gt;. Since we named the 2nd unicorn2, your top should have unicorn and unicorn2 running. Score!&lt;/p&gt;
 
-&lt;h3 id=&quot;nginx&quot;&gt;Nginx&lt;/h3&gt;
+&lt;h3&gt;&amp;gt; Nginx&lt;/h3&gt;
 
 &lt;p&gt;Now for the final bit. Nginx&amp;#39;s configuration.&lt;/p&gt;
 
@@ -617,7 +617,7 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
 &lt;p&gt;And voila! You&amp;#39;re good to go. Switch to the rails user to run your standard rake commands like &lt;code&gt;rake db:setup&lt;/code&gt; and &lt;code&gt;assets:precompile&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;final-thoughts&quot;&gt;Final thoughts&lt;/h3&gt;
+&lt;h3&gt;Final thoughts&lt;/h3&gt;
 
 &lt;p&gt;I am sure you may have some errors for each ruby. Definitely check your logs for nginx and unicorn. When we did this, we had to re-connect the executable-hook for each of the apps since we used different ruby versions for the apps. Stack Overflow had some brilliant articles that helped us troubleshoot. I can&amp;#39;t recall which ones they were but if I encounter them again, I&amp;#39;ll post it here.&lt;/p&gt;
 
@@ -692,13 +692,13 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
   allow 0.0.0.0/0.0.0.0        # allow anyone to connect to the server and
   allow admin:&amp;#39;P@ssw0rd&amp;#39;       # require user and password for login
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;What this does is allow you to hit up your IP address in the browser and see how things are looking: &lt;a href=&quot;http://IP_ADDRESS:2812&quot;&gt;http://IP_ADDRESS:2812&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What this does is allow you to hit up your IP address in the browser and see how things are looking: http://IP_ADDRESS:2812.&lt;/p&gt;
 
 &lt;p&gt;Right on.&lt;/p&gt;
 
 &lt;p&gt;Now, let&amp;#39;s integrate!&lt;/p&gt;
 
-&lt;h3 id=&quot;on-slack&quot;&gt;On Slack&lt;/h3&gt;
+&lt;h3&gt;On Slack&lt;/h3&gt;
 
 &lt;p&gt;If you&amp;#39;re running the desktop app, click on the channel name&amp;#39;s &lt;code&gt;v&lt;/code&gt; down-button and choose Configure Integrations.&lt;/p&gt;
 
@@ -709,9 +709,9 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 &lt;li&gt;Click Add Integration.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;So now you&amp;#39;ve got a webhook URL that looks something like this: &lt;a href=&quot;https://hooks.slack.com/services/HASH/Hash/LongHash&quot;&gt;https://hooks.slack.com/services/HASH/Hash/LongHash&lt;/a&gt;.  You can test out if it works by scrolling to the bottom and picking the integration settings, choosing what you want for description, custom name, etc. Test it out with the &lt;code&gt;curl&lt;/code&gt; command that they give you.  It&amp;#39;s JSON that drives the entire thing. &lt;/p&gt;
+&lt;p&gt;So now you&amp;#39;ve got a webhook URL that looks something like this: https://hooks.slack.com/services/HASH/Hash/LongHash.  You can test out if it works by scrolling to the bottom and picking the integration settings, choosing what you want for description, custom name, etc. Test it out with the &lt;code&gt;curl&lt;/code&gt; command that they give you.  It&amp;#39;s JSON that drives the entire thing. &lt;/p&gt;
 
-&lt;h3 id=&quot;on-monit&quot;&gt;On Monit&lt;/h3&gt;
+&lt;h3&gt;On Monit&lt;/h3&gt;
 
 &lt;p&gt;Now, back to the box. We&amp;#39;re rubyists here so this is how we roll. We&amp;#39;re going to create a file called &lt;code&gt;slack.rb&lt;/code&gt; in your &lt;code&gt;/etc/monit/&lt;/code&gt; directory.&lt;/p&gt;
 
@@ -803,7 +803,7 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         <title>A Quick Tip with Database Formatting</title>
         <description>&lt;p&gt;I&amp;#39;m constantly learning, mostly at this new job. It&amp;#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&amp;#39;t get me wrong, I love every bit of it. Might even say I&amp;#39;m addicted to it. Today&amp;#39;s tip is brought to you by both MySQL &amp;amp;&amp;amp; Postgres! Whoa, a double feature.&lt;/p&gt;
 
-&lt;h3 id=&quot;the-problem&quot;&gt;The problem&lt;/h3&gt;
+&lt;h3&gt;The problem&lt;/h3&gt;
 
 &lt;p&gt;Know what I really don&amp;#39;t like? Having to check the database and getting results that are displayed all sorts of wonky because your terminal window wraps things when you run &lt;code&gt;select * from that_table where id=&amp;#39;1&amp;#39;;&lt;/code&gt;. It looks something like this in MySQL:&lt;/p&gt;
 
@@ -813,7 +813,7 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/quick-tip-postgres.png&quot; alt=&quot;Postgres&quot;&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;the-solution&quot;&gt;The Solution&lt;/h3&gt;
+&lt;h3&gt;The Solution&lt;/h3&gt;
 
 &lt;p&gt;So what do? In MySQL, every SQL command that needs to be formatted pretty needs to have \G appended at the end. &lt;code&gt;select * from that_table where id=&amp;#39;1&amp;#39; \G;&lt;/code&gt; Annoying to have to append &lt;code&gt;\G&lt;/code&gt; to the end, but it&amp;#39;s worth it. Here&amp;#39;s the result:&lt;/p&gt;
 
@@ -858,13 +858,13 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
 &lt;p&gt;Quick background on Postgres. It&amp;#39;s a relational database that is awesome because it&amp;#39;s highly extensible. For instance there is geospacial support (postGIS), key/value store (hstore), and with postgres 9.4, there&amp;#39;s JSON support (more so than what they had previously). You could say it&amp;#39;s the end-all-be-all for databases. At least that&amp;#39;s what I&amp;#39;d like to see it as! Obviously postgres may not suit your needs but this knowledge is valuable and transferable. And if you were afraid of reading the docs before, hopefully after this you won&amp;#39;t be.&lt;/p&gt;
 
-&lt;h3 id=&quot;what-to-expect&quot;&gt;What to expect&lt;/h3&gt;
+&lt;h3&gt;What to expect&lt;/h3&gt;
 
 &lt;p&gt;I&amp;#39;ll walk thru entering/exiting Postgres. Then a bit of navigation so you feel more comfortable with it. And then we&amp;#39;re going to go straight into dealing with import/export (restore/backup). For the import/export section, I&amp;#39;ve a chump vanilla Rails app that will be used because there&amp;#39;s a rake task in there that creates fake data. Hurray for the Faker gem!&lt;/p&gt;
 
 &lt;hr&gt;
 
-&lt;h3 id=&quot;first-thing&amp;#39;s-first&quot;&gt;First thing&amp;#39;s first&lt;/h3&gt;
+&lt;h3&gt;First thing&amp;#39;s first&lt;/h3&gt;
 
 &lt;p&gt;Let&amp;#39;s make sure you can run Postgres.&lt;/p&gt;
 
@@ -883,7 +883,7 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
 &lt;hr&gt;
 
-&lt;h3 id=&quot;go-in,-go-out&quot;&gt;Go in, go out&lt;/h3&gt;
+&lt;h3&gt;Go in, go out&lt;/h3&gt;
 
 &lt;p&gt;Once you&amp;#39;ve followed the instructions for installation and have postgres running, we can confirm this by running &lt;code&gt;psql&lt;/code&gt; in Terminal.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql
@@ -907,7 +907,7 @@ $
 
 &lt;hr&gt;
 
-&lt;h3 id=&quot;navigation&quot;&gt;Navigation&lt;/h3&gt;
+&lt;h3&gt;Navigation&lt;/h3&gt;
 
 &lt;p&gt;To find out where we&amp;#39;re at currently, type &lt;code&gt;\conninfo&lt;/code&gt;. &lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql
@@ -932,7 +932,7 @@ template1=#
 
 &lt;hr&gt;
 
-&lt;h3 id=&quot;rails-setup&quot;&gt;Rails setup&lt;/h3&gt;
+&lt;h3&gt;Rails setup&lt;/h3&gt;
 
 &lt;p&gt;Please clone this repo: &lt;a href=&quot;https://github.com/rbatta/img_blog&quot;&gt;image blog&lt;/a&gt;. It&amp;#39;s my vanilla rails app based on the &lt;a href=&quot;https://www.railstutorial.org/book&quot;&gt;Michael Hartl tutorial&lt;/a&gt;&lt;br&gt;
 It uses ruby 2.0.0, so you may have to use rvm or rbenv to change ruby versions for this app.&lt;/p&gt;
@@ -988,9 +988,9 @@ imgblog_dev=# \q
 
 &lt;hr&gt;
 
-&lt;h3 id=&quot;backup-and-restore-(export-and-import)&quot;&gt;Backup and Restore (Export and Import)&lt;/h3&gt;
+&lt;h3&gt;Backup and Restore (Export and Import)&lt;/h3&gt;
 
-&lt;h4 id=&quot;backup-first&quot;&gt;Backup first&lt;/h4&gt;
+&lt;h4&gt;Backup first&lt;/h4&gt;
 
 &lt;p&gt;Backups are created with the &lt;code&gt;pg_dump&lt;/code&gt; command, but in order for it to know what to do, you have to append flags (options) to the command and send the output to a file.  We&amp;#39;re going to be taking backups of &lt;code&gt;imgblog_dev&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_dump -d imgblog_dev &amp;gt; ~/Desktop/dump1.sql
@@ -1024,7 +1024,7 @@ imgblog_dev=# \q
 
 &lt;p&gt;Congrats! You&amp;#39;ve gotten this far. One last stretch. Importing/restoring things back in!&lt;/p&gt;
 
-&lt;h4 id=&quot;then-restore&quot;&gt;Then Restore&lt;/h4&gt;
+&lt;h4&gt;Then Restore&lt;/h4&gt;
 
 &lt;p&gt;In the real world, you may have times when databases get completely effed up. Hopefully you&amp;#39;ve got redundant databases or at least a scheduled backup system set up. When this happens, we need to sometimes restore the database to a previously known state. It also means there&amp;#39;s a chance of some loss of data. (Having a failover plan is essential, btw.) Othertimes, maybe you&amp;#39;re pulling in prod data into staging so you can manipulate real data and run some load testing. Whatever the case, you need to import some data from one database to another.&lt;/p&gt;
 
@@ -1086,7 +1086,7 @@ $ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &amp;lt; ~/Documents/dump4.dum
 
 &lt;hr&gt;
 
-&lt;h3 id=&quot;wrap-up&quot;&gt;Wrap up&lt;/h3&gt;
+&lt;h3&gt;Wrap up&lt;/h3&gt;
 
 &lt;p&gt;Congratulations!! You&amp;#39;ve learned how to navigate about in postgres, use some SQL commands, and import and export data from postgres. You rock! Give yourself a high-5 :D&lt;/p&gt;
 

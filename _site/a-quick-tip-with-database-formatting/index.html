@@ -7,13 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <title>About Risa</title>
-  <meta name="description" content="Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
-">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://risaonrails.com/about/">
-  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <title>A Quick Tip with Database Formatting</title>
+  <meta name="description" content="I&#39;m constantly learning, mostly at this new job. It&#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&#39;t get m...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/a-quick-tip-with-database-formatting/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
 </head>
 
 
@@ -61,25 +61,40 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">About Risa</h1>
+    <h1 class="post-title">A Quick Tip with Database Formatting</h1>
+    <p class="post-meta">Mar 20, 2015</p>
   </header>
 
   <article class="post-content">
-    <p>Hi, I&#39;m Risa. I am a professional flailer. You know, I flail my arms wildly about and hope that what I&#39;ve done works. And it does, usually. Eventually. </p>
+    <p>I&#39;m constantly learning, mostly at this new job. It&#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&#39;t get me wrong, I love every bit of it. Might even say I&#39;m addicted to it. Today&#39;s tip is brought to you by both MySQL &amp;&amp; Postgres! Whoa, a double feature.</p>
 
-<p>In reality, right now I&#39;m playing DevOps and Developer for an awesome dev shop called NIRD. (how cool is that?)  </p>
+<h3>The problem</h3>
 
-<p>On the side, I&#39;m pretty addicted to the following in no particular order: learning, internet memes, cats, gifs, curvy mountain roads, MINI Coopers, adventures, and San Francisco.  If you live in San Francisco and want to go driving along some curvy mountain roads with me, let me know! :D We&#39;ve got some amazing roads around here. :) </p>
+<p>Know what I really don&#39;t like? Having to check the database and getting results that are displayed all sorts of wonky because your terminal window wraps things when you run <code>select * from that_table where id=&#39;1&#39;;</code>. It looks something like this in MySQL:</p>
 
-<p>As much as I love technology, I&#39;m not very good with Twitter, Pintrest, Instagram, or Facebook. You can say I&#39;m just not good with the whole social media thing, and I&#39;m cool with that. Reddit and Tumblr&#39;s where it&#39;s at anyway.</p>
+<p><img src="/assets/quick-tip-mysql.png" alt="MySQL"></p>
+
+<p>Oh man. Postgres isn&#39;t that much better, y&#39;know.</p>
+
+<p><img src="/assets/quick-tip-postgres.png" alt="Postgres"></p>
+
+<h3>The Solution</h3>
+
+<p>So what do? In MySQL, every SQL command that needs to be formatted pretty needs to have \G appended at the end. <code>select * from that_table where id=&#39;1&#39; \G;</code> Annoying to have to append <code>\G</code> to the end, but it&#39;s worth it. Here&#39;s the result:</p>
+
+<p><img src="/assets/quick-tip-mysql1.png" alt="MySQL"></p>
+
+<p>Postgres is a bit better in this regard. There&#39;s a global setting called <code>\x auto</code> which automatically prettifies the information based on terminal width. The only downside is if you&#39;ve got a text column that&#39;s so long it makes the actual header wrap. I&#39;ll take it anyway, because once it&#39;s set, it&#39;s set until you change it.</p>
+
+<p><img src="/assets/quick-tip-postgres1.png" alt="Postgres"></p>
+
+<p>Right on! This makes viewing records directly in the database so much easier. </p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +1</p>
 
 <hr>
 
-<p>The more professional about me:</p>
-
-<p>Risa spent the majority of her career in the pharmaceutical and defense industries on the East Coast before moving to San Francisco to pursue a career in the tech industry. She&#39;s an avid supporter of pair programming, a Ruby on Rails enthusiast, and a budding Postgres fan. She loves to give presentations and enjoys elevating people&#39;s game, mostly women in STEM fields. Risa is also a speaker for Women Who Code and a member of Lesbians Who Tech.  She drives an awesome electric blue MINI Cooper S named Sebastian.</p>
-
-<p>You can connect with her on <a href="http://linkedin.com/in/risabatta">LinkedIn</a> or any of the other methods below. </p>
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
 
   </article>
 
@@ -158,19 +173,40 @@
 
   </div>
 <script>
-$(function() {
-  return $("h2, h3, h4, h5, h6").each(function(i, el) {
-    var $el, icon, id;
-    $el = $(el);
-    id = $el.attr('id');
-    icon = '<i class="fa fa-link"></i>';
-    if (id) {
-      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+  var anchorForId = function (id) {
+    var anchor = document.createElement("a");
+    anchor.className = "header-link";
+    anchor.href      = "#" + id;
+    anchor.innerHTML = "<i class=\"fa fa-link\"></i>";
+    return anchor;
+  };
+
+  var linkifyAnchors = function (level, containingElement) {
+    var headers = containingElement.getElementsByTagName("h" + level);
+    for (var h = 0; h < headers.length; h++) {
+      var header = headers[h];
+
+      if (typeof header.id !== "undefined" && header.id !== "") {
+        header.appendChild(anchorForId(header.id));
+      }
     }
-  });
-});
+  };
+
+  document.onreadystatechange = function () {
+    if (this.readyState === "complete") {
+      var contentBlock = document.getElementsByClassName("docs")[0] || document.getElementsByClassName("news")[0];
+      if (!contentBlock) {
+        return;
+      }
+      for (var level = 1; level <= 6; level++) {
+        linkifyAnchors(level, contentBlock);
+      }
+    }
+  };
 </script>
+
 </footer>
+
 
 
 

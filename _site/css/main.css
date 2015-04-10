@@ -448,6 +448,10 @@ pre {
   .highlight .il {
     color: #099; }
 
+/* for header links 
+ * This code is courtesy Ben Balter, modified by Parker Moore for jekyllrb.com
+ * http://ben.balter.com/2014/03/13/pages-anchor-links/
+ */
 .header-link {
   position: absolute;
   left: -0.5em;

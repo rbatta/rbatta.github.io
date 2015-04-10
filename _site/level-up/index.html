@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <title>Level up!</title>
   <meta name="description" content="Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
 ">
+
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://risaonrails.com/level-up/">
   <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 </head>
 
 
@@ -71,14 +72,14 @@
 
 <p>As I&#39;m learning Jekyll, I&#39;ll update this lil easter-egg page to show how many posts are in which category of level-upping-goodness. </p>
 
-<h4 id="level-up">Level up</h4>
+<h4>Level up</h4>
 
 <p>+1: Super simple quick tip<br>
 +10: Betcha didn&#39;t know about this, eh?<br>
 +25: Ooh, this might require a bit more effort<br>
 +50: Whoa, we have one of these?</p>
 
-<h4 id="mini-rant">Mini Rant</h4>
+<h4>Mini Rant</h4>
 
 <p>I&#39;m all about spreading the love and knowledge. It shouldn&#39;t be for certain people only. We&#39;re all in this together, from senior devs to bootcamp-grads. Encourage everyone to learn. Teach. Listen. Share. Don&#39;t ever give the ol&#39; cop out reply of &quot;RTFM!&quot; It&#39;s totally cool to say that you don&#39;t know the answer. Yeah we all know there are man pages and docs, but not all of us learn that way. Truthfully, those very docs/man pages can be very intimidating to those of us who are just starting. In any case, we all don&#39;t learn the same way; some of us learn by doing, others learn with examples, some by reading the docs, and others who need pictures.</p>
 
@@ -165,19 +166,40 @@
 
   </div>
 <script>
-$(function() {
-  return $("h2, h3, h4, h5, h6").each(function(i, el) {
-    var $el, icon, id;
-    $el = $(el);
-    id = $el.attr('id');
-    icon = '<i class="fa fa-link"></i>';
-    if (id) {
-      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+  var anchorForId = function (id) {
+    var anchor = document.createElement("a");
+    anchor.className = "header-link";
+    anchor.href      = "#" + id;
+    anchor.innerHTML = "<i class=\"fa fa-link\"></i>";
+    return anchor;
+  };
+
+  var linkifyAnchors = function (level, containingElement) {
+    var headers = containingElement.getElementsByTagName("h" + level);
+    for (var h = 0; h < headers.length; h++) {
+      var header = headers[h];
+
+      if (typeof header.id !== "undefined" && header.id !== "") {
+        header.appendChild(anchorForId(header.id));
+      }
     }
-  });
-});
+  };
+
+  document.onreadystatechange = function () {
+    if (this.readyState === "complete") {
+      var contentBlock = document.getElementsByClassName("docs")[0] || document.getElementsByClassName("news")[0];
+      if (!contentBlock) {
+        return;
+      }
+      for (var level = 1; level <= 6; level++) {
+        linkifyAnchors(level, contentBlock);
+      }
+    }
+  };
 </script>
+
 </footer>
+
 
 
 

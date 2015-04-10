@@ -8,11 +8,11 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <title>A Quick Tip with Database Formatting</title>
-  <meta name="description" content="I’m constantly learning, mostly at this new job. It’s gotten to the point where I end up diving down the rabbit hole many many times. Don’t get me wrong, I l...">
-
+  <meta name="description" content="I&#39;m constantly learning, mostly at this new job. It&#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&#39;t get m...">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://risaonrails.com/a-quick-tip-with-database-formatting/">
   <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 </head>
 
 
@@ -65,34 +65,35 @@
   </header>
 
   <article class="post-content">
-    <p>I’m constantly learning, mostly at this new job. It’s gotten to the point where I end up diving down the rabbit hole many many times. Don’t get me wrong, I love every bit of it. Might even say I’m addicted to it. Today’s tip is brought to you by both MySQL &amp;&amp; Postgres! Whoa, a double feature.</p>
+    <p>I&#39;m constantly learning, mostly at this new job. It&#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&#39;t get me wrong, I love every bit of it. Might even say I&#39;m addicted to it. Today&#39;s tip is brought to you by both MySQL &amp;&amp; Postgres! Whoa, a double feature.</p>
 
 <h3 id="the-problem">The problem</h3>
-<p>Know what I really don’t like? Having to check the database and getting results that are displayed all sorts of wonky because your terminal window wraps things when you run <code>select * from that_table where id='1';</code>. It looks something like this in MySQL:</p>
 
-<p><img src="/assets/quick-tip-mysql.png" alt="MySQL" /></p>
+<p>Know what I really don&#39;t like? Having to check the database and getting results that are displayed all sorts of wonky because your terminal window wraps things when you run <code>select * from that_table where id=&#39;1&#39;;</code>. It looks something like this in MySQL:</p>
 
-<p>Oh man. Postgres isn’t that much better, y’know.</p>
+<p><img src="/assets/quick-tip-mysql.png" alt="MySQL"></p>
 
-<p><img src="/assets/quick-tip-postgres.png" alt="Postgres" /></p>
+<p>Oh man. Postgres isn&#39;t that much better, y&#39;know.</p>
+
+<p><img src="/assets/quick-tip-postgres.png" alt="Postgres"></p>
 
 <h3 id="the-solution">The Solution</h3>
-<p>So what do? In MySQL, every SQL command that needs to be formatted pretty needs to have \G appended at the end. <code>select * from that_table where id='1' \G;</code> Annoying to have to append <code>\G</code> to the end, but it’s worth it. Here’s the result:</p>
 
-<p><img src="/assets/quick-tip-mysql1.png" alt="MySQL" /></p>
+<p>So what do? In MySQL, every SQL command that needs to be formatted pretty needs to have \G appended at the end. <code>select * from that_table where id=&#39;1&#39; \G;</code> Annoying to have to append <code>\G</code> to the end, but it&#39;s worth it. Here&#39;s the result:</p>
 
-<p>Postgres is a bit better in this regard. There’s a global setting called <code>\x auto</code> which automatically prettifies the information based on terminal width. The only downside is if you’ve got a text column that’s so long it makes the actual header wrap. I’ll take it anyway, because once it’s set, it’s set until you change it.</p>
+<p><img src="/assets/quick-tip-mysql1.png" alt="MySQL"></p>
 
-<p><img src="/assets/quick-tip-postgres1.png" alt="Postgres" /></p>
+<p>Postgres is a bit better in this regard. There&#39;s a global setting called <code>\x auto</code> which automatically prettifies the information based on terminal width. The only downside is if you&#39;ve got a text column that&#39;s so long it makes the actual header wrap. I&#39;ll take it anyway, because once it&#39;s set, it&#39;s set until you change it.</p>
 
-<p>Right on! This makes viewing records directly in the database so much easier.</p>
+<p><img src="/assets/quick-tip-postgres1.png" alt="Postgres"></p>
+
+<p>Right on! This makes viewing records directly in the database so much easier. </p>
 
 <p><i class="fa fa-angle-double-up"></i> Level up +1</p>
 
-<hr />
+<hr>
 
-<p>Questions? Comments? Hit me up at <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#105;&#115;&#097;&#111;&#110;&#114;&#097;&#105;&#108;&#115;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
-
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
 
   </article>
 
@@ -170,8 +171,22 @@
     </div>
 
   </div>
-
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
 </footer>
+
+
 
 
   </body>
