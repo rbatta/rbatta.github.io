@@ -13,6 +13,7 @@
   <link rel="canonical" href="http://risaonrails.com/postgres-workshop-notes/">
   <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
 </head>
 
 
@@ -393,20 +394,20 @@ $ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &lt; ~/Documents/dump4.dump
     </div>
 
   </div>
+</footer>
 <script>
 $(function() {
   return $("h2, h3, h4, h5, h6").each(function(i, el) {
     var $el, icon, id;
     $el = $(el);
     id = $el.attr('id');
-    icon = '<i class="fa fa-link"></i>';
+    icon = '<i class="fa fa-link fa-spin"></i>';
     if (id) {
       return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
     }
   });
 });
 </script>
-</footer>
 
 
 
