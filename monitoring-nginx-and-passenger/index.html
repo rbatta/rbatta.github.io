@@ -138,12 +138,10 @@ touch /home/rails/surprise/tmp/restart.txt
 <p>Save and exit. Make it into an executable file.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">sudo chmod +x /etc/monit/touch_surprise_sh
 </code></pre></div>
-<p>Do your standard monit sanity check, then reload monit.
-<code>bash
-$ sudo monit -t       # fix any problems, obv
-$ sudo monit reload
-</code></p>
-
+<p>Do your standard monit sanity check, then reload monit.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo monit -t       <span class="c"># fix any problems, obv</span>
+<span class="nv">$ </span>sudo monit reload
+</code></pre></div>
 <p>Confirm on your web interface that surprise-pass is loaded up and displaying all the goodies you like to see. When you restart nginx, Passenger should lose a PID. It&#39;ll alert you on Slack when you hit the app and create a new PID. Right on. <img class='emoji' title='fist' alt='fist' src='https://github.global.ssl.fastly.net/images/icons/emoji/fist.png' height='20' width='20' align='absmiddle' ></p>
 
 <p>Congrats! Create a monit conf file for each of your apps and behold your power!</p>
