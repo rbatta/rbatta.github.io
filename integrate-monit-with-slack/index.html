@@ -120,11 +120,13 @@
 <span class="n">request</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;channel&quot;</span>    <span class="o">=&gt;</span> <span class="s2">&quot;#monitoring&quot;</span><span class="p">,</span>  <span class="c1"># channel name</span>
     <span class="s2">&quot;username&quot;</span>   <span class="o">=&gt;</span> <span class="s2">&quot;Monit Bot&quot;</span><span class="p">,</span>    <span class="c1"># you can name the bot whatever</span>
-    <span class="s2">&quot;icon_emoji&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;&lt;img class=&#39;emoji&#39; title=&#39;trollface&#39; alt=&#39;trollface&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/trollface.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&quot;</span><span class="p">,</span>      <span class="c1"># because why the hell not!</span>
+    <span class="s2">&quot;icon_emoji&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;:.trollface:&quot;</span><span class="p">,</span>      <span class="c1"># because why the hell not!</span>
     <span class="s2">&quot;text&quot;</span>       <span class="o">=&gt;</span> <span class="s2">&quot;[</span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MONIT_HOST&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MONIT_SERVICE&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MONIT_DESCRIPTION&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 <span class="nb">puts</span> <span class="n">response</span><span class="o">.</span><span class="n">body</span></code></pre></div>
+
+<p><em>Edited note: You&#39;ll need to remove the . in trollface for it to work. Refer to how Slack does icons.</em></p>
 
 <p>The cool thing about this is that you can pick whatever slack icon you want to use OR you can even upload your own for an emoji and use that. Obviously you&#39;ll have to change the <code>uri</code>, <code>channel</code>, <code>username</code> and the like to what applies to you.</p>
 

@@ -6,9 +6,120 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 10 Apr 2015 01:03:55 -0700</pubDate>
-    <lastBuildDate>Fri, 10 Apr 2015 01:03:55 -0700</lastBuildDate>
+    <pubDate>Wed, 15 Apr 2015 23:57:25 -0700</pubDate>
+    <lastBuildDate>Wed, 15 Apr 2015 23:57:25 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Monitoring Nginx&#39;s Passenger</title>
+        <description>&lt;p&gt;In the ever learning world I&amp;#39;m in, someone had commented on &lt;a href=&quot;/integrate-monit-with-slack/&quot;&gt;my post&lt;/a&gt; about monitoring Passenger.&lt;/p&gt;
+
+&lt;p&gt;That got me thinking and diving deep into the depths of Google to find a solution that was acceptable for those of using Nging to create the Passenger instances.&lt;/p&gt;
+
+&lt;p&gt;The most common search result for this was to use the gem &lt;a href=&quot;https://github.com/romanbsd/passenger_monit&quot;&gt;passenger-monit&lt;/a&gt;. However it hasn&amp;#39;t been updated in at least 2 years. I am not that ambitious enough to revive this gem for my own purposes. The biggest drawback for using this gem is that the rack PIDs are hardcoded and if the first one dies, Monit will complain. It isn&amp;#39;t ideal for my purposes since I run multiple apps on one server and I&amp;#39;d like to keep track of them individually.&lt;/p&gt;
+
+&lt;p&gt;HOWEVER~! I have found a way that seems to work.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-solution&quot;&gt;The Solution&lt;/h3&gt;
+
+&lt;p&gt;There&amp;#39;s a method called &lt;code&gt;matching&lt;/code&gt; that monit allows. Essentially monit does a &lt;code&gt;ps aux | grep &amp;#39;whatever thing&amp;#39;&lt;/code&gt; to check for a process. &lt;a href=&quot;http://serverfault.com/questions/523226/monit-daemonize-non-daemon-process&quot;&gt;Holy balls, I love you person on ServerFault who answered this&lt;/a&gt; and I wish I had the reputation to upvote the crap out of that answer. But instead, mad props to you. &lt;/p&gt;
+
+&lt;p&gt;Anyway, after reading that, everything became clear.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what I ended up doing. &lt;/p&gt;
+
+&lt;h4 id=&quot;the-example-setup&quot;&gt;The example setup&lt;/h4&gt;
+
+&lt;p&gt;Assume the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nginx + passenger (Passenger is spawned via Nginx)
+
+&lt;ul&gt;
+&lt;li&gt;there is no passenger PID file that exists&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Rails app named &amp;#39;Surprise&amp;#39; 
+
+&lt;ul&gt;
+&lt;li&gt;nginx configured to point to &lt;code&gt;/home/rails/Surprise/public&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Deployer user named &amp;#39;rails&amp;#39;&lt;/li&gt;
+&lt;li&gt;Monit version 5.6 or 5.8 is running&lt;/li&gt;
+&lt;li&gt;Digital Ocean droplet for server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, if you have not hit Surprise at all, you won&amp;#39;t have any passenger instances created. That makes sense. Why spawn a process when it isn&amp;#39;t being used? &lt;/p&gt;
+
+&lt;p&gt;The process is brutally simple, hit the app to spawn a Passenger process, then check &lt;code&gt;top&lt;/code&gt; to see what the name is and create the monit file.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;top -c
+&lt;span class=&quot;c&quot;&gt;# hit shift M to sort by memory&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# you should see near the top right&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Passenger RubyApp: /home/rails/surprise/public &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# copy paste that&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/conf.d/surprise-pass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now in this file, write in the following:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;check process surprise-pass matching &lt;span class=&quot;s1&quot;&gt;&amp;#39;Passenger RubyApp: \/home\/rails\/surprise\/public&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalmem &amp;gt; 35% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalmem &amp;gt; 60% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/touch_surprise_sh  &lt;span class=&quot;c&quot;&gt;# restart app&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; changed pid &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb              &lt;span class=&quot;c&quot;&gt;# sanity check&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalcpu &amp;gt; 25% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save and exit. Notice the &lt;code&gt;\&lt;/code&gt; marks to escape the &lt;code&gt;/&lt;/code&gt; marks. Because monit does essentially a &lt;code&gt;ps aux | grep ____&lt;/code&gt;, copy pasting what you find in &lt;code&gt;top -c&lt;/code&gt; is a great way to get the process match.&lt;/p&gt;
+
+&lt;p&gt;A couple of things to note. 1) There is also a new file being executed here. More on this in a bit. 2) We are talking totalmem and totalcpu. Passenger can spin up child processes if it needs it, but I want to look at the total memory consumption of that particular app. Total cpu is not per core but for the whole thing. I also based these off of monit&amp;#39;s web interface information. It&amp;#39;s very handy to pick out the things you want to monitor in particular.&lt;/p&gt;
+
+&lt;p&gt;The new file &lt;code&gt;touch_surprise_sh&lt;/code&gt; is a super simple bash script that restarts Passenger (and not Nginx) via the &lt;code&gt;touch&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/touch_surprise_sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the file type the following lines:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!/bin/bash
+
+touch /home/rails/surprise/tmp/restart.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Alternatively you can make it more verbose and sudo in as your user (rails) to restart Passenger.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo -u rails -H sh -c &amp;quot;touch /home/rails/surprise/tmp/restart.txt”
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save and exit. Make it into an executable file.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo chmod +x /etc/monit/touch_surprise_sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Do your standard monit sanity check, then reload monit.
+&lt;code&gt;bash
+$ sudo monit -t       # fix any problems, obv
+$ sudo monit reload
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Confirm on your web interface that surprise-pass is loaded up and displaying all the goodies you like to see. When you restart nginx, Passenger should lose a PID. It&amp;#39;ll alert you on Slack when you hit the app and create a new PID. Right on. &lt;img class=&#39;emoji&#39; title=&#39;fist&#39; alt=&#39;fist&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/fist.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;Congrats! Create a monit conf file for each of your apps and behold your power!&lt;/p&gt;
+
+&lt;p&gt;Special thanks to Grant Trevor who got me to delve into the depths of monit and Google &lt;img class=&#39;emoji&#39; title=&#39;grinning&#39; alt=&#39;grinning&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 15 Apr 2015 14:21:01 -0700</pubDate>
+        <link>http://risaonrails.com/monitoring-nginx-and-passenger/</link>
+        <guid isPermaLink="true">http://risaonrails.com/monitoring-nginx-and-passenger/</guid>
+        
+        <category>monit</category>
+        
+        <category>passenger</category>
+        
+        
+        <category>guide</category>
+        
+        <category>devops</category>
+        
+        <category>monit</category>
+        
+        <category>passenger</category>
+        
+      </item>
     
       <item>
         <title>Woohoo, Nginx training!</title>
@@ -732,11 +843,13 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;s2&quot;&gt;&amp;quot;channel&amp;quot;&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;#monitoring&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# channel name&lt;/span&gt;
     &lt;span class=&quot;s2&quot;&gt;&amp;quot;username&amp;quot;&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Monit Bot&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# you can name the bot whatever&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;icon_emoji&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;img class=&amp;#39;emoji&amp;#39; title=&amp;#39;trollface&amp;#39; alt=&amp;#39;trollface&amp;#39; src=&amp;#39;https://github.global.ssl.fastly.net/images/icons/emoji/trollface.png&amp;#39; height=&amp;#39;20&amp;#39; width=&amp;#39;20&amp;#39; align=&amp;#39;absmiddle&amp;#39; &amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# because why the hell not!&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;icon_emoji&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;:.trollface:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# because why the hell not!&lt;/span&gt;
     &lt;span class=&quot;s2&quot;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_HOST&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;] &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_SERVICE&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; - &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_DESCRIPTION&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Edited note: You&amp;#39;ll need to remove the . in trollface for it to work. Refer to how Slack does icons.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;The cool thing about this is that you can pick whatever slack icon you want to use OR you can even upload your own for an emoji and use that. Obviously you&amp;#39;ll have to change the &lt;code&gt;uri&lt;/code&gt;, &lt;code&gt;channel&lt;/code&gt;, &lt;code&gt;username&lt;/code&gt; and the like to what applies to you.&lt;/p&gt;
 
