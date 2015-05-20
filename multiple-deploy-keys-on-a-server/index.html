@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
+  <title>Multiple Deploy Keys on a Server</title>
+  <meta name="description" content="Life in DevOps land has been pretty exciting for me. I&#39;ve learned to create a tiered service (an app server + worker server), deal with RVM + upstart, fi...">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/multiple-deploy-keys-on-a-server/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Multiple Deploy Keys on a Server</h1>
+    <p class="post-meta">May 20, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>Life in DevOps land has been pretty exciting for me. I&#39;ve learned to create a tiered service (an app server + worker server), deal with RVM + upstart, finagle monit into submission, and most recently work with multiple SSH keys on one server.</p>
+
+<h2 id="scenario">Scenario</h2>
+
+<p>You&#39;ve got a server with 2-3 apps on it, and you&#39;d like to use deploy keys for each app, but how do we keep them separate and how will the system know which to use? There&#39;s a thing called a config file that can be used for our SSH keys. It&#39;s kind of awesome.</p>
+
+<p>I&#39;ll step through how to set it up and the like in this post.</p>
+
+<h3 id="repo-examples">Repo examples</h3>
+
+<p>Let&#39;s pretend we have 2 repos, and both are hosted on Github:  </p>
+
+<ul>
+<li>App 1 = Surprise</li>
+<li>App 2 = Badger</li>
+</ul>
+
+<h3 id="server">Server</h3>
+
+<p>The pretend server is going to be Ubuntu 14.04+. I&#39;ll assume you&#39;ve created a <code>~/.ssh</code> directory and chmod&#39;d it appropriately. On DigitalOcean, the directions for doing that <a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04">can be found here</a> about midway down. We&#39;ll skip their directions about creating keys.</p>
+
+<h3 id="creating-ssh-keys">Creating SSH Keys</h3>
+
+<p><a href="https://help.github.com/articles/generating-ssh-keys/#platform-linux">Github&#39;s SSH key article</a> is probably the best thing that&#39;s happened on the internet for people like me since sliced bread. (But not since buttered and toasted sliced bread...)</p>
+
+<p>Here&#39;s the abbreviated version of that article for our purposes, using our examples. Because examples are great! I&#39;ll use Surprise (app 1) as the example since the steps are repeated for Badger (app 2).</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;devops@surprise&quot;</span>
+<span class="c"># really, we don&#39;t need to put an email. this just lets us know</span>
+<span class="c"># that it&#39;s the surprise repo we&#39;re dealing with.</span>
+Enter file in which to save the key <span class="o">(</span>/Users/you/.ssh/id_rsa<span class="o">)</span>: surprise_rsa
+<span class="c"># here put in something like surprise_rsa then hit enter</span>
+Enter passphrase <span class="o">(</span>empty <span class="k">for</span> no passphrase<span class="o">)</span>: <span class="c"># optional</span>
+Enter same passphrase again: <span class="c"># optional</span>
+<span class="c"># these are optional but highly recommended</span>
+</code></pre></div>
+<p>You should get some funky design/image after this. Repeat these for badger.</p>
+
+<p>Once both are set up, we can proceed to the next step, adding the keys to the ssh-agent. You want to run the eval statement once. This tripped me up a couple of times.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">eval</span> <span class="s2">&quot;$(ssh-agent -s)&quot;</span>
+<span class="c"># this gets you a pid. Agent pid ####</span>
+ssh-add ~/.ssh/surprise_rsa
+ssh-add ~/.ssh/badger_rsa
+<span class="c"># you will probably have to add your passphrases in here. do it.</span>
+</code></pre></div>
+<p>Sanity check yourself by confirming that both SSH keys have been added.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh-add -l
+<span class="c"># this should display both apps</span>
+</code></pre></div>
+<h3 id="add-keys-to-repo">Add Keys to Repo</h3>
+
+<p>Deploy keys. The only way I could really understand their functionality was that they are the server&#39;s ssh keys that get put into a particular repo, so that particular key is the only one that&#39;s allowed to read/write to that repo only. This prevents the key from accessing other repos. Usually we create ssh keys and attach them to our account, so we can then grab ANY repo we&#39;re associated with. This can be dangerous, and it can cause problems if the associated member leaves the organization. (i.e., if I leave the company, the keys on the servers that I had attached to my account will no longer work)</p>
+
+<p>First, we&#39;ll need to <code>cat</code> the public keys. Let&#39;s start with Surprise.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat ~/.ssh/surprise_rsa.pub
+</code></pre></div>
+<p>Copy the <code>surprise_rsa.pub</code> key, from <code>ssh-rsa</code> all the way to <code>devops@surprise</code>.</p>
+
+<p>Now, go to Surprise&#39;s repo in Github &gt; Settings (right panel) &gt; Deploy keys. The path will look like:<br>
+<a href="https://github.com/your_github/Surprise/settings/keys">https://github.com/your_github/Surprise/settings/keys</a></p>
+
+<p>Click on Add Deploy Key, name the key something you&#39;d understand. &quot;My awesome server&#39;s deploy key&quot; is totally OK. You&#39;re the captain of this ship, after all. Paste in your key. Save.</p>
+
+<p>Repeat steps for Badger.</p>
+
+<h3 id="create-ssh-config">Create SSH Config</h3>
+
+<p>Now that we&#39;ve got our 2 deploy keys set up, we need to make sure git knows which key to use and when, when we do our <code>git clones</code> and <code>git pulls and pushes</code>.</p>
+
+<p>Create a config file in <code>~/.ssh/</code> called config.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">nano ~/.ssh/config
+</code></pre></div>
+<p>The file will be in this format:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># surprise github</span>
+Host surprise
+  Hostname github.com
+  User git
+  IdentityFile ~/.ssh/surprise_rsa
+
+<span class="c"># badger github</span>
+Host badger
+  Hostname github.com
+  User git
+  IdentityFile ~/.ssh/badger_rsa
+</code></pre></div>
+<p>Let&#39;s break this down.</p>
+
+<ul>
+<li><strong>Host</strong> can be whatever you want. It can be <code>asdfjkl;</code> for all we care.</li>
+<li><strong>Hostname</strong> is github.com as that&#39;s where our repo is at.</li>
+<li><strong>User</strong> is git, because we are SSH&#39;ing to github. (You know, <a href="mailto:git@github.com">git@github.com</a>...)</li>
+<li><strong>IdentityFile</strong> is the private key for that repo. Remember, we associated it&#39;s public key to the repo, so we need the matching private key for the connection to work.</li>
+</ul>
+
+<p>Save and exit!</p>
+
+<h3 id="setting-up-the-repos">Setting up the repos</h3>
+
+<p>Assuming we haven&#39;t pulled down the repos to the server, we&#39;ll do that now. I know you&#39;re inclined to copy paste the SSH URL from Github: <code>git@github.com:your_github/surprise.git</code> <em>BUT DON&#39;T DO IT</em>.</p>
+
+<p><strong>DON&#39;T YOU DARE!</strong></p>
+
+<p>Instead, you will do this:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">git clone git@surprise:your_github/surprise.git
+</code></pre></div>
+<p>Do you see it? <code>github.com</code> was replaced with <code>surprise</code>. It forces git to look at the SSH config file and be like &quot;What is this host called surprise? Oh, we&#39;re going to use this identity file and connect to this repo on github! Ok got it!&quot;</p>
+
+<p>At that point, your origin will be pointing to <code>surprise</code> and you&#39;ll be able to do <code>git pull origin master</code> or <code>git push origin master</code> and life will be deliciously fabulous.</p>
+
+<p>Repeat this for badger, of course.</p>
+
+<p><em>NOTE: If you&#39;ve already cloned, you can change your origin to point to the above URL instead and that&#39;ll solve your issues.</em></p>
+
+<p>Serious thanks to <a href="http://stackoverflow.com/a/14703929/2464546">this StackOverflow answer</a> that cleared things up for me.</p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +10</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>
