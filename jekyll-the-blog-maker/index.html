@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link href='http://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
   <title>Jekyll: The blog maker</title>
   <meta name="description" content="As you may have figured out, I use Jekyll to create my Github Pages. And boy did I have a hard time understanding what the heck was going on. I dunno, maybe ...">
   <link rel="stylesheet" href="/css/main.css">
@@ -75,7 +75,7 @@
 
 <p>Anyway, here&#39;s what I&#39;ve learned thus far with using Jekyll and Github Pages. Maybe this will help you out, too. I hope to expand my knowledge as well.  Glad that it&#39;s written in Ruby, so implementation of things are much easier to understand (for me).</p>
 
-<h3 id="&gt;-github-pages-overview">&gt; Github Pages Overview</h3>
+<h3 id="gt-github-pages-overview">&gt; Github Pages Overview</h3>
 
 <p>First issue I did not realize, and maybe I should have actually <em>read</em> the instructions better,... there is a HUGE difference between creating a Github Page for a repo and for your account. I wanted to create one for my account but made it for my repo instead. Whoops.</p>
 
@@ -85,7 +85,7 @@
 
 <div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>gem install jekyll</code></pre></div>
 
-<h3 id="&gt;-github-pages-for-your-github-account">&gt; Github Pages for your github account</h3>
+<h3 id="gt-github-pages-for-your-github-account">&gt; Github Pages for your github account</h3>
 
 <p>Create a new repo in Github called &quot;your-github-username.github.io&quot;. In my case it&#39;s a repo called &quot;rbatta.github.io&quot; since my Github username is rbatta. When you git clone to your local machine, your <code>master</code> branch will be the one Github uses to publish your site. You get that? <em>Master branch is what Github uses to publish your site.</em> Git clone your new repo and hop into that directory.</p>
 
@@ -102,7 +102,7 @@
 
 <p><strong>But wait!</strong> Why are we in <code>your-sites-blog-name</code> and not in <code>your-username.github.io</code> directory? Well, like I said before, the <code>master</code> branch is what Github uses to publish your blog. <strong><em>NOT</em></strong> publish your repo. We&#39;ll keep the <code>master</code> directory clean until we&#39;re ready to push things up. So in the meantime, we&#39;ll use the <code>your-sites-blog-name</code> directory to do all of our work.</p>
 
-<h3 id="&gt;-jekyll-setup">&gt; Jekyll setup</h3>
+<h3 id="gt-jekyll-setup">&gt; Jekyll setup</h3>
 
 <p>Create a new Jekyll site by running <code>jekyll new .</code> Make sure you&#39;ve got that period in there, since that creates it within this directory.</p>
 
@@ -116,7 +116,7 @@
 
 <p>This is probably a good time to do <code>git init</code> and do your initial commit.</p>
 
-<h3 id="&gt;-_config.yml">&gt; _config.yml</h3>
+<h3 id="gt-_config-yml">&gt; _config.yml</h3>
 
 <p>Fill in the information given. For <code>baseurl:</code> keep that as blank quotes so that when you serve up your site, it&#39;ll load at <code>127.0.0.1:4000</code> instead of <code>127.0.0.1:4000/baseurl-you-gave-it</code>.</p>
 
@@ -124,7 +124,7 @@
 
 <div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">permalink</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/:title/</span></code></pre></div>
 
-<h3 id="&gt;-_posts/-and-_drafts/">&gt; _posts/ and _drafts/</h3>
+<h3 id="gt-_posts-and-_drafts">&gt; _posts/ and _drafts/</h3>
 
 <p>By default, anything that you put in the _posts directory will be published. Of course you need to make sure it&#39;s in the format of <code>yyyy-mm-dd-post-name</code> with whatever extension you use. I prefer markdown so all my posts end with <code>.md</code>. You&#39;re the author of your blogposts so choose whatever format you&#39;d like: Textile or Markdown are the two default choices Jekyll supports. You can choose others with plugins.</p>
 
@@ -137,7 +137,7 @@
 </code></pre></div>
 <p>In your <code>_post.md</code> file, you need to ensure that you&#39;ve got the YAML markup at the beginning with the --- thing. If you need a template, copy paste it from the Rakefile site or use the welcome-to-jekyll post&#39;s YAML header. Think of this as your template for ALL your posts. Update as you see fit.</p>
 
-<h3 id="&gt;-_plugins">&gt; _plugins</h3>
+<h3 id="gt-_plugins">&gt; _plugins</h3>
 
 <p>There are some cool plugins for added functionality for Jekyll. However when publishing to Github, that&#39;s stripped away and is not built when the site is published. Something something safety precautions. Ehhh. This is why we created a separate directory to work in. The <code>your-sites-blog-name</code> directory has all your drafts and posts and plugins and directories, but we will be creating the &#39;static&#39; website and pushing that to the <code>your-username.github.io</code> directory for the master branch, to deploy to Github to publish. Wow, that came off a bit more complicated than I expected. Here&#39;s the workflow.  We&#39;ll go more into detail later on with this.</p>
 
@@ -148,7 +148,7 @@
 </code></pre></div>
 <p>Now you can add icons by using the syntax <code>{.% icon fa-something %}</code> (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!</p>
 
-<h3 id="&gt;-publishing">&gt; Publishing</h3>
+<h3 id="gt-publishing">&gt; Publishing</h3>
 
 <p>When you are ready to publish, build the site with Jekyll by running <code>jekyll build</code>.  This creates a directory called <code>_site/</code> which houses the raw ol&#39; school HTML of your posts with a css directory that the pages reference.</p>
 
@@ -176,7 +176,7 @@
 
 <p>BOOM. You should be good to go now. Check out your site at <a href="http://your-username.github.io">http://your-username.github.io</a> :)</p>
 
-<h3 id="&gt;-laziness">&gt; Laziness</h3>
+<h3 id="gt-laziness">&gt; Laziness</h3>
 
 <p>I like to make my workflow a lot easier by making aliases. The order of some of the commands won&#39;t matter. So here&#39;s the alias I created, using <code>sudo cp</code> to overwrite things properly. It involves putting in my password but that&#39;s still less typing overall. Easy peasy. This alias will be put into your <code>~/.bash_profile</code> or <code>~/.zshrc</code> or <code>~/.bashrc</code> file.  </p>
 

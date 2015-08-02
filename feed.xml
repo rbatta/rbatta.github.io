@@ -6,9 +6,166 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 20 May 2015 14:49:12 -0700</pubDate>
-    <lastBuildDate>Wed, 20 May 2015 14:49:12 -0700</lastBuildDate>
+    <pubDate>Sat, 01 Aug 2015 19:35:26 -0700</pubDate>
+    <lastBuildDate>Sat, 01 Aug 2015 19:35:26 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Joomla migrations</title>
+        <description>&lt;p&gt;Recently I&amp;#39;d been tasked to migrate a Joomla CMS from one hosting provider to another. As a Rails developer, I cried. A lot. Seriously, what the heck is &lt;a href=&quot;http://www.joomla.org/&quot;&gt;Joomla&lt;/a&gt;??&lt;/p&gt;
+
+&lt;p&gt;Joomla is a CMS (content management system), much like WordPress. Apparently it&amp;#39;s the 2nd most popular CMS out there? (I thought Drupal was? What do I know, I barely know what CMS even is.)&lt;/p&gt;
+
+&lt;p&gt;Anyway, first of all, I did the running away on your behalf. &amp;quot;Countless&amp;quot; hours pouring over tutorials and figuring out things. But...It really isn&amp;#39;t that hard to migrate your Joomla stuff from one server to another.&lt;/p&gt;
+
+&lt;p&gt;Here is the general setup of the old server and new server. And the trials and tribulations I went thru. This was scary for me because it uses MySQL and PHP, 2 things I am rather unfamiliar with, but looking back, it wasn&amp;#39;t so bad at all.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Old Server&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CentOS 6.3&lt;/li&gt;
+&lt;li&gt;MySQL 5.5&lt;/li&gt;
+&lt;li&gt;httpd (and not Apache2)&lt;/li&gt;
+&lt;li&gt;Joomla version ??? (more on this later)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;New Server&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ubuntu 14.04 LTS&lt;/li&gt;
+&lt;li&gt;MySQL 5.6&lt;/li&gt;
+&lt;li&gt;Apache2 (2.4.x)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-summary-of-steps&quot;&gt;The summary of steps&lt;/h2&gt;
+
+&lt;p&gt;Here is what is going to happen and why.&lt;/p&gt;
+
+&lt;p&gt;Joomla pages are in their own folders. You can pretty much transfer the folders as is, with their known directory structure, from one server to the other. And then you do a database backup and shove it into the new server. There&amp;#39;s some weird finicky settings that need to be changed, but that&amp;#39;s all small stuff. So since I like bulletted lists...&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Transfer Joomla pages from old server to new server&lt;/li&gt;
+&lt;li&gt;Export and then import database dump&lt;/li&gt;
+&lt;li&gt;Change about certain settings&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The task seemed a lot larger at the beginning when I first was handed it. But at the end of the day, it wasn&amp;#39;t so bad at all, only time consuming.&lt;/p&gt;
+
+&lt;h4 id=&quot;transferring-of-joomla-files&quot;&gt;Transferring of Joomla files&lt;/h4&gt;
+
+&lt;p&gt;The particular Joomla installation on the old server was at &lt;code&gt;/var/www/vhosts/&lt;/code&gt; with each site having their own directory. A lot of the tutorials I found had me FTPing the pages down to my local machine and then reFTP&amp;#39;ing it up. But...why put me in as middleman? That&amp;#39;s what &lt;code&gt;scp&lt;/code&gt; is for!  &lt;/p&gt;
+
+&lt;p&gt;Save yourself a bit of time by adding in the &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt; key to your &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; file so you don&amp;#39;t have to put in root password.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on old server as root&lt;/span&gt;
+cat ~/.ssh/id_rsa.pub
+&lt;span class=&quot;c&quot;&gt;# copy this&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# on new server&lt;/span&gt;
+sudo nano ~/.ssh/authorized_keys
+&lt;span class=&quot;c&quot;&gt;# paste the id_rsa.pub key into here&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# save and exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Time to copy the files.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on the new server&lt;/span&gt;
+sudo mkdir /var/www/vhosts
+&lt;span class=&quot;c&quot;&gt;# on the old server&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /var/www/vhosts
+scp -r . root@123.123.123.123:/var/www/vhosts/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Depending on how many Joomla sites you&amp;#39;re moving and depending on your servers&amp;#39; connection speeds, this can take a very short time or a very very long time. I moved 5 sites and that took roughly 2 hours, which is surprising since it was going from one server to another and bypassing me. There was about 5 GB of data to be transferred though.&lt;/p&gt;
+
+&lt;p&gt;While we&amp;#39;re at it, since the CentOS setup was using httpd (Apache), I got lazy and decided to transfer over the site.conf files for Apache. Why reinvent the wheel when you can just copy, after all?&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on the old server&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /etc/httpd/vhost.d/
+scp -r . root@123.123.123.123:/etc/apache2/sites-available/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At this point I feel like I should re-name the article &amp;quot;how to use SCP&amp;quot; hah...&lt;/p&gt;
+
+&lt;h4 id=&quot;export-and-import-mysql-database&quot;&gt;Export and Import MySQL database&lt;/h4&gt;
+
+&lt;p&gt;I&amp;#39;m so much more familiar with Postgres that when it came to using MySQL, I freaked out a bit, admittedly. Being unfamiliar with how things were setup, I took the easy route and created a dump directly on the older server then &lt;code&gt;scp&lt;/code&gt; the dump to the new one. There were no show-stopping differences between 5.5 and 5.6 that I saw.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on old server&lt;/span&gt;
+mysqldump --all-databases &amp;gt; all_db.sql
+scp -r all_db.sql root@123.123.123.123:/home/deploy/
+&lt;span class=&quot;c&quot;&gt;# put it in any directory you want, really&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# on new server&lt;/span&gt;
+mysql -u root -p &amp;lt; all_db.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Fun fact, if you didn&amp;#39;t know this about mysql.... If you set up mysql root with a password and don&amp;#39;t have it locked down, any user can log into it, but they won&amp;#39;t see your databases at all. e.g. if you hop into mysql as user &lt;code&gt;deploy&lt;/code&gt; and show databases, nothing shows up. But if you log into mysql as &lt;code&gt;root&lt;/code&gt; then you see your databases. This really threw me for a loop.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# as user deploy&lt;/span&gt;
+mysql
+&lt;span class=&quot;c&quot;&gt;# then in mysql, list the databases&lt;/span&gt;
+show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# you shouldn&amp;#39;t see anything&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# now log in as root (with password)&lt;/span&gt;
+mysql -u root -p
+show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# boom! all your databases are there&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But, I digress.&lt;/p&gt;
+
+&lt;h4 id=&quot;changing-settings-joomla&quot;&gt;Changing Settings - Joomla&lt;/h4&gt;
+
+&lt;p&gt;Now that the files you need have been moved over, it&amp;#39;s time to adjust the settings. Again, I had about 5 Joomla sites, so I picked one to test things on.&lt;/p&gt;
+
+&lt;p&gt;First, let&amp;#39;s focus on the Joomla settings.&lt;/p&gt;
+
+&lt;p&gt;At this point, I realize I should have imported the data into a different mysql user account vs the root one, but, what&amp;#39;s done is done. Moving on.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /var/www/vhosts/site.com/public_html
+sudo nano configuration.php
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Scroll down to find the database section near the top and change the settings to reflect which user you put the data under. The dump file should have created the databases for you and should be the same.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;public &lt;span class=&quot;nv&quot;&gt;$dbtype&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;mysql&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;root&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                       &lt;span class=&quot;c&quot;&gt;# possibly change this&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;your_awesome_password&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;app_database&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                 &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save and exit. This should be all you need to do for your Joomla settings.&lt;/p&gt;
+
+&lt;h4 id=&quot;changing-settings-apache&quot;&gt;Changing Settings - Apache&lt;/h4&gt;
+
+&lt;p&gt;There were some small differences between the httpd and Apache2 server settings so things needed to be updated/adjusted.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /etc/apache2/sites-available/
+sudo nano site.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Adjust the ServerName and Directory block options. For instance, the + - symbols are no longer used in the Options, so I removed them accordingly. I also adjusted where my logs went. (I don&amp;#39;t like them in &lt;code&gt;/var/log/apache2/&lt;/code&gt; and prefer them in &lt;code&gt;/usr/share/apache2/logs/&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;I changed the ServerName from the domain to my IP address to make sure the site worked. I recommend this as well for you.&lt;/p&gt;
+
+&lt;p&gt;If you have SSL certs that are needed, make sure to also transfer them over and adjust the apache settings.&lt;/p&gt;
+
+&lt;p&gt;Save and exit. Enable that site and reload Apache2.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo a2ensite site.conf
+sudo service apache2 restart &lt;span class=&quot;c&quot;&gt;# or reload&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If there are any errors and Apache won&amp;#39;t restart, correct them.&lt;/p&gt;
+
+&lt;p&gt;Go to &lt;a href=&quot;http://123.123.123.123&quot;&gt;http://123.123.123.123&lt;/a&gt; (whatever your IP is) and confirm that your site loads properly and things are looking super fly.  Celebrate and then complete the crossover by switching the IPs for the domain.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Jul 2015 09:25:52 -0700</pubDate>
+        <link>http://risaonrails.com/joomla-migrations</link>
+        <guid isPermaLink="true">http://risaonrails.com/joomla-migrations</guid>
+        
+        <category>joomla</category>
+        
+        <category>migrations</category>
+        
+        
+        <category>joomla</category>
+        
+        <category>devops</category>
+        
+      </item>
     
       <item>
         <title>Multiple Deploy Keys on a Server</title>
@@ -151,9 +308,9 @@ Host badger
 
 &lt;p&gt;Maybe a few years ago I found a pair of &lt;em&gt;&amp;quot;see the world thru the eyes of a 3 yr old&amp;quot;&lt;/em&gt; glasses, but ever since then, life is pretty awesome.&lt;/p&gt;
 
-&lt;h3 id=&quot;so-why-am-i-excited?!&quot;&gt;So why am I excited?!&lt;/h3&gt;
+&lt;h3 id=&quot;so-why-am-i-excited&quot;&gt;So why am I excited?!&lt;/h3&gt;
 
-&lt;p&gt;Because we&amp;#39;re going on an &lt;em&gt;ADVENTURE&lt;/em&gt;, Charlie! Yeah, Charlie, and adventure!&lt;/p&gt;
+&lt;p&gt;Because we&amp;#39;re going on an &lt;em&gt;ADVENTURE&lt;/em&gt;, Charlie! Yeah, Charlie, an adventure!&lt;/p&gt;
 
 &lt;p&gt;No really though. I love adventures. Everything is an adventure! It&amp;#39;s totally not limited to going to new places. It&amp;#39;s everything. Heck, every day is an adventure!&lt;/p&gt;
 
@@ -169,7 +326,7 @@ Host badger
 
 &lt;p&gt;So how did this all come to be? What made me decide to do something kinda crazy (for me)? Simple answer: The hairs on the back of my neck are standing up. I&amp;#39;m scared to go! And that means that I&amp;#39;ve got to do this. I can do this, and I&amp;#39;m going to have a blast!&lt;/p&gt;
 
-&lt;h3 id=&quot;no-really.&quot;&gt;No really.&lt;/h3&gt;
+&lt;h3 id=&quot;no-really&quot;&gt;No really.&lt;/h3&gt;
 
 &lt;p&gt;In reality, I was talking about soccer in Slack with my team and realized that this year was Women&amp;#39;s World Cup. I love watching soccer, and women&amp;#39;s soccer is by far more entertaining than men&amp;#39;s. Why? They don&amp;#39;t flop about like wet fish on the field; they are a lot more brutal with their tackles; and Abby Wambach is the highest goal scorer (int&amp;#39;l games) on the face of the planet at currently 178 goals. The closest man is Ali Daei at 105, for comparison. Just saying. On top of it, Men&amp;#39;s World Cup is so much more expensive, and I have no desire to go to the next few countries for their Cup games.&lt;/p&gt;
 
@@ -177,11 +334,11 @@ Host badger
 
 &lt;p&gt;It really helps that I&amp;#39;ve no ties to SF. And maybe I&amp;#39;ll end up falling in love with Vancouver and spend more time up there. Anything&amp;#39;s possible.  (I still love you, SF. But y&amp;#39;know. &lt;em&gt;You know why.&lt;/em&gt;)&lt;/p&gt;
 
-&lt;h3 id=&quot;what-about-your-birthday?&quot;&gt;What about your birthday?&lt;/h3&gt;
+&lt;h3 id=&quot;what-about-your-birthday&quot;&gt;What about your birthday?&lt;/h3&gt;
 
 &lt;p&gt;Psh. GTFO. Birthdays ain&amp;#39;t got nuttin&amp;#39; on dis! Birthdays are just another day of disappointment for me -- I say this as my birthday is a few days away, and the disappointment is ever increasing.&lt;/p&gt;
 
-&lt;h3 id=&quot;ahhhh!&quot;&gt;AHHHH!&lt;/h3&gt;
+&lt;h3 id=&quot;ahhhh&quot;&gt;AHHHH!&lt;/h3&gt;
 
 &lt;p&gt;Oh my effing gawd. I&amp;#39;ve never been to a soccer match before! So many firsts! I&amp;#39;m going to so many games! AHHHH. And I hear Vancouver is so pretty, and it&amp;#39;s a walkable city! And all the nature trails! It&amp;#39;s totally gay friendly too! You can&amp;#39;t get any better than this right now for me!  Now to experience other new things outside of soccer!&lt;/p&gt;
 
@@ -443,7 +600,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;Anyway, here&amp;#39;s what I&amp;#39;ve learned thus far with using Jekyll and Github Pages. Maybe this will help you out, too. I hope to expand my knowledge as well.  Glad that it&amp;#39;s written in Ruby, so implementation of things are much easier to understand (for me).&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-github-pages-overview&quot;&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
+&lt;h3 id=&quot;gt-github-pages-overview&quot;&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
 
 &lt;p&gt;First issue I did not realize, and maybe I should have actually &lt;em&gt;read&lt;/em&gt; the instructions better,... there is a HUGE difference between creating a Github Page for a repo and for your account. I wanted to create one for my account but made it for my repo instead. Whoops.&lt;/p&gt;
 
@@ -453,7 +610,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;&amp;gt;-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
+&lt;h3 id=&quot;gt-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
 
 &lt;p&gt;Create a new repo in Github called &amp;quot;your-github-username.github.io&amp;quot;. In my case it&amp;#39;s a repo called &amp;quot;rbatta.github.io&amp;quot; since my Github username is rbatta. When you git clone to your local machine, your &lt;code&gt;master&lt;/code&gt; branch will be the one Github uses to publish your site. You get that? &lt;em&gt;Master branch is what Github uses to publish your site.&lt;/em&gt; Git clone your new repo and hop into that directory.&lt;/p&gt;
 
@@ -470,7 +627,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;&lt;strong&gt;But wait!&lt;/strong&gt; Why are we in &lt;code&gt;your-sites-blog-name&lt;/code&gt; and not in &lt;code&gt;your-username.github.io&lt;/code&gt; directory? Well, like I said before, the &lt;code&gt;master&lt;/code&gt; branch is what Github uses to publish your blog. &lt;strong&gt;&lt;em&gt;NOT&lt;/em&gt;&lt;/strong&gt; publish your repo. We&amp;#39;ll keep the &lt;code&gt;master&lt;/code&gt; directory clean until we&amp;#39;re ready to push things up. So in the meantime, we&amp;#39;ll use the &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory to do all of our work.&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-jekyll-setup&quot;&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
+&lt;h3 id=&quot;gt-jekyll-setup&quot;&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
 
 &lt;p&gt;Create a new Jekyll site by running &lt;code&gt;jekyll new .&lt;/code&gt; Make sure you&amp;#39;ve got that period in there, since that creates it within this directory.&lt;/p&gt;
 
@@ -484,7 +641,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;This is probably a good time to do &lt;code&gt;git init&lt;/code&gt; and do your initial commit.&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-_config.yml&quot;&gt;&amp;gt; _config.yml&lt;/h3&gt;
+&lt;h3 id=&quot;gt-_config-yml&quot;&gt;&amp;gt; _config.yml&lt;/h3&gt;
 
 &lt;p&gt;Fill in the information given. For &lt;code&gt;baseurl:&lt;/code&gt; keep that as blank quotes so that when you serve up your site, it&amp;#39;ll load at &lt;code&gt;127.0.0.1:4000&lt;/code&gt; instead of &lt;code&gt;127.0.0.1:4000/baseurl-you-gave-it&lt;/code&gt;.&lt;/p&gt;
 
@@ -492,7 +649,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;&amp;gt;-_posts/-and-_drafts/&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
+&lt;h3 id=&quot;gt-_posts-and-_drafts&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
 
 &lt;p&gt;By default, anything that you put in the _posts directory will be published. Of course you need to make sure it&amp;#39;s in the format of &lt;code&gt;yyyy-mm-dd-post-name&lt;/code&gt; with whatever extension you use. I prefer markdown so all my posts end with &lt;code&gt;.md&lt;/code&gt;. You&amp;#39;re the author of your blogposts so choose whatever format you&amp;#39;d like: Textile or Markdown are the two default choices Jekyll supports. You can choose others with plugins.&lt;/p&gt;
 
@@ -505,7 +662,7 @@ touch /home/rails/surprise/tmp/restart.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In your &lt;code&gt;_post.md&lt;/code&gt; file, you need to ensure that you&amp;#39;ve got the YAML markup at the beginning with the --- thing. If you need a template, copy paste it from the Rakefile site or use the welcome-to-jekyll post&amp;#39;s YAML header. Think of this as your template for ALL your posts. Update as you see fit.&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-_plugins&quot;&gt;&amp;gt; _plugins&lt;/h3&gt;
+&lt;h3 id=&quot;gt-_plugins&quot;&gt;&amp;gt; _plugins&lt;/h3&gt;
 
 &lt;p&gt;There are some cool plugins for added functionality for Jekyll. However when publishing to Github, that&amp;#39;s stripped away and is not built when the site is published. Something something safety precautions. Ehhh. This is why we created a separate directory to work in. The &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory has all your drafts and posts and plugins and directories, but we will be creating the &amp;#39;static&amp;#39; website and pushing that to the &lt;code&gt;your-username.github.io&lt;/code&gt; directory for the master branch, to deploy to Github to publish. Wow, that came off a bit more complicated than I expected. Here&amp;#39;s the workflow.  We&amp;#39;ll go more into detail later on with this.&lt;/p&gt;
 
@@ -516,7 +673,7 @@ touch /home/rails/surprise/tmp/restart.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now you can add icons by using the syntax &lt;code&gt;{.% icon fa-something %}&lt;/code&gt; (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-publishing&quot;&gt;&amp;gt; Publishing&lt;/h3&gt;
+&lt;h3 id=&quot;gt-publishing&quot;&gt;&amp;gt; Publishing&lt;/h3&gt;
 
 &lt;p&gt;When you are ready to publish, build the site with Jekyll by running &lt;code&gt;jekyll build&lt;/code&gt;.  This creates a directory called &lt;code&gt;_site/&lt;/code&gt; which houses the raw ol&amp;#39; school HTML of your posts with a css directory that the pages reference.&lt;/p&gt;
 
@@ -544,7 +701,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;BOOM. You should be good to go now. Check out your site at &lt;a href=&quot;http://your-username.github.io&quot;&gt;http://your-username.github.io&lt;/a&gt; :)&lt;/p&gt;
 
-&lt;h3 id=&quot;&amp;gt;-laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
+&lt;h3 id=&quot;gt-laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
 
 &lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won&amp;#39;t matter. So here&amp;#39;s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that&amp;#39;s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; or &lt;code&gt;~/.bashrc&lt;/code&gt; file.  &lt;/p&gt;
 
@@ -588,7 +745,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;Yuuuup, you can run &lt;code&gt;rails console --sandbox&lt;/code&gt; when you load up your console. What&amp;#39;s it for? Simple -- to ensure that any changes you make to the database are &lt;em&gt;rolled back&lt;/em&gt; on exit.&lt;/p&gt;
 
-&lt;h3 id=&quot;why-use-this?&quot;&gt;Why use this?&lt;/h3&gt;
+&lt;h3 id=&quot;why-use-this&quot;&gt;Why use this?&lt;/h3&gt;
 
 &lt;p&gt;Well, what if you&amp;#39;re going into your production box and need to poke around with the data. The site&amp;#39;s live, y&amp;#39;know. It&amp;#39;s great to be able to go into a production box, run &lt;code&gt;rails c&lt;/code&gt; and not have to worry that you may have accidentally deleted an entry or updated a value. Think of it as an extra safety net. Here&amp;#39;s what it&amp;#39;d look like.&lt;/p&gt;
 
@@ -1103,57 +1260,6 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         <category>slack</category>
         
         <category>guide</category>
-        
-      </item>
-    
-      <item>
-        <title>A Quick Tip with Database Formatting</title>
-        <description>&lt;p&gt;I&amp;#39;m constantly learning, mostly at this new job. It&amp;#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&amp;#39;t get me wrong, I love every bit of it. Might even say I&amp;#39;m addicted to it. Today&amp;#39;s tip is brought to you by both MySQL &amp;amp;&amp;amp; Postgres! Whoa, a double feature.&lt;/p&gt;
-
-&lt;h3 id=&quot;the-problem&quot;&gt;The problem&lt;/h3&gt;
-
-&lt;p&gt;Know what I really don&amp;#39;t like? Having to check the database and getting results that are displayed all sorts of wonky because your terminal window wraps things when you run &lt;code&gt;select * from that_table where id=&amp;#39;1&amp;#39;;&lt;/code&gt;. It looks something like this in MySQL:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-mysql.png&quot; alt=&quot;MySQL&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Oh man. Postgres isn&amp;#39;t that much better, y&amp;#39;know.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-postgres.png&quot; alt=&quot;Postgres&quot;&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;the-solution&quot;&gt;The Solution&lt;/h3&gt;
-
-&lt;p&gt;So what do? In MySQL, every SQL command that needs to be formatted pretty needs to have \G appended at the end. &lt;code&gt;select * from that_table where id=&amp;#39;1&amp;#39; \G;&lt;/code&gt; Annoying to have to append &lt;code&gt;\G&lt;/code&gt; to the end, but it&amp;#39;s worth it. Here&amp;#39;s the result:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-mysql1.png&quot; alt=&quot;MySQL&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Postgres is a bit better in this regard. There&amp;#39;s a global setting called &lt;code&gt;\x auto&lt;/code&gt; which automatically prettifies the information based on terminal width. The only downside is if you&amp;#39;ve got a text column that&amp;#39;s so long it makes the actual header wrap. I&amp;#39;ll take it anyway, because once it&amp;#39;s set, it&amp;#39;s set until you change it.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-postgres1.png&quot; alt=&quot;Postgres&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Right on! This makes viewing records directly in the database so much easier. &lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Fri, 20 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/a-quick-tip-with-database-formatting/</link>
-        <guid isPermaLink="true">http://risaonrails.com/a-quick-tip-with-database-formatting/</guid>
-        
-        <category>postgres</category>
-        
-        <category>mysql</category>
-        
-        <category>tips</category>
-        
-        
-        <category>postgres</category>
-        
-        <category>mysql</category>
-        
-        <category>tips</category>
         
       </item>
     
