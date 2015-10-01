@@ -6,9 +6,60 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 01 Aug 2015 19:35:26 -0700</pubDate>
-    <lastBuildDate>Sat, 01 Aug 2015 19:35:26 -0700</lastBuildDate>
+    <pubDate>Wed, 30 Sep 2015 19:29:24 -0700</pubDate>
+    <lastBuildDate>Wed, 30 Sep 2015 19:29:24 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>HIPAA compliance</title>
+        <description>&lt;p&gt;Readers, it&amp;#39;s been a while. So much has happened. Lately I have gotten to understand HIPAA law a bit better as it pertains to servers and hosting apps that have or use medical data. Let&amp;#39;s start first with some definitions. HIPAA stands for Health Insurance Portability and Accountability Act, which was passed by Congress back in &amp;#39;96.  It is enforced by the Dept of Health and Human Services (HHS).  For the purposes of app hosting, HIPAA is important for the electronic side of things, namely, protected health information (PHI) and personal identifiable information (PII).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TLDR: You need to be HIPAA compliant and protect personal information if you&amp;#39;re gonna have a medical app or host a medical app.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In order for a hosting provider to be compliant, it needs to meet certain requirements. These requirements are in the form of physical, technical, and administrative safeguards.  Let&amp;#39;s talk about each one.&lt;/p&gt;
+
+&lt;h3 id=&quot;physical-safeguards&quot;&gt;Physical Safeguards&lt;/h3&gt;
+
+&lt;p&gt;Servers that host PHI/PII need to have certain physical safeguards, such as facility access control, workstation access, etc. The good thing about this is that a lot of infrastructure as a service companies like Digital Ocean or Linode are already HIPAA compliant. The physical datacenters which host our lovely virtual servers have a lot of safety requirements by default, such as key card entry plus biometric login, etc.  Datacenters can also be certified at higher levels of security, such as SOC I and II certifications (Service Organization Control).&lt;/p&gt;
+
+&lt;h3 id=&quot;technical-safeguards&quot;&gt;Technical Safeguards&lt;/h3&gt;
+
+&lt;p&gt;Technical safeguards are things like access control, authentication systems, and secure transmissions. Thinking about technical safeguards is easiest from the app perspective. You will need unique logins, your database should be encrypted (easier to be encrypted before going into the db), and a record of who did what when.  From a server perspective, it&amp;#39;s ensuring that access to the server is limited and recorded and that the server is properly monitored for any breaches. You might also implement automatic logoff (both app and server).  This is the part where you implement services on the server like Fail2ban and have a bunch of firewall rules with all the ports turned off except the ones you absolutely need.&lt;/p&gt;
+
+&lt;h3 id=&quot;administrative-safeguards&quot;&gt;Administrative Safeguards&lt;/h3&gt;
+
+&lt;p&gt;Administrative safeguards isn&amp;#39;t just about writing up documentation to explain what the SOP is for when there&amp;#39;s a security breach, but it&amp;#39;s also for ensuring all personnel are properly trained to handle PHI/PII. You&amp;#39;ll have to do risk analysis and risk assessments (generally once a year) on your systems, which includes but isn&amp;#39;t limited to testing out disaster recovery plans, like server and data restoration in the event of a catastrophe. Reviewing your own policies and procedures is also required as a safeguard, such as reviewing how things are done and assessing whether or not the process in place is still effective or needs to be adjusted. Think of this as adjusting your Fail2ban settings to make sure it&amp;#39;s capturing and banning failed login attemps properly.  Finally, having a contingency plan is also part of the administrative safeguards. It makes sense to have backups of your database, but making sure you have a backup of your server is essential. It also helps to have a backup of a backup as well (the external server hosting the backup databases).  Finally, as a hosting company or as a medical app, you will most likely need a signed Business Associate Agreement between you and your client.&lt;/p&gt;
+
+&lt;p&gt;Overall, HIPAA compliance seems like a daunting thing, but truthfully, the law is there to help us. We need to be smart about how we keep things running as a hosting company. And as long as if we keep our ducks in a row, being HIPAA compliant is actually really easy to do.&lt;/p&gt;
+
+&lt;p&gt;The particular section we, as techies, need to be aware of with HIPAA regularion is CFR 164.308, 310, 312, 314, and 316.&lt;/p&gt;
+
+&lt;p&gt;For more information, that section, along with the rest of the regulation can be found &lt;a href=&quot;http://www.hhs.gov/ocr/privacy/hipaa/administrative/combined/hipaa-simplification-201303.pdf&quot;&gt;here&lt;/a&gt;, in particular pages 62-69.&lt;/p&gt;
+
+&lt;p&gt;Please note, I&amp;#39;ve over-simplified this. It&amp;#39;s good to actually read thru the regulation. It&amp;#39;s surprisingly very easy to understand. And when you&amp;#39;re dealing with engineering manuals, this is most definitely a breath of fresh air! :)&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 30 Sep 2015 11:26:17 -0700</pubDate>
+        <link>http://risaonrails.com/hipaa-compliance/</link>
+        <guid isPermaLink="true">http://risaonrails.com/hipaa-compliance/</guid>
+        
+        <category>HIPAA</category>
+        
+        <category>servers</category>
+        
+        
+        <category>rails</category>
+        
+        <category>devops</category>
+        
+        <category>hipaa</category>
+        
+      </item>
     
       <item>
         <title>Joomla migrations</title>
@@ -1133,131 +1184,6 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         <category>digital ocean</category>
         
         <category>nginx</category>
-        
-        <category>guide</category>
-        
-      </item>
-    
-      <item>
-        <title>Integrating Monit to Slack</title>
-        <description>&lt;p&gt;The conversation of what software are we going to choose for monitoring our apps and servers came up at work. We&amp;#39;ve all used New Relic and Nagios before, but not really Monit. New Relic is free to a certain point, but can get hella expensive if you&amp;#39;ve got multiple apps and want to check many different things. Both Nagios and Monit are open-source, which equates to &lt;em&gt;FREE&lt;/em&gt;. Perfect for dev shops and small businesses.&lt;/p&gt;
-
-&lt;p&gt;Since I like to read a lot of different articles while researching things, I kept coming across Monit as the go-to tool for monitoring instead of Nagios. Plus my boss had some bad experiences with setting it up before. Well, my Google-fu is fairly strong, so I decided to give Monit a try.&lt;/p&gt;
-
-&lt;p&gt;I admit, setup was fairly simple.  Currently our stack is LEPPR (Linux Nginx Passenger Postgres Rails), not that it matters though. So real quick, here were the steps I used to set it up, before going to the meat of the article: integrating with Slack.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo apt-get install monit&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The file you want to edit will be &lt;code&gt;/etc/monit/monitrc&lt;/code&gt; which is the main config file. Comment out the bits about the httpd section, about mid-way thru, and add in your info as needed. As always, geared for Digital Ocean:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;set httpd port 2812 and
-  use address IP_ADDRESS       # Put your droplet IP here
-  allow 0.0.0.0/0.0.0.0        # allow anyone to connect to the server and
-  allow admin:&amp;#39;P@ssw0rd&amp;#39;       # require user and password for login
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;What this does is allow you to hit up your IP address in the browser and see how things are looking: &lt;a href=&quot;http://IP_ADDRESS:2812&quot;&gt;http://IP_ADDRESS:2812&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Right on.&lt;/p&gt;
-
-&lt;p&gt;Now, let&amp;#39;s integrate!&lt;/p&gt;
-
-&lt;h3 id=&quot;on-slack&quot;&gt;On Slack&lt;/h3&gt;
-
-&lt;p&gt;If you&amp;#39;re running the desktop app, click on the channel name&amp;#39;s &lt;code&gt;v&lt;/code&gt; down-button and choose Configure Integrations.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;On the web page, choose &amp;quot;&lt;em&gt;Or, make your own!&lt;/em&gt;&amp;quot; which should take you to /services/new#diy.&lt;/li&gt;
-&lt;li&gt;Click Add for &lt;strong&gt;Incoming Webhooks&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;You can choose a channel or make a new one. I created one called &lt;code&gt;#monitoring&lt;/code&gt; because I&amp;#39;m not original.&lt;/li&gt;
-&lt;li&gt;Click Add Integration.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So now you&amp;#39;ve got a webhook URL that looks something like this: &lt;a href=&quot;https://hooks.slack.com/services/HASH/Hash/LongHash&quot;&gt;https://hooks.slack.com/services/HASH/Hash/LongHash&lt;/a&gt;.  You can test out if it works by scrolling to the bottom and picking the integration settings, choosing what you want for description, custom name, etc. Test it out with the &lt;code&gt;curl&lt;/code&gt; command that they give you.  It&amp;#39;s JSON that drives the entire thing. &lt;/p&gt;
-
-&lt;h3 id=&quot;on-monit&quot;&gt;On Monit&lt;/h3&gt;
-
-&lt;p&gt;Now, back to the box. We&amp;#39;re rubyists here so this is how we roll. We&amp;#39;re going to create a file called &lt;code&gt;slack.rb&lt;/code&gt; in your &lt;code&gt;/etc/monit/&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo touch /etc/monit/slack.rb
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/slack.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Now in this file, insert this:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/ruby&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;net/https&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;json&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;URI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;https://hooks.slack.com/services/HASH/Hash/LongHash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;use_ssl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request_uri&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;channel&amp;quot;&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;#monitoring&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# channel name&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;username&amp;quot;&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Monit Bot&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# you can name the bot whatever&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;icon_emoji&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;:.trollface:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# because why the hell not!&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_HOST&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;] &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_SERVICE&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; - &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_DESCRIPTION&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;Edited note: You&amp;#39;ll need to remove the . in trollface for it to work. Refer to how Slack does icons.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;The cool thing about this is that you can pick whatever slack icon you want to use OR you can even upload your own for an emoji and use that. Obviously you&amp;#39;ll have to change the &lt;code&gt;uri&lt;/code&gt;, &lt;code&gt;channel&lt;/code&gt;, &lt;code&gt;username&lt;/code&gt; and the like to what applies to you.&lt;/p&gt;
-
-&lt;p&gt;Do a sanity check at this point to make sure everything&amp;#39;s correct. Run the ruby script real quick-like.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby /etc/monit/slack.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Did you get a notification in Slack?  Great, now make that into an executable file!&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo chmod +x /etc/monit/slack.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;You will need to invoke this file whenever something happens, so to test it out, we&amp;#39;re going to create an nginx file to monitor nginx. This will be kept in &lt;code&gt;/etc/monit/conf.d/&lt;/code&gt; directory as a file called &lt;code&gt;nginx&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;check process nginx with pidfile /var/run/nginx.pid
-  start &lt;span class=&quot;nv&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/usr/sbin/service nginx start&amp;quot;&lt;/span&gt;
-  stop  &lt;span class=&quot;nv&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/usr/sbin/service nginx stop&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; failed host 127.0.0.1 port &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; restart
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; changed pid &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb    &lt;span class=&quot;c&quot;&gt;# this is our sanity check&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; failed host 127.0.0.1 port &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; succeeded &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; cpu is greater than 40% &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; cycles &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; succeeded &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; cpu &amp;gt; 60% &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; cycles &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; restart&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The basic format is that whenever you need to invoke an alert, instead of a &lt;code&gt;then alert&lt;/code&gt;, you are changing it to execute the slack.rb file. You &lt;strong&gt;must&lt;/strong&gt; specify the full path to slack.rb. Pretty much any time you see a &lt;code&gt;then alert&lt;/code&gt;, change it to &lt;code&gt;then exec /etc/monit/slack.rb&lt;/code&gt;. :)&lt;/p&gt;
-
-&lt;p&gt;Check to ensure file is correct, reload monit to accept the changes, and then stop/start nginx.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit -t       &lt;span class=&quot;c&quot;&gt;# if errors, fix!&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit reload
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo service nginx stop
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo service nginx start&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;There&amp;#39;s a few second delay but check out slack! You should see the message with your info all in there. HURRAY!&lt;/p&gt;
-
-&lt;p&gt;This article used an Ubuntu 14.10 droplet.&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +3&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Fri, 27 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/integrate-monit-with-slack/</link>
-        <guid isPermaLink="true">http://risaonrails.com/integrate-monit-with-slack/</guid>
-        
-        <category>slack</category>
-        
-        <category>monit</category>
-        
-        <category>devops</category>
-        
-        
-        <category>devops</category>
-        
-        <category>monit</category>
-        
-        <category>slack</category>
         
         <category>guide</category>
         

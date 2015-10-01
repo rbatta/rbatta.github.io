@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
+  <title>HIPAA compliance</title>
+  <meta name="description" content="Readers, it&#39;s been a while. So much has happened. Lately I have gotten to understand HIPAA law a bit better as it pertains to servers and hosting apps th...">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/hipaa-compliance/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">HIPAA compliance</h1>
+    <p class="post-meta">Sep 30, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>Readers, it&#39;s been a while. So much has happened. Lately I have gotten to understand HIPAA law a bit better as it pertains to servers and hosting apps that have or use medical data. Let&#39;s start first with some definitions. HIPAA stands for Health Insurance Portability and Accountability Act, which was passed by Congress back in &#39;96.  It is enforced by the Dept of Health and Human Services (HHS).  For the purposes of app hosting, HIPAA is important for the electronic side of things, namely, protected health information (PHI) and personal identifiable information (PII).</p>
+
+<p><strong>TLDR: You need to be HIPAA compliant and protect personal information if you&#39;re gonna have a medical app or host a medical app.</strong></p>
+
+<p>In order for a hosting provider to be compliant, it needs to meet certain requirements. These requirements are in the form of physical, technical, and administrative safeguards.  Let&#39;s talk about each one.</p>
+
+<h3 id="physical-safeguards">Physical Safeguards</h3>
+
+<p>Servers that host PHI/PII need to have certain physical safeguards, such as facility access control, workstation access, etc. The good thing about this is that a lot of infrastructure as a service companies like Digital Ocean or Linode are already HIPAA compliant. The physical datacenters which host our lovely virtual servers have a lot of safety requirements by default, such as key card entry plus biometric login, etc.  Datacenters can also be certified at higher levels of security, such as SOC I and II certifications (Service Organization Control).</p>
+
+<h3 id="technical-safeguards">Technical Safeguards</h3>
+
+<p>Technical safeguards are things like access control, authentication systems, and secure transmissions. Thinking about technical safeguards is easiest from the app perspective. You will need unique logins, your database should be encrypted (easier to be encrypted before going into the db), and a record of who did what when.  From a server perspective, it&#39;s ensuring that access to the server is limited and recorded and that the server is properly monitored for any breaches. You might also implement automatic logoff (both app and server).  This is the part where you implement services on the server like Fail2ban and have a bunch of firewall rules with all the ports turned off except the ones you absolutely need.</p>
+
+<h3 id="administrative-safeguards">Administrative Safeguards</h3>
+
+<p>Administrative safeguards isn&#39;t just about writing up documentation to explain what the SOP is for when there&#39;s a security breach, but it&#39;s also for ensuring all personnel are properly trained to handle PHI/PII. You&#39;ll have to do risk analysis and risk assessments (generally once a year) on your systems, which includes but isn&#39;t limited to testing out disaster recovery plans, like server and data restoration in the event of a catastrophe. Reviewing your own policies and procedures is also required as a safeguard, such as reviewing how things are done and assessing whether or not the process in place is still effective or needs to be adjusted. Think of this as adjusting your Fail2ban settings to make sure it&#39;s capturing and banning failed login attemps properly.  Finally, having a contingency plan is also part of the administrative safeguards. It makes sense to have backups of your database, but making sure you have a backup of your server is essential. It also helps to have a backup of a backup as well (the external server hosting the backup databases).  Finally, as a hosting company or as a medical app, you will most likely need a signed Business Associate Agreement between you and your client.</p>
+
+<p>Overall, HIPAA compliance seems like a daunting thing, but truthfully, the law is there to help us. We need to be smart about how we keep things running as a hosting company. And as long as if we keep our ducks in a row, being HIPAA compliant is actually really easy to do.</p>
+
+<p>The particular section we, as techies, need to be aware of with HIPAA regularion is CFR 164.308, 310, 312, 314, and 316.</p>
+
+<p>For more information, that section, along with the rest of the regulation can be found <a href="http://www.hhs.gov/ocr/privacy/hipaa/administrative/combined/hipaa-simplification-201303.pdf">here</a>, in particular pages 62-69.</p>
+
+<p>Please note, I&#39;ve over-simplified this. It&#39;s good to actually read thru the regulation. It&#39;s surprisingly very easy to understand. And when you&#39;re dealing with engineering manuals, this is most definitely a breath of fresh air! :)</p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +5</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>
