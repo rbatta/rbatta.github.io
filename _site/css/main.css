@@ -91,9 +91,9 @@ blockquote {
 pre,
 code {
   font-size: 14px;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #807CAD;
   border-radius: 3px;
-  background-color: #eef; }
+  background-color: #CFE8FF; }
 
 code {
   padding: 1px 5px; }
@@ -275,7 +275,10 @@ pre {
 
 .post-link {
   display: block;
-  font-size: 24px; }
+  font-size: 24px;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  font-style: italic; }
 
 /**
  * Posts
@@ -286,7 +289,10 @@ pre {
 .post-title {
   font-size: 42px;
   letter-spacing: -1px;
-  line-height: 1; }
+  line-height: 1;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  font-style: italic; }
   @media screen and (max-width: 800px) {
     .post-title {
       font-size: 36px; } }
@@ -448,13 +454,9 @@ pre {
   .highlight .il {
     color: #099; }
 
-/* for header links 
- * This code is courtesy Ben Balter, modified by Parker Moore for jekyllrb.com
- * http://ben.balter.com/2014/03/13/pages-anchor-links/
- */
 .header-link {
-  position: absolute;
-  left: -0.5em;
+  position: relative;
+  padding-right: 5px;
   opacity: 0;
 
   -webkit-transition: opacity 0.2s ease-in-out 0.1s;

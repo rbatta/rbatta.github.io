@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
+  <title>Joomla migrations</title>
+  <meta name="description" content="Recently I&#39;d been tasked to migrate a Joomla CMS from one hosting provider to another. As a Rails developer, I cried. A lot. Seriously, what the heck is ...">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/joomla-migrations">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Joomla migrations</h1>
+    <p class="post-meta">Jul 29, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>Recently I&#39;d been tasked to migrate a Joomla CMS from one hosting provider to another. As a Rails developer, I cried. A lot. Seriously, what the heck is <a href="http://www.joomla.org/">Joomla</a>??</p>
+
+<p>Joomla is a CMS (content management system), much like WordPress. Apparently it&#39;s the 2nd most popular CMS out there? (I thought Drupal was? What do I know, I barely know what CMS even is.)</p>
+
+<p>Anyway, first of all, I did the running away on your behalf. &quot;Countless&quot; hours pouring over tutorials and figuring out things. But...It really isn&#39;t that hard to migrate your Joomla stuff from one server to another.</p>
+
+<p>Here is the general setup of the old server and new server. And the trials and tribulations I went thru. This was scary for me because it uses MySQL and PHP, 2 things I am rather unfamiliar with, but looking back, it wasn&#39;t so bad at all.</p>
+
+<p><strong><em>Old Server</em></strong></p>
+
+<ul>
+<li>CentOS 6.3</li>
+<li>MySQL 5.5</li>
+<li>httpd (and not Apache2)</li>
+<li>Joomla version ??? (more on this later)</li>
+</ul>
+
+<p><strong><em>New Server</em></strong></p>
+
+<ul>
+<li>Ubuntu 14.04 LTS</li>
+<li>MySQL 5.6</li>
+<li>Apache2 (2.4.x)</li>
+</ul>
+
+<h2 id="the-summary-of-steps">The summary of steps</h2>
+
+<p>Here is what is going to happen and why.</p>
+
+<p>Joomla pages are in their own folders. You can pretty much transfer the folders as is, with their known directory structure, from one server to the other. And then you do a database backup and shove it into the new server. There&#39;s some weird finicky settings that need to be changed, but that&#39;s all small stuff. So since I like bulletted lists...</p>
+
+<ul>
+<li>Transfer Joomla pages from old server to new server</li>
+<li>Export and then import database dump</li>
+<li>Change about certain settings</li>
+</ul>
+
+<p>The task seemed a lot larger at the beginning when I first was handed it. But at the end of the day, it wasn&#39;t so bad at all, only time consuming.</p>
+
+<h4 id="transferring-of-joomla-files">Transferring of Joomla files</h4>
+
+<p>The particular Joomla installation on the old server was at <code>/var/www/vhosts/</code> with each site having their own directory. A lot of the tutorials I found had me FTPing the pages down to my local machine and then reFTP&#39;ing it up. But...why put me in as middleman? That&#39;s what <code>scp</code> is for!  </p>
+
+<p>Save yourself a bit of time by adding in the <code>~/.ssh/id_rsa.pub</code> key to your <code>~/.ssh/authorized_keys</code> file so you don&#39;t have to put in root password.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># on old server as root</span>
+cat ~/.ssh/id_rsa.pub
+<span class="c"># copy this</span>
+
+<span class="c"># on new server</span>
+sudo nano ~/.ssh/authorized_keys
+<span class="c"># paste the id_rsa.pub key into here</span>
+<span class="c"># save and exit</span>
+</code></pre></div>
+<p>Time to copy the files.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># on the new server</span>
+sudo mkdir /var/www/vhosts
+<span class="c"># on the old server</span>
+<span class="nb">cd</span> /var/www/vhosts
+scp -r . root@123.123.123.123:/var/www/vhosts/
+</code></pre></div>
+<p>Depending on how many Joomla sites you&#39;re moving and depending on your servers&#39; connection speeds, this can take a very short time or a very very long time. I moved 5 sites and that took roughly 2 hours, which is surprising since it was going from one server to another and bypassing me. There was about 5 GB of data to be transferred though.</p>
+
+<p>While we&#39;re at it, since the CentOS setup was using httpd (Apache), I got lazy and decided to transfer over the site.conf files for Apache. Why reinvent the wheel when you can just copy, after all?</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># on the old server</span>
+<span class="nb">cd</span> /etc/httpd/vhost.d/
+scp -r . root@123.123.123.123:/etc/apache2/sites-available/
+</code></pre></div>
+<p>At this point I feel like I should re-name the article &quot;how to use SCP&quot; hah...</p>
+
+<h4 id="export-and-import-mysql-database">Export and Import MySQL database</h4>
+
+<p>I&#39;m so much more familiar with Postgres that when it came to using MySQL, I freaked out a bit, admittedly. Being unfamiliar with how things were setup, I took the easy route and created a dump directly on the older server then <code>scp</code> the dump to the new one. There were no show-stopping differences between 5.5 and 5.6 that I saw.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># on old server</span>
+mysqldump --all-databases &gt; all_db.sql
+scp -r all_db.sql root@123.123.123.123:/home/deploy/
+<span class="c"># put it in any directory you want, really</span>
+
+<span class="c"># on new server</span>
+mysql -u root -p &lt; all_db.sql
+</code></pre></div>
+<p>Fun fact, if you didn&#39;t know this about mysql.... If you set up mysql root with a password and don&#39;t have it locked down, any user can log into it, but they won&#39;t see your databases at all. e.g. if you hop into mysql as user <code>deploy</code> and show databases, nothing shows up. But if you log into mysql as <code>root</code> then you see your databases. This really threw me for a loop.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># as user deploy</span>
+mysql
+<span class="c"># then in mysql, list the databases</span>
+show databases<span class="p">;</span>
+<span class="c"># you shouldn&#39;t see anything</span>
+<span class="nb">exit</span>
+<span class="c"># now log in as root (with password)</span>
+mysql -u root -p
+show databases<span class="p">;</span>
+<span class="c"># boom! all your databases are there</span>
+<span class="nb">exit</span>
+</code></pre></div>
+<p>But, I digress.</p>
+
+<h4 id="changing-settings-joomla">Changing Settings - Joomla</h4>
+
+<p>Now that the files you need have been moved over, it&#39;s time to adjust the settings. Again, I had about 5 Joomla sites, so I picked one to test things on.</p>
+
+<p>First, let&#39;s focus on the Joomla settings.</p>
+
+<p>At this point, I realize I should have imported the data into a different mysql user account vs the root one, but, what&#39;s done is done. Moving on.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /var/www/vhosts/site.com/public_html
+sudo nano configuration.php
+</code></pre></div>
+<p>Scroll down to find the database section near the top and change the settings to reflect which user you put the data under. The dump file should have created the databases for you and should be the same.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">public <span class="nv">$dbtype</span> <span class="o">=</span> <span class="s1">&#39;mysql&#39;</span><span class="p">;</span>
+public <span class="nv">$host</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+public <span class="nv">$user</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span><span class="p">;</span>                       <span class="c"># possibly change this</span>
+public <span class="nv">$password</span> <span class="o">=</span> <span class="s1">&#39;your_awesome_password&#39;</span><span class="p">;</span>  <span class="c"># change this</span>
+public <span class="nv">$db</span> <span class="o">=</span> <span class="s1">&#39;app_database&#39;</span><span class="p">;</span>                 <span class="c"># change this</span>
+</code></pre></div>
+<p>Save and exit. This should be all you need to do for your Joomla settings.</p>
+
+<h4 id="changing-settings-apache">Changing Settings - Apache</h4>
+
+<p>There were some small differences between the httpd and Apache2 server settings so things needed to be updated/adjusted.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /etc/apache2/sites-available/
+sudo nano site.conf
+</code></pre></div>
+<p>Adjust the ServerName and Directory block options. For instance, the + - symbols are no longer used in the Options, so I removed them accordingly. I also adjusted where my logs went. (I don&#39;t like them in <code>/var/log/apache2/</code> and prefer them in <code>/usr/share/apache2/logs/</code>)</p>
+
+<p>I changed the ServerName from the domain to my IP address to make sure the site worked. I recommend this as well for you.</p>
+
+<p>If you have SSL certs that are needed, make sure to also transfer them over and adjust the apache settings.</p>
+
+<p>Save and exit. Enable that site and reload Apache2.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo a2ensite site.conf
+sudo service apache2 restart <span class="c"># or reload</span>
+</code></pre></div>
+<p>If there are any errors and Apache won&#39;t restart, correct them.</p>
+
+<p>Go to <a href="http://123.123.123.123">http://123.123.123.123</a> (whatever your IP is) and confirm that your site loads properly and things are looking super fly.  Celebrate and then complete the crossover by switching the IPs for the domain.</p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +5</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
+  <title>Monitoring Nginx's Passenger</title>
+  <meta name="description" content="In the ever learning world I&#39;m in, someone had commented on my post about monitoring Passenger.">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/monitoring-nginx-and-passenger/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Monitoring Nginx's Passenger</h1>
+    <p class="post-meta">Apr 15, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>In the ever learning world I&#39;m in, someone had commented on <a href="/integrate-monit-with-slack/">my post</a> about monitoring Passenger.</p>
+
+<p>That got me thinking and diving deep into the depths of Google to find a solution that was acceptable for those of using Nging to create the Passenger instances.</p>
+
+<p>The most common search result for this was to use the gem <a href="https://github.com/romanbsd/passenger_monit">passenger-monit</a>. However it hasn&#39;t been updated in at least 2 years. I am not that ambitious enough to revive this gem for my own purposes. The biggest drawback for using this gem is that the rack PIDs are hardcoded and if the first one dies, Monit will complain. It isn&#39;t ideal for my purposes since I run multiple apps on one server and I&#39;d like to keep track of them individually.</p>
+
+<p>HOWEVER~! I have found a way that seems to work.</p>
+
+<h3 id="the-solution">The Solution</h3>
+
+<p>There&#39;s a method called <code>matching</code> that monit allows. Essentially monit does a <code>ps aux | grep &#39;whatever thing&#39;</code> to check for a process. <a href="http://serverfault.com/questions/523226/monit-daemonize-non-daemon-process">Holy balls, I love you person on ServerFault who answered this</a> and I wish I had the reputation to upvote the crap out of that answer. But instead, mad props to you. </p>
+
+<p>Anyway, after reading that, everything became clear.</p>
+
+<p>Here&#39;s what I ended up doing. </p>
+
+<h4 id="the-example-setup">The example setup</h4>
+
+<p>Assume the following:</p>
+
+<ul>
+<li>Nginx + passenger (Passenger is spawned via Nginx)
+
+<ul>
+<li>there is no passenger PID file that exists</li>
+</ul></li>
+<li>Rails app named &#39;Surprise&#39; 
+
+<ul>
+<li>nginx configured to point to <code>/home/rails/Surprise/public</code></li>
+</ul></li>
+<li>Deployer user named &#39;rails&#39;</li>
+<li>Monit version 5.6 or 5.8 is running</li>
+<li>Digital Ocean droplet for server</li>
+</ul>
+
+<p>Now, if you have not hit Surprise at all, you won&#39;t have any passenger instances created. That makes sense. Why spawn a process when it isn&#39;t being used? </p>
+
+<p>The process is brutally simple, hit the app to spawn a Passenger process, then check <code>top</code> to see what the name is and create the monit file.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>top -c
+<span class="c"># hit shift M to sort by memory</span>
+<span class="c"># you should see near the top right</span>
+<span class="c"># Passenger RubyApp: /home/rails/surprise/public </span>
+<span class="c"># copy paste that</span>
+
+<span class="nv">$ </span>sudo nano /etc/monit/conf.d/surprise-pass
+</code></pre></div>
+<p>Now in this file, write in the following:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">check process surprise-pass matching <span class="s1">&#39;Passenger RubyApp: \/home\/rails\/surprise\/public&#39;</span>
+  <span class="k">if</span> totalmem &gt; 35% <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb
+  <span class="k">if</span> totalmem &gt; 60% <span class="k">then</span> <span class="nb">exec</span> /etc/monit/touch_surprise_sh  <span class="c"># restart app</span>
+  <span class="k">if</span> changed pid <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb              <span class="c"># sanity check</span>
+  <span class="k">if</span> totalcpu &gt; 25% <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb
+</code></pre></div>
+<p>Save and exit. Notice the <code>\</code> marks to escape the <code>/</code> marks. Because monit does essentially a <code>ps aux | grep ____</code>, copy pasting what you find in <code>top -c</code> is a great way to get the process match.</p>
+
+<p>A couple of things to note. 1) There is also a new file being executed here. More on this in a bit. 2) We are talking totalmem and totalcpu. Passenger can spin up child processes if it needs it, but I want to look at the total memory consumption of that particular app. Total cpu is not per core but for the whole thing. I also based these off of monit&#39;s web interface information. It&#39;s very handy to pick out the things you want to monitor in particular.</p>
+
+<p>The new file <code>touch_surprise_sh</code> is a super simple bash script that restarts Passenger (and not Nginx) via the <code>touch</code> command.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo nano /etc/monit/touch_surprise_sh
+</code></pre></div>
+<p>In the file type the following lines:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">#!/bin/bash
+
+touch /home/rails/surprise/tmp/restart.txt
+</code></pre></div>
+<p>Alternatively you can make it more verbose and sudo in as your user (rails) to restart Passenger.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo -u rails -H sh -c &quot;touch /home/rails/surprise/tmp/restart.txt”
+</code></pre></div>
+<p>Save and exit. Make it into an executable file.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chmod +x /etc/monit/touch_surprise_sh
+</code></pre></div>
+<p>Do your standard monit sanity check, then reload monit.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo monit -t       <span class="c"># fix any problems, obv</span>
+<span class="nv">$ </span>sudo monit reload
+</code></pre></div>
+<p>Confirm on your web interface that surprise-pass is loaded up and displaying all the goodies you like to see. When you restart nginx, Passenger should lose a PID. It&#39;ll alert you on Slack when you hit the app and create a new PID. Right on. <img class='emoji' title='fist' alt='fist' src='https://github.global.ssl.fastly.net/images/icons/emoji/fist.png' height='20' width='20' align='absmiddle' ></p>
+
+<p>Congrats! Create a monit conf file for each of your apps and behold your power!</p>
+
+<p>Special thanks to Grant Trevor who got me to delve into the depths of monit and Google <img class='emoji' title='grinning' alt='grinning' src='https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png' height='20' width='20' align='absmiddle' ></p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +5</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>

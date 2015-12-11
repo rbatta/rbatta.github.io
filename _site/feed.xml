@@ -6,9 +6,522 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 09 Apr 2015 21:18:02 -0700</pubDate>
-    <lastBuildDate>Thu, 09 Apr 2015 21:18:02 -0700</lastBuildDate>
+    <pubDate>Wed, 30 Sep 2015 19:29:24 -0700</pubDate>
+    <lastBuildDate>Wed, 30 Sep 2015 19:29:24 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>HIPAA compliance</title>
+        <description>&lt;p&gt;Readers, it&amp;#39;s been a while. So much has happened. Lately I have gotten to understand HIPAA law a bit better as it pertains to servers and hosting apps that have or use medical data. Let&amp;#39;s start first with some definitions. HIPAA stands for Health Insurance Portability and Accountability Act, which was passed by Congress back in &amp;#39;96.  It is enforced by the Dept of Health and Human Services (HHS).  For the purposes of app hosting, HIPAA is important for the electronic side of things, namely, protected health information (PHI) and personal identifiable information (PII).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TLDR: You need to be HIPAA compliant and protect personal information if you&amp;#39;re gonna have a medical app or host a medical app.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In order for a hosting provider to be compliant, it needs to meet certain requirements. These requirements are in the form of physical, technical, and administrative safeguards.  Let&amp;#39;s talk about each one.&lt;/p&gt;
+
+&lt;h3 id=&quot;physical-safeguards&quot;&gt;Physical Safeguards&lt;/h3&gt;
+
+&lt;p&gt;Servers that host PHI/PII need to have certain physical safeguards, such as facility access control, workstation access, etc. The good thing about this is that a lot of infrastructure as a service companies like Digital Ocean or Linode are already HIPAA compliant. The physical datacenters which host our lovely virtual servers have a lot of safety requirements by default, such as key card entry plus biometric login, etc.  Datacenters can also be certified at higher levels of security, such as SOC I and II certifications (Service Organization Control).&lt;/p&gt;
+
+&lt;h3 id=&quot;technical-safeguards&quot;&gt;Technical Safeguards&lt;/h3&gt;
+
+&lt;p&gt;Technical safeguards are things like access control, authentication systems, and secure transmissions. Thinking about technical safeguards is easiest from the app perspective. You will need unique logins, your database should be encrypted (easier to be encrypted before going into the db), and a record of who did what when.  From a server perspective, it&amp;#39;s ensuring that access to the server is limited and recorded and that the server is properly monitored for any breaches. You might also implement automatic logoff (both app and server).  This is the part where you implement services on the server like Fail2ban and have a bunch of firewall rules with all the ports turned off except the ones you absolutely need.&lt;/p&gt;
+
+&lt;h3 id=&quot;administrative-safeguards&quot;&gt;Administrative Safeguards&lt;/h3&gt;
+
+&lt;p&gt;Administrative safeguards isn&amp;#39;t just about writing up documentation to explain what the SOP is for when there&amp;#39;s a security breach, but it&amp;#39;s also for ensuring all personnel are properly trained to handle PHI/PII. You&amp;#39;ll have to do risk analysis and risk assessments (generally once a year) on your systems, which includes but isn&amp;#39;t limited to testing out disaster recovery plans, like server and data restoration in the event of a catastrophe. Reviewing your own policies and procedures is also required as a safeguard, such as reviewing how things are done and assessing whether or not the process in place is still effective or needs to be adjusted. Think of this as adjusting your Fail2ban settings to make sure it&amp;#39;s capturing and banning failed login attemps properly.  Finally, having a contingency plan is also part of the administrative safeguards. It makes sense to have backups of your database, but making sure you have a backup of your server is essential. It also helps to have a backup of a backup as well (the external server hosting the backup databases).  Finally, as a hosting company or as a medical app, you will most likely need a signed Business Associate Agreement between you and your client.&lt;/p&gt;
+
+&lt;p&gt;Overall, HIPAA compliance seems like a daunting thing, but truthfully, the law is there to help us. We need to be smart about how we keep things running as a hosting company. And as long as if we keep our ducks in a row, being HIPAA compliant is actually really easy to do.&lt;/p&gt;
+
+&lt;p&gt;The particular section we, as techies, need to be aware of with HIPAA regularion is CFR 164.308, 310, 312, 314, and 316.&lt;/p&gt;
+
+&lt;p&gt;For more information, that section, along with the rest of the regulation can be found &lt;a href=&quot;http://www.hhs.gov/ocr/privacy/hipaa/administrative/combined/hipaa-simplification-201303.pdf&quot;&gt;here&lt;/a&gt;, in particular pages 62-69.&lt;/p&gt;
+
+&lt;p&gt;Please note, I&amp;#39;ve over-simplified this. It&amp;#39;s good to actually read thru the regulation. It&amp;#39;s surprisingly very easy to understand. And when you&amp;#39;re dealing with engineering manuals, this is most definitely a breath of fresh air! :)&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 30 Sep 2015 11:26:17 -0700</pubDate>
+        <link>http://risaonrails.com/hipaa-compliance/</link>
+        <guid isPermaLink="true">http://risaonrails.com/hipaa-compliance/</guid>
+        
+        <category>HIPAA</category>
+        
+        <category>servers</category>
+        
+        
+        <category>rails</category>
+        
+        <category>devops</category>
+        
+        <category>hipaa</category>
+        
+      </item>
+    
+      <item>
+        <title>Joomla migrations</title>
+        <description>&lt;p&gt;Recently I&amp;#39;d been tasked to migrate a Joomla CMS from one hosting provider to another. As a Rails developer, I cried. A lot. Seriously, what the heck is &lt;a href=&quot;http://www.joomla.org/&quot;&gt;Joomla&lt;/a&gt;??&lt;/p&gt;
+
+&lt;p&gt;Joomla is a CMS (content management system), much like WordPress. Apparently it&amp;#39;s the 2nd most popular CMS out there? (I thought Drupal was? What do I know, I barely know what CMS even is.)&lt;/p&gt;
+
+&lt;p&gt;Anyway, first of all, I did the running away on your behalf. &amp;quot;Countless&amp;quot; hours pouring over tutorials and figuring out things. But...It really isn&amp;#39;t that hard to migrate your Joomla stuff from one server to another.&lt;/p&gt;
+
+&lt;p&gt;Here is the general setup of the old server and new server. And the trials and tribulations I went thru. This was scary for me because it uses MySQL and PHP, 2 things I am rather unfamiliar with, but looking back, it wasn&amp;#39;t so bad at all.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Old Server&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CentOS 6.3&lt;/li&gt;
+&lt;li&gt;MySQL 5.5&lt;/li&gt;
+&lt;li&gt;httpd (and not Apache2)&lt;/li&gt;
+&lt;li&gt;Joomla version ??? (more on this later)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;New Server&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ubuntu 14.04 LTS&lt;/li&gt;
+&lt;li&gt;MySQL 5.6&lt;/li&gt;
+&lt;li&gt;Apache2 (2.4.x)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-summary-of-steps&quot;&gt;The summary of steps&lt;/h2&gt;
+
+&lt;p&gt;Here is what is going to happen and why.&lt;/p&gt;
+
+&lt;p&gt;Joomla pages are in their own folders. You can pretty much transfer the folders as is, with their known directory structure, from one server to the other. And then you do a database backup and shove it into the new server. There&amp;#39;s some weird finicky settings that need to be changed, but that&amp;#39;s all small stuff. So since I like bulletted lists...&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Transfer Joomla pages from old server to new server&lt;/li&gt;
+&lt;li&gt;Export and then import database dump&lt;/li&gt;
+&lt;li&gt;Change about certain settings&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The task seemed a lot larger at the beginning when I first was handed it. But at the end of the day, it wasn&amp;#39;t so bad at all, only time consuming.&lt;/p&gt;
+
+&lt;h4 id=&quot;transferring-of-joomla-files&quot;&gt;Transferring of Joomla files&lt;/h4&gt;
+
+&lt;p&gt;The particular Joomla installation on the old server was at &lt;code&gt;/var/www/vhosts/&lt;/code&gt; with each site having their own directory. A lot of the tutorials I found had me FTPing the pages down to my local machine and then reFTP&amp;#39;ing it up. But...why put me in as middleman? That&amp;#39;s what &lt;code&gt;scp&lt;/code&gt; is for!  &lt;/p&gt;
+
+&lt;p&gt;Save yourself a bit of time by adding in the &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt; key to your &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; file so you don&amp;#39;t have to put in root password.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on old server as root&lt;/span&gt;
+cat ~/.ssh/id_rsa.pub
+&lt;span class=&quot;c&quot;&gt;# copy this&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# on new server&lt;/span&gt;
+sudo nano ~/.ssh/authorized_keys
+&lt;span class=&quot;c&quot;&gt;# paste the id_rsa.pub key into here&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# save and exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Time to copy the files.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on the new server&lt;/span&gt;
+sudo mkdir /var/www/vhosts
+&lt;span class=&quot;c&quot;&gt;# on the old server&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /var/www/vhosts
+scp -r . root@123.123.123.123:/var/www/vhosts/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Depending on how many Joomla sites you&amp;#39;re moving and depending on your servers&amp;#39; connection speeds, this can take a very short time or a very very long time. I moved 5 sites and that took roughly 2 hours, which is surprising since it was going from one server to another and bypassing me. There was about 5 GB of data to be transferred though.&lt;/p&gt;
+
+&lt;p&gt;While we&amp;#39;re at it, since the CentOS setup was using httpd (Apache), I got lazy and decided to transfer over the site.conf files for Apache. Why reinvent the wheel when you can just copy, after all?&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on the old server&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /etc/httpd/vhost.d/
+scp -r . root@123.123.123.123:/etc/apache2/sites-available/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;At this point I feel like I should re-name the article &amp;quot;how to use SCP&amp;quot; hah...&lt;/p&gt;
+
+&lt;h4 id=&quot;export-and-import-mysql-database&quot;&gt;Export and Import MySQL database&lt;/h4&gt;
+
+&lt;p&gt;I&amp;#39;m so much more familiar with Postgres that when it came to using MySQL, I freaked out a bit, admittedly. Being unfamiliar with how things were setup, I took the easy route and created a dump directly on the older server then &lt;code&gt;scp&lt;/code&gt; the dump to the new one. There were no show-stopping differences between 5.5 and 5.6 that I saw.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# on old server&lt;/span&gt;
+mysqldump --all-databases &amp;gt; all_db.sql
+scp -r all_db.sql root@123.123.123.123:/home/deploy/
+&lt;span class=&quot;c&quot;&gt;# put it in any directory you want, really&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# on new server&lt;/span&gt;
+mysql -u root -p &amp;lt; all_db.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Fun fact, if you didn&amp;#39;t know this about mysql.... If you set up mysql root with a password and don&amp;#39;t have it locked down, any user can log into it, but they won&amp;#39;t see your databases at all. e.g. if you hop into mysql as user &lt;code&gt;deploy&lt;/code&gt; and show databases, nothing shows up. But if you log into mysql as &lt;code&gt;root&lt;/code&gt; then you see your databases. This really threw me for a loop.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# as user deploy&lt;/span&gt;
+mysql
+&lt;span class=&quot;c&quot;&gt;# then in mysql, list the databases&lt;/span&gt;
+show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# you shouldn&amp;#39;t see anything&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# now log in as root (with password)&lt;/span&gt;
+mysql -u root -p
+show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# boom! all your databases are there&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But, I digress.&lt;/p&gt;
+
+&lt;h4 id=&quot;changing-settings-joomla&quot;&gt;Changing Settings - Joomla&lt;/h4&gt;
+
+&lt;p&gt;Now that the files you need have been moved over, it&amp;#39;s time to adjust the settings. Again, I had about 5 Joomla sites, so I picked one to test things on.&lt;/p&gt;
+
+&lt;p&gt;First, let&amp;#39;s focus on the Joomla settings.&lt;/p&gt;
+
+&lt;p&gt;At this point, I realize I should have imported the data into a different mysql user account vs the root one, but, what&amp;#39;s done is done. Moving on.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /var/www/vhosts/site.com/public_html
+sudo nano configuration.php
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Scroll down to find the database section near the top and change the settings to reflect which user you put the data under. The dump file should have created the databases for you and should be the same.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;public &lt;span class=&quot;nv&quot;&gt;$dbtype&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;mysql&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;root&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                       &lt;span class=&quot;c&quot;&gt;# possibly change this&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;your_awesome_password&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;app_database&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                 &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save and exit. This should be all you need to do for your Joomla settings.&lt;/p&gt;
+
+&lt;h4 id=&quot;changing-settings-apache&quot;&gt;Changing Settings - Apache&lt;/h4&gt;
+
+&lt;p&gt;There were some small differences between the httpd and Apache2 server settings so things needed to be updated/adjusted.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /etc/apache2/sites-available/
+sudo nano site.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Adjust the ServerName and Directory block options. For instance, the + - symbols are no longer used in the Options, so I removed them accordingly. I also adjusted where my logs went. (I don&amp;#39;t like them in &lt;code&gt;/var/log/apache2/&lt;/code&gt; and prefer them in &lt;code&gt;/usr/share/apache2/logs/&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;I changed the ServerName from the domain to my IP address to make sure the site worked. I recommend this as well for you.&lt;/p&gt;
+
+&lt;p&gt;If you have SSL certs that are needed, make sure to also transfer them over and adjust the apache settings.&lt;/p&gt;
+
+&lt;p&gt;Save and exit. Enable that site and reload Apache2.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo a2ensite site.conf
+sudo service apache2 restart &lt;span class=&quot;c&quot;&gt;# or reload&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If there are any errors and Apache won&amp;#39;t restart, correct them.&lt;/p&gt;
+
+&lt;p&gt;Go to &lt;a href=&quot;http://123.123.123.123&quot;&gt;http://123.123.123.123&lt;/a&gt; (whatever your IP is) and confirm that your site loads properly and things are looking super fly.  Celebrate and then complete the crossover by switching the IPs for the domain.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Jul 2015 09:25:52 -0700</pubDate>
+        <link>http://risaonrails.com/joomla-migrations</link>
+        <guid isPermaLink="true">http://risaonrails.com/joomla-migrations</guid>
+        
+        <category>joomla</category>
+        
+        <category>migrations</category>
+        
+        
+        <category>joomla</category>
+        
+        <category>devops</category>
+        
+      </item>
+    
+      <item>
+        <title>Multiple Deploy Keys on a Server</title>
+        <description>&lt;p&gt;Life in DevOps land has been pretty exciting for me. I&amp;#39;ve learned to create a tiered service (an app server + worker server), deal with RVM + upstart, finagle monit into submission, and most recently work with multiple SSH keys on one server.&lt;/p&gt;
+
+&lt;h2 id=&quot;scenario&quot;&gt;Scenario&lt;/h2&gt;
+
+&lt;p&gt;You&amp;#39;ve got a server with 2-3 apps on it, and you&amp;#39;d like to use deploy keys for each app, but how do we keep them separate and how will the system know which to use? There&amp;#39;s a thing called a config file that can be used for our SSH keys. It&amp;#39;s kind of awesome.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ll step through how to set it up and the like in this post.&lt;/p&gt;
+
+&lt;h3 id=&quot;repo-examples&quot;&gt;Repo examples&lt;/h3&gt;
+
+&lt;p&gt;Let&amp;#39;s pretend we have 2 repos, and both are hosted on Github:  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;App 1 = Surprise&lt;/li&gt;
+&lt;li&gt;App 2 = Badger&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;server&quot;&gt;Server&lt;/h3&gt;
+
+&lt;p&gt;The pretend server is going to be Ubuntu 14.04+. I&amp;#39;ll assume you&amp;#39;ve created a &lt;code&gt;~/.ssh&lt;/code&gt; directory and chmod&amp;#39;d it appropriately. On DigitalOcean, the directions for doing that &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04&quot;&gt;can be found here&lt;/a&gt; about midway down. We&amp;#39;ll skip their directions about creating keys.&lt;/p&gt;
+
+&lt;h3 id=&quot;creating-ssh-keys&quot;&gt;Creating SSH Keys&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://help.github.com/articles/generating-ssh-keys/#platform-linux&quot;&gt;Github&amp;#39;s SSH key article&lt;/a&gt; is probably the best thing that&amp;#39;s happened on the internet for people like me since sliced bread. (But not since buttered and toasted sliced bread...)&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s the abbreviated version of that article for our purposes, using our examples. Because examples are great! I&amp;#39;ll use Surprise (app 1) as the example since the steps are repeated for Badger (app 2).&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ssh-keygen -t rsa -b &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; -C &lt;span class=&quot;s2&quot;&gt;&amp;quot;devops@surprise&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# really, we don&amp;#39;t need to put an email. this just lets us know&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# that it&amp;#39;s the surprise repo we&amp;#39;re dealing with.&lt;/span&gt;
+Enter file in which to save the key &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/you/.ssh/id_rsa&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: surprise_rsa
+&lt;span class=&quot;c&quot;&gt;# here put in something like surprise_rsa then hit enter&lt;/span&gt;
+Enter passphrase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;empty &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; no passphrase&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;c&quot;&gt;# optional&lt;/span&gt;
+Enter same passphrase again: &lt;span class=&quot;c&quot;&gt;# optional&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# these are optional but highly recommended&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You should get some funky design/image after this. Repeat these for badger.&lt;/p&gt;
+
+&lt;p&gt;Once both are set up, we can proceed to the next step, adding the keys to the ssh-agent. You want to run the eval statement once. This tripped me up a couple of times.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$(ssh-agent -s)&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# this gets you a pid. Agent pid ####&lt;/span&gt;
+ssh-add ~/.ssh/surprise_rsa
+ssh-add ~/.ssh/badger_rsa
+&lt;span class=&quot;c&quot;&gt;# you will probably have to add your passphrases in here. do it.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Sanity check yourself by confirming that both SSH keys have been added.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ssh-add -l
+&lt;span class=&quot;c&quot;&gt;# this should display both apps&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;add-keys-to-repo&quot;&gt;Add Keys to Repo&lt;/h3&gt;
+
+&lt;p&gt;Deploy keys. The only way I could really understand their functionality was that they are the server&amp;#39;s ssh keys that get put into a particular repo, so that particular key is the only one that&amp;#39;s allowed to read/write to that repo only. This prevents the key from accessing other repos. Usually we create ssh keys and attach them to our account, so we can then grab ANY repo we&amp;#39;re associated with. This can be dangerous, and it can cause problems if the associated member leaves the organization. (i.e., if I leave the company, the keys on the servers that I had attached to my account will no longer work)&lt;/p&gt;
+
+&lt;p&gt;First, we&amp;#39;ll need to &lt;code&gt;cat&lt;/code&gt; the public keys. Let&amp;#39;s start with Surprise.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;cat ~/.ssh/surprise_rsa.pub
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Copy the &lt;code&gt;surprise_rsa.pub&lt;/code&gt; key, from &lt;code&gt;ssh-rsa&lt;/code&gt; all the way to &lt;code&gt;devops@surprise&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, go to Surprise&amp;#39;s repo in Github &amp;gt; Settings (right panel) &amp;gt; Deploy keys. The path will look like:&lt;br&gt;
+&lt;a href=&quot;https://github.com/your_github/Surprise/settings/keys&quot;&gt;https://github.com/your_github/Surprise/settings/keys&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Click on Add Deploy Key, name the key something you&amp;#39;d understand. &amp;quot;My awesome server&amp;#39;s deploy key&amp;quot; is totally OK. You&amp;#39;re the captain of this ship, after all. Paste in your key. Save.&lt;/p&gt;
+
+&lt;p&gt;Repeat steps for Badger.&lt;/p&gt;
+
+&lt;h3 id=&quot;create-ssh-config&quot;&gt;Create SSH Config&lt;/h3&gt;
+
+&lt;p&gt;Now that we&amp;#39;ve got our 2 deploy keys set up, we need to make sure git knows which key to use and when, when we do our &lt;code&gt;git clones&lt;/code&gt; and &lt;code&gt;git pulls and pushes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Create a config file in &lt;code&gt;~/.ssh/&lt;/code&gt; called config.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;nano ~/.ssh/config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The file will be in this format:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# surprise github&lt;/span&gt;
+Host surprise
+  Hostname github.com
+  User git
+  IdentityFile ~/.ssh/surprise_rsa
+
+&lt;span class=&quot;c&quot;&gt;# badger github&lt;/span&gt;
+Host badger
+  Hostname github.com
+  User git
+  IdentityFile ~/.ssh/badger_rsa
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let&amp;#39;s break this down.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Host&lt;/strong&gt; can be whatever you want. It can be &lt;code&gt;asdfjkl;&lt;/code&gt; for all we care.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hostname&lt;/strong&gt; is github.com as that&amp;#39;s where our repo is at.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;User&lt;/strong&gt; is git, because we are SSH&amp;#39;ing to github. (You know, &lt;a href=&quot;mailto:git@github.com&quot;&gt;git@github.com&lt;/a&gt;...)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IdentityFile&lt;/strong&gt; is the private key for that repo. Remember, we associated it&amp;#39;s public key to the repo, so we need the matching private key for the connection to work.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Save and exit!&lt;/p&gt;
+
+&lt;h3 id=&quot;setting-up-the-repos&quot;&gt;Setting up the repos&lt;/h3&gt;
+
+&lt;p&gt;Assuming we haven&amp;#39;t pulled down the repos to the server, we&amp;#39;ll do that now. I know you&amp;#39;re inclined to copy paste the SSH URL from Github: &lt;code&gt;git@github.com:your_github/surprise.git&lt;/code&gt; &lt;em&gt;BUT DON&amp;#39;T DO IT&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;DON&amp;#39;T YOU DARE!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead, you will do this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;git clone git@surprise:your_github/surprise.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Do you see it? &lt;code&gt;github.com&lt;/code&gt; was replaced with &lt;code&gt;surprise&lt;/code&gt;. It forces git to look at the SSH config file and be like &amp;quot;What is this host called surprise? Oh, we&amp;#39;re going to use this identity file and connect to this repo on github! Ok got it!&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;At that point, your origin will be pointing to &lt;code&gt;surprise&lt;/code&gt; and you&amp;#39;ll be able to do &lt;code&gt;git pull origin master&lt;/code&gt; or &lt;code&gt;git push origin master&lt;/code&gt; and life will be deliciously fabulous.&lt;/p&gt;
+
+&lt;p&gt;Repeat this for badger, of course.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: If you&amp;#39;ve already cloned, you can change your origin to point to the above URL instead and that&amp;#39;ll solve your issues.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Serious thanks to &lt;a href=&quot;http://stackoverflow.com/a/14703929/2464546&quot;&gt;this StackOverflow answer&lt;/a&gt; that cleared things up for me.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +10&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 20 May 2015 05:40:53 -0700</pubDate>
+        <link>http://risaonrails.com/multiple-deploy-keys-on-a-server/</link>
+        <guid isPermaLink="true">http://risaonrails.com/multiple-deploy-keys-on-a-server/</guid>
+        
+        <category>devops</category>
+        
+        <category>guide</category>
+        
+        
+        <category>devops</category>
+        
+      </item>
+    
+      <item>
+        <title>Mounting excitement</title>
+        <description>&lt;p&gt;I used to be risk-averse. But now? Totally not. In fact, I may be ever so slightly an adrenaline junkie. And I love every bit of it.  &lt;/p&gt;
+
+&lt;p&gt;Maybe a few years ago I found a pair of &lt;em&gt;&amp;quot;see the world thru the eyes of a 3 yr old&amp;quot;&lt;/em&gt; glasses, but ever since then, life is pretty awesome.&lt;/p&gt;
+
+&lt;h3 id=&quot;so-why-am-i-excited&quot;&gt;So why am I excited?!&lt;/h3&gt;
+
+&lt;p&gt;Because we&amp;#39;re going on an &lt;em&gt;ADVENTURE&lt;/em&gt;, Charlie! Yeah, Charlie, an adventure!&lt;/p&gt;
+
+&lt;p&gt;No really though. I love adventures. Everything is an adventure! It&amp;#39;s totally not limited to going to new places. It&amp;#39;s everything. Heck, every day is an adventure!&lt;/p&gt;
+
+&lt;p&gt;So really, why am I this excited?&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m going to Vancouver, Canada for a month. Ok ok, it may not seem like such a big deal, but here&amp;#39;s where it gets more interesting.&lt;br&gt;
+1. I have never been to Vancouver.
+1. Women&amp;#39;s World Cup soccer games are there!
+1. I&amp;#39;m going to at least 4 Cup games!
+1. I can work remotely anywhere I want!
+1. Did I mention Women&amp;#39;s World Cup soccer?
+1. I&amp;#39;m going to get me a Finals ticket, darn it.&lt;/p&gt;
+
+&lt;p&gt;So how did this all come to be? What made me decide to do something kinda crazy (for me)? Simple answer: The hairs on the back of my neck are standing up. I&amp;#39;m scared to go! And that means that I&amp;#39;ve got to do this. I can do this, and I&amp;#39;m going to have a blast!&lt;/p&gt;
+
+&lt;h3 id=&quot;no-really&quot;&gt;No really.&lt;/h3&gt;
+
+&lt;p&gt;In reality, I was talking about soccer in Slack with my team and realized that this year was Women&amp;#39;s World Cup. I love watching soccer, and women&amp;#39;s soccer is by far more entertaining than men&amp;#39;s. Why? They don&amp;#39;t flop about like wet fish on the field; they are a lot more brutal with their tackles; and Abby Wambach is the highest goal scorer (int&amp;#39;l games) on the face of the planet at currently 178 goals. The closest man is Ali Daei at 105, for comparison. Just saying. On top of it, Men&amp;#39;s World Cup is so much more expensive, and I have no desire to go to the next few countries for their Cup games.&lt;/p&gt;
+
+&lt;p&gt;On top of it, it&amp;#39;s in Vancouver, just a short flight away! Because my job is already remote, I can even work from there. So I started calculating things out and decided that going for almost the entire month of June made sense. Financially, not really, but whatever. We&amp;#39;ve only got this life, we might as well enjoy every bit of it!&lt;/p&gt;
+
+&lt;p&gt;It really helps that I&amp;#39;ve no ties to SF. And maybe I&amp;#39;ll end up falling in love with Vancouver and spend more time up there. Anything&amp;#39;s possible.  (I still love you, SF. But y&amp;#39;know. &lt;em&gt;You know why.&lt;/em&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;what-about-your-birthday&quot;&gt;What about your birthday?&lt;/h3&gt;
+
+&lt;p&gt;Psh. GTFO. Birthdays ain&amp;#39;t got nuttin&amp;#39; on dis! Birthdays are just another day of disappointment for me -- I say this as my birthday is a few days away, and the disappointment is ever increasing.&lt;/p&gt;
+
+&lt;h3 id=&quot;ahhhh&quot;&gt;AHHHH!&lt;/h3&gt;
+
+&lt;p&gt;Oh my effing gawd. I&amp;#39;ve never been to a soccer match before! So many firsts! I&amp;#39;m going to so many games! AHHHH. And I hear Vancouver is so pretty, and it&amp;#39;s a walkable city! And all the nature trails! It&amp;#39;s totally gay friendly too! You can&amp;#39;t get any better than this right now for me!  Now to experience other new things outside of soccer!&lt;/p&gt;
+
+&lt;p&gt;...Secretly-not-so-secretly, I think that if I fall in love with this city and then some, I may spend more time up there. 2-3 months at a time! Geezus, I love working remotely.&lt;/p&gt;
+
+&lt;p&gt;How does one sleep with this excitement?!?&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1 for getting to know me better?&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Apr 2015 16:34:32 -0700</pubDate>
+        <link>http://risaonrails.com/mounting-excitement/</link>
+        <guid isPermaLink="true">http://risaonrails.com/mounting-excitement/</guid>
+        
+        <category>offtopic</category>
+        
+        
+        <category>offtopic</category>
+        
+      </item>
+    
+      <item>
+        <title>Monitoring Nginx&#39;s Passenger</title>
+        <description>&lt;p&gt;In the ever learning world I&amp;#39;m in, someone had commented on &lt;a href=&quot;/integrate-monit-with-slack/&quot;&gt;my post&lt;/a&gt; about monitoring Passenger.&lt;/p&gt;
+
+&lt;p&gt;That got me thinking and diving deep into the depths of Google to find a solution that was acceptable for those of using Nging to create the Passenger instances.&lt;/p&gt;
+
+&lt;p&gt;The most common search result for this was to use the gem &lt;a href=&quot;https://github.com/romanbsd/passenger_monit&quot;&gt;passenger-monit&lt;/a&gt;. However it hasn&amp;#39;t been updated in at least 2 years. I am not that ambitious enough to revive this gem for my own purposes. The biggest drawback for using this gem is that the rack PIDs are hardcoded and if the first one dies, Monit will complain. It isn&amp;#39;t ideal for my purposes since I run multiple apps on one server and I&amp;#39;d like to keep track of them individually.&lt;/p&gt;
+
+&lt;p&gt;HOWEVER~! I have found a way that seems to work.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-solution&quot;&gt;The Solution&lt;/h3&gt;
+
+&lt;p&gt;There&amp;#39;s a method called &lt;code&gt;matching&lt;/code&gt; that monit allows. Essentially monit does a &lt;code&gt;ps aux | grep &amp;#39;whatever thing&amp;#39;&lt;/code&gt; to check for a process. &lt;a href=&quot;http://serverfault.com/questions/523226/monit-daemonize-non-daemon-process&quot;&gt;Holy balls, I love you person on ServerFault who answered this&lt;/a&gt; and I wish I had the reputation to upvote the crap out of that answer. But instead, mad props to you. &lt;/p&gt;
+
+&lt;p&gt;Anyway, after reading that, everything became clear.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what I ended up doing. &lt;/p&gt;
+
+&lt;h4 id=&quot;the-example-setup&quot;&gt;The example setup&lt;/h4&gt;
+
+&lt;p&gt;Assume the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nginx + passenger (Passenger is spawned via Nginx)
+
+&lt;ul&gt;
+&lt;li&gt;there is no passenger PID file that exists&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Rails app named &amp;#39;Surprise&amp;#39; 
+
+&lt;ul&gt;
+&lt;li&gt;nginx configured to point to &lt;code&gt;/home/rails/Surprise/public&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Deployer user named &amp;#39;rails&amp;#39;&lt;/li&gt;
+&lt;li&gt;Monit version 5.6 or 5.8 is running&lt;/li&gt;
+&lt;li&gt;Digital Ocean droplet for server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, if you have not hit Surprise at all, you won&amp;#39;t have any passenger instances created. That makes sense. Why spawn a process when it isn&amp;#39;t being used? &lt;/p&gt;
+
+&lt;p&gt;The process is brutally simple, hit the app to spawn a Passenger process, then check &lt;code&gt;top&lt;/code&gt; to see what the name is and create the monit file.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;top -c
+&lt;span class=&quot;c&quot;&gt;# hit shift M to sort by memory&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# you should see near the top right&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Passenger RubyApp: /home/rails/surprise/public &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# copy paste that&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/conf.d/surprise-pass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now in this file, write in the following:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;check process surprise-pass matching &lt;span class=&quot;s1&quot;&gt;&amp;#39;Passenger RubyApp: \/home\/rails\/surprise\/public&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalmem &amp;gt; 35% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalmem &amp;gt; 60% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/touch_surprise_sh  &lt;span class=&quot;c&quot;&gt;# restart app&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; changed pid &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb              &lt;span class=&quot;c&quot;&gt;# sanity check&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalcpu &amp;gt; 25% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save and exit. Notice the &lt;code&gt;\&lt;/code&gt; marks to escape the &lt;code&gt;/&lt;/code&gt; marks. Because monit does essentially a &lt;code&gt;ps aux | grep ____&lt;/code&gt;, copy pasting what you find in &lt;code&gt;top -c&lt;/code&gt; is a great way to get the process match.&lt;/p&gt;
+
+&lt;p&gt;A couple of things to note. 1) There is also a new file being executed here. More on this in a bit. 2) We are talking totalmem and totalcpu. Passenger can spin up child processes if it needs it, but I want to look at the total memory consumption of that particular app. Total cpu is not per core but for the whole thing. I also based these off of monit&amp;#39;s web interface information. It&amp;#39;s very handy to pick out the things you want to monitor in particular.&lt;/p&gt;
+
+&lt;p&gt;The new file &lt;code&gt;touch_surprise_sh&lt;/code&gt; is a super simple bash script that restarts Passenger (and not Nginx) via the &lt;code&gt;touch&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/touch_surprise_sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the file type the following lines:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!/bin/bash
+
+touch /home/rails/surprise/tmp/restart.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Alternatively you can make it more verbose and sudo in as your user (rails) to restart Passenger.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo -u rails -H sh -c &amp;quot;touch /home/rails/surprise/tmp/restart.txt”
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save and exit. Make it into an executable file.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo chmod +x /etc/monit/touch_surprise_sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Do your standard monit sanity check, then reload monit.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit -t       &lt;span class=&quot;c&quot;&gt;# fix any problems, obv&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit reload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Confirm on your web interface that surprise-pass is loaded up and displaying all the goodies you like to see. When you restart nginx, Passenger should lose a PID. It&amp;#39;ll alert you on Slack when you hit the app and create a new PID. Right on. &lt;img class=&#39;emoji&#39; title=&#39;fist&#39; alt=&#39;fist&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/fist.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;Congrats! Create a monit conf file for each of your apps and behold your power!&lt;/p&gt;
+
+&lt;p&gt;Special thanks to Grant Trevor who got me to delve into the depths of monit and Google &lt;img class=&#39;emoji&#39; title=&#39;grinning&#39; alt=&#39;grinning&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 15 Apr 2015 14:21:01 -0700</pubDate>
+        <link>http://risaonrails.com/monitoring-nginx-and-passenger/</link>
+        <guid isPermaLink="true">http://risaonrails.com/monitoring-nginx-and-passenger/</guid>
+        
+        <category>monit</category>
+        
+        <category>passenger</category>
+        
+        
+        <category>guide</category>
+        
+        <category>devops</category>
+        
+        <category>monit</category>
+        
+        <category>passenger</category>
+        
+      </item>
     
       <item>
         <title>Woohoo, Nginx training!</title>
@@ -22,7 +535,7 @@
 
 &lt;p&gt;&lt;img src=&quot;http://swagct.com/generators/images/successkid_thumb.jpg&quot; alt=&quot;Success kid&quot;&gt;&lt;/p&gt;
 
-&lt;h3&gt;Training Day&lt;/h3&gt;
+&lt;h3 id=&quot;training-day&quot;&gt;Training Day&lt;/h3&gt;
 
 &lt;p&gt;The Summit/Training was held at RocketSpace in downtown SF. The space was really nice, and we were given a bunch of different swag (tees, water bottles, cute lil cars with M&amp;amp;Ms in them, an O&amp;#39;Reilly book about microservices, etc). The best part was the fact that the tables were lined with paper and had crayons. :D Oh yeah the 12-yr-old me was stoked!&lt;/p&gt;
 
@@ -36,7 +549,7 @@
 
 &lt;p&gt;Once training was over, the lightning talks began. Admittedly, this was where my interest wained, tho the guy talking about load testing with a thing called Bees with Machine Guns was really cool. My coworker and I opted not to stay until the end for the social hour and excused ourselves. &lt;/p&gt;
 
-&lt;h3&gt;Overall thoughts&lt;/h3&gt;
+&lt;h3 id=&quot;overall-thoughts&quot;&gt;Overall thoughts&lt;/h3&gt;
 
 &lt;p&gt;Seriously, this training was kind of amazingly perfect timing for my coworker and myself. Would I recommend it? Hellz yes! It&amp;#39;s the perfect beginner course to anyone getting to know and understand Nginx. It&amp;#39;s really simple to use, now that I understand it better. It was also validating to know that the things we were teaching ourselves by fiddling around with the servers were all correct.&lt;/p&gt;
 
@@ -91,7 +604,7 @@
 
 &lt;p&gt;The Rails guides didn&amp;#39;t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.&lt;/p&gt;
 
-&lt;h3&gt;The way of the old rails warrior&lt;/h3&gt;
+&lt;h3 id=&quot;the-way-of-the-old-rails-warrior&quot;&gt;The way of the old rails warrior&lt;/h3&gt;
 
 &lt;p&gt;I can just refer an older Rails version when doing &lt;code&gt;rails new&lt;/code&gt;! Since I wanted 4.0.13, I did this: &lt;code&gt;rails 4.0.13 new appname&lt;/code&gt;. This did not work.&lt;/p&gt;
 
@@ -138,7 +651,7 @@
 
 &lt;p&gt;Anyway, here&amp;#39;s what I&amp;#39;ve learned thus far with using Jekyll and Github Pages. Maybe this will help you out, too. I hope to expand my knowledge as well.  Glad that it&amp;#39;s written in Ruby, so implementation of things are much easier to understand (for me).&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
+&lt;h3 id=&quot;gt-github-pages-overview&quot;&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
 
 &lt;p&gt;First issue I did not realize, and maybe I should have actually &lt;em&gt;read&lt;/em&gt; the instructions better,... there is a HUGE difference between creating a Github Page for a repo and for your account. I wanted to create one for my account but made it for my repo instead. Whoops.&lt;/p&gt;
 
@@ -148,7 +661,7 @@
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
+&lt;h3 id=&quot;gt-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
 
 &lt;p&gt;Create a new repo in Github called &amp;quot;your-github-username.github.io&amp;quot;. In my case it&amp;#39;s a repo called &amp;quot;rbatta.github.io&amp;quot; since my Github username is rbatta. When you git clone to your local machine, your &lt;code&gt;master&lt;/code&gt; branch will be the one Github uses to publish your site. You get that? &lt;em&gt;Master branch is what Github uses to publish your site.&lt;/em&gt; Git clone your new repo and hop into that directory.&lt;/p&gt;
 
@@ -165,7 +678,7 @@
 
 &lt;p&gt;&lt;strong&gt;But wait!&lt;/strong&gt; Why are we in &lt;code&gt;your-sites-blog-name&lt;/code&gt; and not in &lt;code&gt;your-username.github.io&lt;/code&gt; directory? Well, like I said before, the &lt;code&gt;master&lt;/code&gt; branch is what Github uses to publish your blog. &lt;strong&gt;&lt;em&gt;NOT&lt;/em&gt;&lt;/strong&gt; publish your repo. We&amp;#39;ll keep the &lt;code&gt;master&lt;/code&gt; directory clean until we&amp;#39;re ready to push things up. So in the meantime, we&amp;#39;ll use the &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory to do all of our work.&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
+&lt;h3 id=&quot;gt-jekyll-setup&quot;&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
 
 &lt;p&gt;Create a new Jekyll site by running &lt;code&gt;jekyll new .&lt;/code&gt; Make sure you&amp;#39;ve got that period in there, since that creates it within this directory.&lt;/p&gt;
 
@@ -179,7 +692,7 @@
 
 &lt;p&gt;This is probably a good time to do &lt;code&gt;git init&lt;/code&gt; and do your initial commit.&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; _config.yml&lt;/h3&gt;
+&lt;h3 id=&quot;gt-_config-yml&quot;&gt;&amp;gt; _config.yml&lt;/h3&gt;
 
 &lt;p&gt;Fill in the information given. For &lt;code&gt;baseurl:&lt;/code&gt; keep that as blank quotes so that when you serve up your site, it&amp;#39;ll load at &lt;code&gt;127.0.0.1:4000&lt;/code&gt; instead of &lt;code&gt;127.0.0.1:4000/baseurl-you-gave-it&lt;/code&gt;.&lt;/p&gt;
 
@@ -187,7 +700,7 @@
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
+&lt;h3 id=&quot;gt-_posts-and-_drafts&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
 
 &lt;p&gt;By default, anything that you put in the _posts directory will be published. Of course you need to make sure it&amp;#39;s in the format of &lt;code&gt;yyyy-mm-dd-post-name&lt;/code&gt; with whatever extension you use. I prefer markdown so all my posts end with &lt;code&gt;.md&lt;/code&gt;. You&amp;#39;re the author of your blogposts so choose whatever format you&amp;#39;d like: Textile or Markdown are the two default choices Jekyll supports. You can choose others with plugins.&lt;/p&gt;
 
@@ -200,7 +713,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In your &lt;code&gt;_post.md&lt;/code&gt; file, you need to ensure that you&amp;#39;ve got the YAML markup at the beginning with the --- thing. If you need a template, copy paste it from the Rakefile site or use the welcome-to-jekyll post&amp;#39;s YAML header. Think of this as your template for ALL your posts. Update as you see fit.&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; _plugins&lt;/h3&gt;
+&lt;h3 id=&quot;gt-_plugins&quot;&gt;&amp;gt; _plugins&lt;/h3&gt;
 
 &lt;p&gt;There are some cool plugins for added functionality for Jekyll. However when publishing to Github, that&amp;#39;s stripped away and is not built when the site is published. Something something safety precautions. Ehhh. This is why we created a separate directory to work in. The &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory has all your drafts and posts and plugins and directories, but we will be creating the &amp;#39;static&amp;#39; website and pushing that to the &lt;code&gt;your-username.github.io&lt;/code&gt; directory for the master branch, to deploy to Github to publish. Wow, that came off a bit more complicated than I expected. Here&amp;#39;s the workflow.  We&amp;#39;ll go more into detail later on with this.&lt;/p&gt;
 
@@ -211,7 +724,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now you can add icons by using the syntax &lt;code&gt;{.% icon fa-something %}&lt;/code&gt; (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; Publishing&lt;/h3&gt;
+&lt;h3 id=&quot;gt-publishing&quot;&gt;&amp;gt; Publishing&lt;/h3&gt;
 
 &lt;p&gt;When you are ready to publish, build the site with Jekyll by running &lt;code&gt;jekyll build&lt;/code&gt;.  This creates a directory called &lt;code&gt;_site/&lt;/code&gt; which houses the raw ol&amp;#39; school HTML of your posts with a css directory that the pages reference.&lt;/p&gt;
 
@@ -237,9 +750,9 @@
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&amp;quot;your msg about your post that&amp;#39;s ready for Github&amp;quot;&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;BOOM. You should be good to go now. Check out your site at http://your-username.github.io :)&lt;/p&gt;
+&lt;p&gt;BOOM. You should be good to go now. Check out your site at &lt;a href=&quot;http://your-username.github.io&quot;&gt;http://your-username.github.io&lt;/a&gt; :)&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; Laziness&lt;/h3&gt;
+&lt;h3 id=&quot;gt-laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
 
 &lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won&amp;#39;t matter. So here&amp;#39;s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that&amp;#39;s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; or &lt;code&gt;~/.bashrc&lt;/code&gt; file.  &lt;/p&gt;
 
@@ -283,7 +796,7 @@
 
 &lt;p&gt;Yuuuup, you can run &lt;code&gt;rails console --sandbox&lt;/code&gt; when you load up your console. What&amp;#39;s it for? Simple -- to ensure that any changes you make to the database are &lt;em&gt;rolled back&lt;/em&gt; on exit.&lt;/p&gt;
 
-&lt;h3&gt;Why use this?&lt;/h3&gt;
+&lt;h3 id=&quot;why-use-this&quot;&gt;Why use this?&lt;/h3&gt;
 
 &lt;p&gt;Well, what if you&amp;#39;re going into your production box and need to poke around with the data. The site&amp;#39;s live, y&amp;#39;know. It&amp;#39;s great to be able to go into a production box, run &lt;code&gt;rails c&lt;/code&gt; and not have to worry that you may have accidentally deleted an entry or updated a value. Think of it as an extra safety net. Here&amp;#39;s what it&amp;#39;d look like.&lt;/p&gt;
 
@@ -363,11 +876,11 @@
 
 &lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; I basically doubled all the unicorn conf files and doubled the server blocks in nginx.&lt;/p&gt;
 
-&lt;h2&gt;Digital Ocean 1-Click Rails Template&lt;/h2&gt;
+&lt;h2 id=&quot;digital-ocean-1-click-rails-template&quot;&gt;Digital Ocean 1-Click Rails Template&lt;/h2&gt;
 
 &lt;p&gt;Start with your standard Ubuntu setup and click the Rails template. Deploy. The DO template comes with a user already created called Rails. They have a great doc on &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-use-the-1-click-ruby-on-rails-on-ubuntu-14-04-image&quot;&gt;how to set your own Rails app with their template&lt;/a&gt;, but here&amp;#39;s my modifications.  Since our apps are on the LEPUR stack, there&amp;#39;s a bit of extra work.&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; Bash setup&lt;/h3&gt;
+&lt;h3 id=&quot;bash-setup&quot;&gt;Bash setup&lt;/h3&gt;
 
 &lt;p&gt;First, start by installing git and Postgres. Skip the Postgres install if you&amp;#39;re sticking with LEMUR. I dropped the &lt;code&gt;sudo&lt;/code&gt; part since I&amp;#39;m logged in as &lt;code&gt;root&lt;/code&gt; user.&lt;/p&gt;
 
@@ -387,7 +900,7 @@
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chsh -s /bin/bash rails
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir /var/sockets&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3&gt;&amp;gt; Two Rails apps setup&lt;/h3&gt;
+&lt;h3 id=&quot;two-rails-apps-setup&quot;&gt;Two Rails apps setup&lt;/h3&gt;
 
 &lt;p&gt;Now we add our 2 apps. For simplicity sake, I&amp;#39;m adding both of them into the /home/rails/ directory, once I empty it out. If you accidentally deleted the entire rails folder, just &lt;code&gt;mkdir rails&lt;/code&gt; in &lt;code&gt;/home&lt;/code&gt;.&lt;/p&gt;
 
@@ -406,7 +919,7 @@
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chown rails:www-data -R /home/rails&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3&gt;&amp;gt; Unicorn&lt;/h3&gt;
+&lt;h3 id=&quot;unicorn&quot;&gt;Unicorn&lt;/h3&gt;
 
 &lt;p&gt;I struggled and searched the internet far and wide for someone who took the DO 1-click template to create 2 apps. Their template has a non-standard unicorn and nginx configuration (in terms of files and locations). Again, we work with what we got. The easiest way I found was to duplicate the unicorn files, which are located in two different places: &lt;code&gt;/etc/default/unicorn&lt;/code&gt; and &lt;code&gt;/home/unicorn/unicorn.conf&lt;/code&gt;. We&amp;#39;ll start with the latter. Out of sheer simplicity, the dupes had 2 appended to the end of it. I also use nano as my editor, so don&amp;#39;t judge. :)&lt;/p&gt;
 
@@ -500,7 +1013,7 @@ check_config&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot
 
 &lt;p&gt;You can confirm that both are running by checking &lt;code&gt;top -c&lt;/code&gt; then press &lt;code&gt;shift-M&lt;/code&gt;. Since we named the 2nd unicorn2, your top should have unicorn and unicorn2 running. Score!&lt;/p&gt;
 
-&lt;h3&gt;&amp;gt; Nginx&lt;/h3&gt;
+&lt;h3 id=&quot;nginx&quot;&gt;Nginx&lt;/h3&gt;
 
 &lt;p&gt;Now for the final bit. Nginx&amp;#39;s configuration.&lt;/p&gt;
 
@@ -617,7 +1130,7 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
 &lt;p&gt;And voila! You&amp;#39;re good to go. Switch to the rails user to run your standard rake commands like &lt;code&gt;rake db:setup&lt;/code&gt; and &lt;code&gt;assets:precompile&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3&gt;Final thoughts&lt;/h3&gt;
+&lt;h3 id=&quot;final-thoughts&quot;&gt;Final thoughts&lt;/h3&gt;
 
 &lt;p&gt;I am sure you may have some errors for each ruby. Definitely check your logs for nginx and unicorn. When we did this, we had to re-connect the executable-hook for each of the apps since we used different ruby versions for the apps. Stack Overflow had some brilliant articles that helped us troubleshoot. I can&amp;#39;t recall which ones they were but if I encounter them again, I&amp;#39;ll post it here.&lt;/p&gt;
 
@@ -671,449 +1184,6 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         <category>digital ocean</category>
         
         <category>nginx</category>
-        
-        <category>guide</category>
-        
-      </item>
-    
-      <item>
-        <title>Integrating Monit to Slack</title>
-        <description>&lt;p&gt;The conversation of what software are we going to choose for monitoring our apps and servers came up at work. We&amp;#39;ve all used New Relic and Nagios before, but not really Monit. New Relic is free to a certain point, but can get hella expensive if you&amp;#39;ve got multiple apps and want to check many different things. Both Nagios and Monit are open-source, which equates to &lt;em&gt;FREE&lt;/em&gt;. Perfect for dev shops and small businesses.&lt;/p&gt;
-
-&lt;p&gt;Since I like to read a lot of different articles while researching things, I kept coming across Monit as the go-to tool for monitoring instead of Nagios. Plus my boss had some bad experiences with setting it up before. Well, my Google-fu is fairly strong, so I decided to give Monit a try.&lt;/p&gt;
-
-&lt;p&gt;I admit, setup was fairly simple.  Currently our stack is LEPPR (Linux Nginx Passenger Postgres Rails), not that it matters though. So real quick, here were the steps I used to set it up, before going to the meat of the article: integrating with Slack.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo apt-get install monit&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The file you want to edit will be &lt;code&gt;/etc/monit/monitrc&lt;/code&gt; which is the main config file. Comment out the bits about the httpd section, about mid-way thru, and add in your info as needed. As always, geared for Digital Ocean:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;set httpd port 2812 and
-  use address IP_ADDRESS       # Put your droplet IP here
-  allow 0.0.0.0/0.0.0.0        # allow anyone to connect to the server and
-  allow admin:&amp;#39;P@ssw0rd&amp;#39;       # require user and password for login
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;What this does is allow you to hit up your IP address in the browser and see how things are looking: http://IP_ADDRESS:2812.&lt;/p&gt;
-
-&lt;p&gt;Right on.&lt;/p&gt;
-
-&lt;p&gt;Now, let&amp;#39;s integrate!&lt;/p&gt;
-
-&lt;h3&gt;On Slack&lt;/h3&gt;
-
-&lt;p&gt;If you&amp;#39;re running the desktop app, click on the channel name&amp;#39;s &lt;code&gt;v&lt;/code&gt; down-button and choose Configure Integrations.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;On the web page, choose &amp;quot;&lt;em&gt;Or, make your own!&lt;/em&gt;&amp;quot; which should take you to /services/new#diy.&lt;/li&gt;
-&lt;li&gt;Click Add for &lt;strong&gt;Incoming Webhooks&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;You can choose a channel or make a new one. I created one called &lt;code&gt;#monitoring&lt;/code&gt; because I&amp;#39;m not original.&lt;/li&gt;
-&lt;li&gt;Click Add Integration.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So now you&amp;#39;ve got a webhook URL that looks something like this: https://hooks.slack.com/services/HASH/Hash/LongHash.  You can test out if it works by scrolling to the bottom and picking the integration settings, choosing what you want for description, custom name, etc. Test it out with the &lt;code&gt;curl&lt;/code&gt; command that they give you.  It&amp;#39;s JSON that drives the entire thing. &lt;/p&gt;
-
-&lt;h3&gt;On Monit&lt;/h3&gt;
-
-&lt;p&gt;Now, back to the box. We&amp;#39;re rubyists here so this is how we roll. We&amp;#39;re going to create a file called &lt;code&gt;slack.rb&lt;/code&gt; in your &lt;code&gt;/etc/monit/&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo touch /etc/monit/slack.rb
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/slack.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Now in this file, insert this:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/ruby&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;net/https&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;json&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;URI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;https://hooks.slack.com/services/HASH/Hash/LongHash&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;use_ssl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request_uri&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;channel&amp;quot;&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;#monitoring&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# channel name&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;username&amp;quot;&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Monit Bot&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# you can name the bot whatever&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;icon_emoji&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;img class=&amp;#39;emoji&amp;#39; title=&amp;#39;trollface&amp;#39; alt=&amp;#39;trollface&amp;#39; src=&amp;#39;https://github.global.ssl.fastly.net/images/icons/emoji/trollface.png&amp;#39; height=&amp;#39;20&amp;#39; width=&amp;#39;20&amp;#39; align=&amp;#39;absmiddle&amp;#39; &amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# because why the hell not!&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_HOST&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;] &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_SERVICE&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; - &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;MONIT_DESCRIPTION&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The cool thing about this is that you can pick whatever slack icon you want to use OR you can even upload your own for an emoji and use that. Obviously you&amp;#39;ll have to change the &lt;code&gt;uri&lt;/code&gt;, &lt;code&gt;channel&lt;/code&gt;, &lt;code&gt;username&lt;/code&gt; and the like to what applies to you.&lt;/p&gt;
-
-&lt;p&gt;Do a sanity check at this point to make sure everything&amp;#39;s correct. Run the ruby script real quick-like.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby /etc/monit/slack.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Did you get a notification in Slack?  Great, now make that into an executable file!&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo chmod +x /etc/monit/slack.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;You will need to invoke this file whenever something happens, so to test it out, we&amp;#39;re going to create an nginx file to monitor nginx. This will be kept in &lt;code&gt;/etc/monit/conf.d/&lt;/code&gt; directory as a file called &lt;code&gt;nginx&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;check process nginx with pidfile /var/run/nginx.pid
-  start &lt;span class=&quot;nv&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/usr/sbin/service nginx start&amp;quot;&lt;/span&gt;
-  stop  &lt;span class=&quot;nv&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/usr/sbin/service nginx stop&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; failed host 127.0.0.1 port &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; restart
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; changed pid &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb    &lt;span class=&quot;c&quot;&gt;# this is our sanity check&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; failed host 127.0.0.1 port &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; succeeded &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; cpu is greater than 40% &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; cycles &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; succeeded &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; cpu &amp;gt; 60% &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; cycles &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; restart&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The basic format is that whenever you need to invoke an alert, instead of a &lt;code&gt;then alert&lt;/code&gt;, you are changing it to execute the slack.rb file. You &lt;strong&gt;must&lt;/strong&gt; specify the full path to slack.rb. Pretty much any time you see a &lt;code&gt;then alert&lt;/code&gt;, change it to &lt;code&gt;then exec /etc/monit/slack.rb&lt;/code&gt;. :)&lt;/p&gt;
-
-&lt;p&gt;Check to ensure file is correct, reload monit to accept the changes, and then stop/start nginx.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit -t       &lt;span class=&quot;c&quot;&gt;# if errors, fix!&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit reload
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo service nginx stop
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo service nginx start&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;There&amp;#39;s a few second delay but check out slack! You should see the message with your info all in there. HURRAY!&lt;/p&gt;
-
-&lt;p&gt;This article used an Ubuntu 14.10 droplet.&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +3&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Fri, 27 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/integrate-monit-with-slack/</link>
-        <guid isPermaLink="true">http://risaonrails.com/integrate-monit-with-slack/</guid>
-        
-        <category>slack</category>
-        
-        <category>monit</category>
-        
-        <category>devops</category>
-        
-        
-        <category>devops</category>
-        
-        <category>monit</category>
-        
-        <category>slack</category>
-        
-        <category>guide</category>
-        
-      </item>
-    
-      <item>
-        <title>A Quick Tip with Database Formatting</title>
-        <description>&lt;p&gt;I&amp;#39;m constantly learning, mostly at this new job. It&amp;#39;s gotten to the point where I end up diving down the rabbit hole many many times. Don&amp;#39;t get me wrong, I love every bit of it. Might even say I&amp;#39;m addicted to it. Today&amp;#39;s tip is brought to you by both MySQL &amp;amp;&amp;amp; Postgres! Whoa, a double feature.&lt;/p&gt;
-
-&lt;h3&gt;The problem&lt;/h3&gt;
-
-&lt;p&gt;Know what I really don&amp;#39;t like? Having to check the database and getting results that are displayed all sorts of wonky because your terminal window wraps things when you run &lt;code&gt;select * from that_table where id=&amp;#39;1&amp;#39;;&lt;/code&gt;. It looks something like this in MySQL:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-mysql.png&quot; alt=&quot;MySQL&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Oh man. Postgres isn&amp;#39;t that much better, y&amp;#39;know.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-postgres.png&quot; alt=&quot;Postgres&quot;&gt;&lt;/p&gt;
-
-&lt;h3&gt;The Solution&lt;/h3&gt;
-
-&lt;p&gt;So what do? In MySQL, every SQL command that needs to be formatted pretty needs to have \G appended at the end. &lt;code&gt;select * from that_table where id=&amp;#39;1&amp;#39; \G;&lt;/code&gt; Annoying to have to append &lt;code&gt;\G&lt;/code&gt; to the end, but it&amp;#39;s worth it. Here&amp;#39;s the result:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-mysql1.png&quot; alt=&quot;MySQL&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Postgres is a bit better in this regard. There&amp;#39;s a global setting called &lt;code&gt;\x auto&lt;/code&gt; which automatically prettifies the information based on terminal width. The only downside is if you&amp;#39;ve got a text column that&amp;#39;s so long it makes the actual header wrap. I&amp;#39;ll take it anyway, because once it&amp;#39;s set, it&amp;#39;s set until you change it.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/quick-tip-postgres1.png&quot; alt=&quot;Postgres&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Right on! This makes viewing records directly in the database so much easier. &lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Fri, 20 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/a-quick-tip-with-database-formatting/</link>
-        <guid isPermaLink="true">http://risaonrails.com/a-quick-tip-with-database-formatting/</guid>
-        
-        <category>postgres</category>
-        
-        <category>mysql</category>
-        
-        <category>tips</category>
-        
-        
-        <category>postgres</category>
-        
-        <category>mysql</category>
-        
-        <category>tips</category>
-        
-      </item>
-    
-      <item>
-        <title>Postgres Workshop Notes</title>
-        <description>&lt;p&gt;Hi there!&lt;/p&gt;
-
-&lt;p&gt;Missed the Postgres workshop? Forgot what I covered? This post was made just for you then! :)&lt;/p&gt;
-
-&lt;p&gt;Quick background on Postgres. It&amp;#39;s a relational database that is awesome because it&amp;#39;s highly extensible. For instance there is geospacial support (postGIS), key/value store (hstore), and with postgres 9.4, there&amp;#39;s JSON support (more so than what they had previously). You could say it&amp;#39;s the end-all-be-all for databases. At least that&amp;#39;s what I&amp;#39;d like to see it as! Obviously postgres may not suit your needs but this knowledge is valuable and transferable. And if you were afraid of reading the docs before, hopefully after this you won&amp;#39;t be.&lt;/p&gt;
-
-&lt;h3&gt;What to expect&lt;/h3&gt;
-
-&lt;p&gt;I&amp;#39;ll walk thru entering/exiting Postgres. Then a bit of navigation so you feel more comfortable with it. And then we&amp;#39;re going to go straight into dealing with import/export (restore/backup). For the import/export section, I&amp;#39;ve a chump vanilla Rails app that will be used because there&amp;#39;s a rake task in there that creates fake data. Hurray for the Faker gem!&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h3&gt;First thing&amp;#39;s first&lt;/h3&gt;
-
-&lt;p&gt;Let&amp;#39;s make sure you can run Postgres.&lt;/p&gt;
-
-&lt;p&gt;On a Mac, you have a couple of options:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Download the &lt;a href=&quot;http://postgresapp.com/&quot;&gt;postgresapp&lt;/a&gt;. Double-click to open and run it. Boom, postgres is running. You&amp;#39;ll see it as the cute lil elephant icon in your menu bar up top. If you quit the app, you quit the postgres server. &lt;/li&gt;
-&lt;li&gt;Follow this &lt;a href=&quot;http://www.mikeball.us/blog/setting-up-postgres-with-homebrew/&quot;&gt;super awesome guide&lt;/a&gt;. This is what I used to set my machine up. I prefer this to Postgresapp, truthfully.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;On *nix machines, use &lt;a href=&quot;http://www.postgresql.org/download/linux/&quot;&gt;the official documentation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;On Windows, you can use &lt;a href=&quot;http://www.postgresql.org/download/windows/&quot;&gt;this guide&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Sorry *nix and Windows users. I&amp;#39;m a Mac user so the entire thing is geared for this. Don&amp;#39;t hate!&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h3&gt;Go in, go out&lt;/h3&gt;
-
-&lt;p&gt;Once you&amp;#39;ve followed the instructions for installation and have postgres running, we can confirm this by running &lt;code&gt;psql&lt;/code&gt; in Terminal.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Did you get an error saying &lt;code&gt;FATAL role &amp;quot;YOURNAME&amp;quot; does not exist&lt;/code&gt; ? It&amp;#39;s saying that the user account you&amp;#39;re logged in as isn&amp;#39;t a postgres user. We&amp;#39;ve got to create it. Use the command below and make sure to use the name that the role says doesn&amp;#39;t exist. Say yes when they ask if the user (you) should be superuser. &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ createuser --interactive YOURNAME
-# Shall the new role be a superuser? (y/n) Y
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Did you get an error saying &lt;code&gt;FATAL database &amp;quot;YOURNAME&amp;quot; does not exist&lt;/code&gt;? Simple enough, we&amp;#39;ll just create it. Use the following command to create that particular database. Make sure you use the name that it references.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ createdb YOURNAME
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Ok, in we go. The postgres prompt you see should have your account name if you followed the above steps. Since my account name is risa, my postgres username and database are risa. The prompt for me looks like &lt;code&gt;risa=#&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql
-risa=#
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Great. Let&amp;#39;s quit out of postgres. The command is &lt;code&gt;\q&lt;/code&gt; (not the usual / one. It&amp;#39;s the \ above the return button)&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;risa=# \q
-$
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;It&amp;#39;s always important to know how to exit any program. Otherwise you might be stuck in &lt;a href=&quot;https://twitter.com/iamdevloper/status/435555976687923200&quot;&gt;vim foreverrrrr&lt;/a&gt;.&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h3&gt;Navigation&lt;/h3&gt;
-
-&lt;p&gt;To find out where we&amp;#39;re at currently, type &lt;code&gt;\conninfo&lt;/code&gt;. &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql
-risa=# \conninfo
-# You are connected to database &amp;quot;risa&amp;quot; as user &amp;quot;risa&amp;quot; via socket in &amp;quot;/tmp&amp;quot; at port &amp;quot;5432&amp;quot;.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;To list the databases you&amp;#39;ve got in postgres, type &lt;code&gt;\l&lt;/code&gt; (l for list)&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;risa=# \l
-# you&amp;#39;ll get an output that lists a bunch of databases, including template0 and template1.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;Note: template1 is what all new databases use when they get created. If you add an extension like `pg&lt;/em&gt;stat&lt;em&gt;statement` into template1, all your subsequent databases will have that extension turned on automatically. AWESOME.&lt;br&gt;
-Template0 is the ultimate empty database. If you accidentally mess up template1, then you can use template0 to fix it. 
-I&amp;#39;ll include directions on this maybe at the end or in another blog, but this wasn&amp;#39;t part of the workshop.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;To change databases, you will have to do &lt;code&gt;\c DATABASE_NAME&lt;/code&gt;. Since I don&amp;#39;t know what databases you&amp;#39;ve already got in your system, I&amp;#39;ll use template1 as an example.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;risa=# \c template1
-template1=#
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Notice that the prompt changed. The prompt always points to the current database you&amp;#39;re in. Sweet.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s hop out and do some Rails things so we can look a bit deeper into postgres.&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h3&gt;Rails setup&lt;/h3&gt;
-
-&lt;p&gt;Please clone this repo: &lt;a href=&quot;https://github.com/rbatta/img_blog&quot;&gt;image blog&lt;/a&gt;. It&amp;#39;s my vanilla rails app based on the &lt;a href=&quot;https://www.railstutorial.org/book&quot;&gt;Michael Hartl tutorial&lt;/a&gt;&lt;br&gt;
-It uses ruby 2.0.0, so you may have to use rvm or rbenv to change ruby versions for this app.&lt;/p&gt;
-
-&lt;p&gt;Once cloned and ruby version is changed to 2.0.0, run the usual suspects:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rake db:setup&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;With Rails 4.0 and below, &lt;code&gt;rake db:setup&lt;/code&gt; created a dev database with migrations run &lt;strong&gt;as well as an empty test database&lt;/strong&gt;.  In Rails 4.1+, &lt;code&gt;db:setup&lt;/code&gt; no longer creates an empty test database. You have to manually run &lt;code&gt;RAILS_ENV=test rake db:setup&lt;/code&gt;. Silly, I know.&lt;/p&gt;
-
-&lt;p&gt;So, what did that rake db:setup do? Let&amp;#39;s find out.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql
-risa=# \l
-# you should see these 2 added into your database list
-# imgblog_dev       | risa  | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
-# imgblog_test      | risa  | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Boom. Now, let&amp;#39;s hop into the imgblog_dev database and check out the tables and stuff. BTW, you can press tab to autocomplete database names (and sometimes table names too). The command for displaying tables is &lt;code&gt;\dt&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;risa=# \c imgblog_dev
-imgblog_dev=# \dt
-# you should see 3 tables. images and users are the tables
-# schema_migrations has the indexes
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you&amp;#39;re curious as to how big your tables might be, you can also do &lt;code&gt;\dt+&lt;/code&gt; which gives you sizes as well.&lt;/p&gt;
-
-&lt;p&gt;To see what&amp;#39;s in the tables, you can then do your standard SQL query:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;imgblog_dev=# select * from users;
-# this will display any/all your users and their columns. 
-# right now it&amp;#39;s empty so you just see column names.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you just want to see the column names of the users table, you can do &lt;code&gt;\d users&lt;/code&gt; instead.&lt;/p&gt;
-
-&lt;p&gt;Great. Let&amp;#39;s hop back out and put some real data in to do some backups and restores. Assuming you&amp;#39;re still in the root directory of the img_blog, run the rake command to create a bunch of fake data.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;imgblog_dev=# \q
-$ rake db:populate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Hop in and confirm that data was created. I&amp;#39;m going to append the database name to the &lt;code&gt;psql&lt;/code&gt; statement to automatically go to that database.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql imgblog_dev
-imgblog_dev=# SELECT * FROM users;
-# you should see a bunch of output that might be cut off
-# scroll with the arrow keys
-# get the prompt back by pressing Q.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Let&amp;#39;s count how many users and images were created. (Answer: 33 users, 66 images)&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;imgblog_dev=# select count(*) from users;
-# you get back 33
-imgblog_dev=# select count(*) from images;
-# you get back 66
-imgblog_dev=# \q
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Awesome. Great job so far!! Time to start the backup / restore process. I&amp;#39;ll go through the commands and append more flags as I go along, explaining each one. By the end, you should have about 4 backup files created.&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h3&gt;Backup and Restore (Export and Import)&lt;/h3&gt;
-
-&lt;h4&gt;Backup first&lt;/h4&gt;
-
-&lt;p&gt;Backups are created with the &lt;code&gt;pg_dump&lt;/code&gt; command, but in order for it to know what to do, you have to append flags (options) to the command and send the output to a file.  We&amp;#39;re going to be taking backups of &lt;code&gt;imgblog_dev&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_dump -d imgblog_dev &amp;gt; ~/Desktop/dump1.sql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If I had to read it out loud, it is saying &amp;quot;Take a dump (haha) of database imgblog_dev and send it to the Desktop and call it dump1.sql.&amp;quot; The &lt;code&gt;-d&lt;/code&gt; flag stands for database. The &lt;code&gt;&amp;gt;&lt;/code&gt; is to output the contents to a file in some location. In this case it&amp;#39;s to the Desktop, as dump1.sql. Why &lt;code&gt;.sql&lt;/code&gt; ? Truthfully, the extension doesn&amp;#39;t matter. It can be &lt;code&gt;.txt&lt;/code&gt;, &lt;code&gt;.asdf&lt;/code&gt;, or whatever. But for sanity sake, &lt;code&gt;.sql&lt;/code&gt;. You&amp;#39;ll see why when you open up the file.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ subl ~/Desktop/dump1.sql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Assuming you&amp;#39;ve got sublime as your text editor with that shortcut, that&amp;#39;ll work. Otherwise do what you normally do when opening up files. :) When you do, you&amp;#39;ll see that it&amp;#39;s got a bunch of SQL commands. If you look more closely, you&amp;#39;ll see that they have some &lt;code&gt;CREATE TABLE&lt;/code&gt; commands and then &lt;code&gt;COPY&lt;/code&gt; commands for the actual data. You&amp;#39;ve taken a human-readable backup of the database.&lt;/p&gt;
-
-&lt;p&gt;What if all we want is the data? Imagine we&amp;#39;re transfering the information to another database and it&amp;#39;s already got tables set up because we&amp;#39;ve run migrations. What then? Let&amp;#39;s set some more flags.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_dump -d imgblog_dev -a -O &amp;gt; ~/Desktop/dump2.sql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Ok, so we&amp;#39;ve set 2 more flags: &lt;code&gt;-a&lt;/code&gt; and &lt;code&gt;-O&lt;/code&gt; (capital o, not zero). The &lt;code&gt;-a&lt;/code&gt; flag stands for &lt;code&gt;--data-only&lt;/code&gt;, so telling it to take only the data. The &lt;code&gt;-O&lt;/code&gt; command is &lt;code&gt;--no-owner&lt;/code&gt; which means remove all traces of ownership when getting this backup.  If you open up this file and compare it to dump1, here&amp;#39;s the kind of thing you&amp;#39;ll see.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# On ~ line 34 of dump1.sql, you&amp;#39;ll see the owner as yourself
--- Name: images; Type: TABLE; Schema: public; Owner: risa; Tablespace: 
-
-# On ~ line 15 of dump2.sql, you don&amp;#39;t see an owner listed
--- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: -
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Quick visual check also comfirms that dump2 only has data listed. No reference to tables.&lt;/p&gt;
-
-&lt;p&gt;Imagine you&amp;#39;re working on a production database, hosted on Digital Ocean at IP address 127.0.0.1 and port 5432. (Reality: 127.0.0.1 == localhost == your computer&amp;#39;s own IP address) This theoretical database is like 2GB large (whoa), and you need to transfer it to your dev env. It&amp;#39;s gonna be a pain to download all 2GB. Let&amp;#39;s compress it down, like an archive file.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_dump -h 127.0.0.1 -p 5432 -d imgblog_dev -a -O -Fc &amp;gt; ~/Desktop/dump3.dump
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The flags to connect: &lt;code&gt;-h&lt;/code&gt; is for host, usually an IP or a .com kind of address; &lt;code&gt;-p&lt;/code&gt; is for port, default postgres port is 5432 but it can be set to anything.  The next new flag is the &lt;code&gt;-Fc&lt;/code&gt; flag. I like to think of it as &amp;quot;format compressed&amp;quot; but in reality it is &amp;quot;format custom.&amp;quot; There are other &lt;code&gt;-F&lt;/code&gt; options, like &lt;code&gt;-Ft&lt;/code&gt; and &lt;code&gt;-Fd&lt;/code&gt; which will also archive your file, but &lt;code&gt;-Fc&lt;/code&gt; is the one you want. Finally, notice that I changed the extension to &lt;code&gt;.dump&lt;/code&gt;. Again, it&amp;#39;s a sanity thing. Appending that lets me know that it&amp;#39;s actually a compressed file that I&amp;#39;m dealing with.&lt;/p&gt;
-
-&lt;p&gt;If you open this file, you&amp;#39;ll immediately notice how it is completely human-readable gibberish and gobbledigook. :) It&amp;#39;s compressed after all. Postgres can understand it; we just know that the file is a lot smaller in size.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_dump -h 127.0.0.1 -p 5432 -U risa -d imgblog_dev -Fc -a -O &amp;gt; ~/Desktop/dump4.dump
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This combines pretty much all the flags I&amp;#39;ve covered thus far with the addition of &lt;code&gt;-U&lt;/code&gt; which is user. In your case, make sure you put your postgres username in, since you won&amp;#39;t have a risa user (unless your name is Risa as well. Hi!)&lt;/p&gt;
-
-&lt;p&gt;Congrats! You&amp;#39;ve gotten this far. One last stretch. Importing/restoring things back in!&lt;/p&gt;
-
-&lt;h4&gt;Then Restore&lt;/h4&gt;
-
-&lt;p&gt;In the real world, you may have times when databases get completely effed up. Hopefully you&amp;#39;ve got redundant databases or at least a scheduled backup system set up. When this happens, we need to sometimes restore the database to a previously known state. It also means there&amp;#39;s a chance of some loss of data. (Having a failover plan is essential, btw.) Othertimes, maybe you&amp;#39;re pulling in prod data into staging so you can manipulate real data and run some load testing. Whatever the case, you need to import some data from one database to another.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s get to it. First we&amp;#39;re going to totally break things, because when I gave the workshop, it was live, and I broke things :) We are going to restore to the &lt;code&gt;imgblog_test&lt;/code&gt; database. &lt;/p&gt;
-
-&lt;p&gt;But, one important thing. &lt;strong&gt;One Very Important Thing&lt;/strong&gt; When doing pg&lt;em&gt;dump, you have the two paths: human-readable and archive/compressed formats. If you choose the human-readable path, you _&lt;/em&gt;&lt;em&gt;MUST&lt;/em&gt;__ use &lt;code&gt;psql&lt;/code&gt;. If you choose the archive/compressed format, you &lt;strong&gt;&lt;em&gt;MUST&lt;/em&gt;&lt;/strong&gt; use pg_restore. Got that? In pseudocode it&amp;#39;s:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;use pg_dump
-  if use -Fc
-    use pg_restore
-  else
-    use psql
-  end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now that we got that sorted, let&amp;#39;s use the compressed dump to import/restore.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_restore -d imgblog_test &amp;lt; ~/Desktop/dump3.dump
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If you&amp;#39;ve been following very carefully, you will get a bunch of error output. Postgres did NOT like what just happened.  Here&amp;#39;s the proof:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_restore: [archiver (db)] could not execute query: ERROR:  relation &amp;quot;images&amp;quot; does not exist
-Command was: COPY images (id, img_url, img_name, description, user_id, created_at, updated_at, tags, gif, pictures) FROM stdin;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Key in the part where it says: &lt;code&gt;ERROR: relation &amp;quot;images&amp;quot; does not exist&lt;/code&gt;. Why&amp;#39;d it say that?  Remember how I said that in Rails 4.0, &lt;code&gt;rake db:setup&lt;/code&gt; creates an empty test database? Yeah.... Empty database has no tables. The import would not have worked because dump3.dump is a data-only and no-owner dump. It needs tables for data to be inserted.  Instead, let&amp;#39;s run dump1. Remember, since dump1 is a human-readable file, it needs to be run as psql.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql imgblog_test -f ~/Desktop/dump1.sql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The output should be a list of SET&amp;#39;s and CREATE&amp;#39;s and COPY&amp;#39;s. They will correspond to the SETs and CREATEs and COPYs in your dump1.sql file. Confirm that data has been transferred properly.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ psql imgblog_test
-imgblog_test=# \dt
-# confirm you have images, schema_migrations, and users
-imgblog_test=# select count(*) from users;
-# you should have 33 users.
-imgblog_test=# select count(*) from images;
-# you should have 66 images.
-imgblog_test=# \q
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Fantastic job! Let&amp;#39;s drop the database and confirm that it is no longer there. I am using a shortcut to display the list of databases without hopping into postgres. Then we&amp;#39;ll set it up properly.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ RAILS_ENV=test rake db:drop
-$ psql -l
-# confirm that imgblog_test does not exist
-$ RAILS_ENV=test rake db:setup
-# this runs db:create, migrate, and seed
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Ok, now let&amp;#39;s use that data-only dump file (dump3). The output of that is below the command.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ pg_restore -d imgblog_test &amp;lt; ~/Desktop/dump3.dump
-# the output
-pg_restore: [archiver (db)] Error while PROCESSING TOC:
-pg_restore: [archiver (db)] Error from TOC entry 2284; 0    34203 TABLE DATA schema_migrations risa
-pg_restore: [archiver (db)] COPY failed for table &amp;quot;schema_    migrations&amp;quot;: ERROR:  duplicate key value violates unique    constraint &amp;quot;unique_schema_migrations&amp;quot;
-DETAIL:  Key (version)=(20141122220745) already exists.
-CONTEXT:  COPY schema_migrations, line 1
-WARNING: errors ignored on restore: 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Oh no! There&amp;#39;s an ERROR!! But wait, it says &amp;quot;duplicate key value violates unique constraint&amp;quot; That&amp;#39;s just postgres double checking your work basically. No need to worry about that. It&amp;#39;s basically saying that it already existed in the database, but that&amp;#39;s to be expected, since we ran the migrations and created the tables (and indexes).  You can confirm that data indeed was still transferred over properly.&lt;br&gt;
-...I will let you figure that one out on your own. :)&lt;/p&gt;
-
-&lt;p&gt;OK, ONE LAST RESTORE! Imagine that you have to restore the database from your machine to another machine. Yup, you&amp;#39;ll need those host and port (and user, but skipping here) flags.  Before we do that, let&amp;#39;s reset the test database.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ RAILS_ENV=test rake db:reset
-$ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &amp;lt; ~/Documents/dump4.dump
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Again, same kind of errors, but hop in and check the data. Did it transfer over?  Awesome!&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h3&gt;Wrap up&lt;/h3&gt;
-
-&lt;p&gt;Congratulations!! You&amp;#39;ve learned how to navigate about in postgres, use some SQL commands, and import and export data from postgres. You rock! Give yourself a high-5 :D&lt;/p&gt;
-
-&lt;p&gt;Now, after reading all of this, I hope you feel a bit more comfortable reading the documentation. Here are some super helpful links.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.postgresql.org/docs/9.4/static/app-psql.html&quot;&gt;Postgres Docs: psql&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.postgresql.org/docs/9.4/static/app-pgdump.html&quot;&gt;Postgres Docs: pg_dump&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.postgresql.org/docs/9.4/static/app-pgrestore.html&quot;&gt;Postgres Docs: pg_restore&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Suggestions? Please let me know. You can email me at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;. No question is too dumb.&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +10&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/postgres-workshop-notes/</link>
-        <guid isPermaLink="true">http://risaonrails.com/postgres-workshop-notes/</guid>
-        
-        <category>postgres</category>
-        
-        
-        <category>postgres</category>
-        
-        <category>presentations</category>
         
         <category>guide</category>
         

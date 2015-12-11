@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
   <title>Postgres Workshop Notes</title>
   <meta name="description" content="Hi there!">
-
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://risaonrails.com/postgres-workshop-notes/">
   <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
 </head>
 
 
@@ -72,13 +73,13 @@
 
 <p>Quick background on Postgres. It&#39;s a relational database that is awesome because it&#39;s highly extensible. For instance there is geospacial support (postGIS), key/value store (hstore), and with postgres 9.4, there&#39;s JSON support (more so than what they had previously). You could say it&#39;s the end-all-be-all for databases. At least that&#39;s what I&#39;d like to see it as! Obviously postgres may not suit your needs but this knowledge is valuable and transferable. And if you were afraid of reading the docs before, hopefully after this you won&#39;t be.</p>
 
-<h3>What to expect</h3>
+<h3 id="what-to-expect">What to expect</h3>
 
 <p>I&#39;ll walk thru entering/exiting Postgres. Then a bit of navigation so you feel more comfortable with it. And then we&#39;re going to go straight into dealing with import/export (restore/backup). For the import/export section, I&#39;ve a chump vanilla Rails app that will be used because there&#39;s a rake task in there that creates fake data. Hurray for the Faker gem!</p>
 
 <hr>
 
-<h3>First thing&#39;s first</h3>
+<h3 id="first-thing-39-s-first">First thing&#39;s first</h3>
 
 <p>Let&#39;s make sure you can run Postgres.</p>
 
@@ -97,7 +98,7 @@
 
 <hr>
 
-<h3>Go in, go out</h3>
+<h3 id="go-in-go-out">Go in, go out</h3>
 
 <p>Once you&#39;ve followed the instructions for installation and have postgres running, we can confirm this by running <code>psql</code> in Terminal.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">$ psql
@@ -121,7 +122,7 @@ $
 
 <hr>
 
-<h3>Navigation</h3>
+<h3 id="navigation">Navigation</h3>
 
 <p>To find out where we&#39;re at currently, type <code>\conninfo</code>. </p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">$ psql
@@ -146,7 +147,7 @@ template1=#
 
 <hr>
 
-<h3>Rails setup</h3>
+<h3 id="rails-setup">Rails setup</h3>
 
 <p>Please clone this repo: <a href="https://github.com/rbatta/img_blog">image blog</a>. It&#39;s my vanilla rails app based on the <a href="https://www.railstutorial.org/book">Michael Hartl tutorial</a><br>
 It uses ruby 2.0.0, so you may have to use rvm or rbenv to change ruby versions for this app.</p>
@@ -202,9 +203,9 @@ imgblog_dev=# \q
 
 <hr>
 
-<h3>Backup and Restore (Export and Import)</h3>
+<h3 id="backup-and-restore-export-and-import">Backup and Restore (Export and Import)</h3>
 
-<h4>Backup first</h4>
+<h4 id="backup-first">Backup first</h4>
 
 <p>Backups are created with the <code>pg_dump</code> command, but in order for it to know what to do, you have to append flags (options) to the command and send the output to a file.  We&#39;re going to be taking backups of <code>imgblog_dev</code>.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_dump -d imgblog_dev &gt; ~/Desktop/dump1.sql
@@ -238,7 +239,7 @@ imgblog_dev=# \q
 
 <p>Congrats! You&#39;ve gotten this far. One last stretch. Importing/restoring things back in!</p>
 
-<h4>Then Restore</h4>
+<h4 id="then-restore">Then Restore</h4>
 
 <p>In the real world, you may have times when databases get completely effed up. Hopefully you&#39;ve got redundant databases or at least a scheduled backup system set up. When this happens, we need to sometimes restore the database to a previously known state. It also means there&#39;s a chance of some loss of data. (Having a failover plan is essential, btw.) Othertimes, maybe you&#39;re pulling in prod data into staging so you can manipulate real data and run some load testing. Whatever the case, you need to import some data from one database to another.</p>
 
@@ -300,7 +301,7 @@ $ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &lt; ~/Documents/dump4.dump
 
 <hr>
 
-<h3>Wrap up</h3>
+<h3 id="wrap-up">Wrap up</h3>
 
 <p>Congratulations!! You&#39;ve learned how to navigate about in postgres, use some SQL commands, and import and export data from postgres. You rock! Give yourself a high-5 :D</p>
 
@@ -317,6 +318,21 @@ $ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &lt; ~/Documents/dump4.dump
 <p>Questions? Comments? Suggestions? Please let me know. You can email me at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>. No question is too dumb.</p>
 
 <p><i class="fa fa-angle-double-up"></i> Level up +10</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </article>
 
@@ -392,47 +408,26 @@ $ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &lt; ~/Documents/dump4.dump
 </p>
       </div>
     </div>
-
   </div>
+</footer>
 <script>
-  var anchorForId = function (id) {
-    var anchor = document.createElement("a");
-    anchor.className = "header-link";
-    anchor.href      = "#" + id;
-    anchor.innerHTML = "<i class=\"fa fa-link\"></i>";
-    return anchor;
-  };
-
-  var linkifyAnchors = function (level, containingElement) {
-    var headers = containingElement.getElementsByTagName("h" + level);
-    for (var h = 0; h < headers.length; h++) {
-      var header = headers[h];
-
-      if (typeof header.id !== "undefined" && header.id !== "") {
-        header.appendChild(anchorForId(header.id));
-      }
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
     }
-  };
-
-  document.onreadystatechange = function () {
-    if (this.readyState === "complete") {
-      var contentBlock = document.getElementsByClassName("docs")[0] || document.getElementsByClassName("news")[0];
-      if (!contentBlock) {
-        return;
-      }
-      for (var level = 1; level <= 6; level++) {
-        linkifyAnchors(level, contentBlock);
-      }
-    }
-  };
+  });
+});
 </script>
 
-</footer>
 
 
 
-
-
+    
   </body>
 
 </html>
