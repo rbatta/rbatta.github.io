@@ -106,42 +106,42 @@
 <p>Now, if you have not hit Surprise at all, you won&#39;t have any passenger instances created. That makes sense. Why spawn a process when it isn&#39;t being used? </p>
 
 <p>The process is brutally simple, hit the app to spawn a Passenger process, then check <code>top</code> to see what the name is and create the monit file.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>top -c
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>top -c
 <span class="c"># hit shift M to sort by memory</span>
 <span class="c"># you should see near the top right</span>
 <span class="c"># Passenger RubyApp: /home/rails/surprise/public </span>
 <span class="c"># copy paste that</span>
 
-<span class="nv">$ </span>sudo nano /etc/monit/conf.d/surprise-pass
+<span class="gp">$ </span>sudo nano /etc/monit/conf.d/surprise-pass
 </code></pre></div>
 <p>Now in this file, write in the following:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">check process surprise-pass matching <span class="s1">&#39;Passenger RubyApp: \/home\/rails\/surprise\/public&#39;</span>
-  <span class="k">if</span> totalmem &gt; 35% <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb
-  <span class="k">if</span> totalmem &gt; 60% <span class="k">then</span> <span class="nb">exec</span> /etc/monit/touch_surprise_sh  <span class="c"># restart app</span>
-  <span class="k">if</span> changed pid <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb              <span class="c"># sanity check</span>
-  <span class="k">if</span> totalcpu &gt; 25% <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">check process surprise-pass matching <span class="s1">'Passenger RubyApp: \/home\/rails\/surprise\/public'</span>
+  <span class="k">if </span>totalmem &gt; 35% <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb
+  <span class="k">if </span>totalmem &gt; 60% <span class="k">then </span><span class="nb">exec</span> /etc/monit/touch_surprise_sh  <span class="c"># restart app</span>
+  <span class="k">if </span>changed pid <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb              <span class="c"># sanity check</span>
+  <span class="k">if </span>totalcpu &gt; 25% <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb
 </code></pre></div>
 <p>Save and exit. Notice the <code>\</code> marks to escape the <code>/</code> marks. Because monit does essentially a <code>ps aux | grep ____</code>, copy pasting what you find in <code>top -c</code> is a great way to get the process match.</p>
 
 <p>A couple of things to note. 1) There is also a new file being executed here. More on this in a bit. 2) We are talking totalmem and totalcpu. Passenger can spin up child processes if it needs it, but I want to look at the total memory consumption of that particular app. Total cpu is not per core but for the whole thing. I also based these off of monit&#39;s web interface information. It&#39;s very handy to pick out the things you want to monitor in particular.</p>
 
 <p>The new file <code>touch_surprise_sh</code> is a super simple bash script that restarts Passenger (and not Nginx) via the <code>touch</code> command.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo nano /etc/monit/touch_surprise_sh
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo nano /etc/monit/touch_surprise_sh
 </code></pre></div>
 <p>In the file type the following lines:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!/bin/bash
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!/bin/bash</span>
 
 touch /home/rails/surprise/tmp/restart.txt
 </code></pre></div>
 <p>Alternatively you can make it more verbose and sudo in as your user (rails) to restart Passenger.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo -u rails -H sh -c &quot;touch /home/rails/surprise/tmp/restart.txt”
+<div class="highlight"><pre><code class="language-" data-lang="">sudo -u rails -H sh -c "touch /home/rails/surprise/tmp/restart.txt”
 </code></pre></div>
 <p>Save and exit. Make it into an executable file.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chmod +x /etc/monit/touch_surprise_sh
+<div class="highlight"><pre><code class="language-" data-lang="">sudo chmod +x /etc/monit/touch_surprise_sh
 </code></pre></div>
 <p>Do your standard monit sanity check, then reload monit.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo monit -t       <span class="c"># fix any problems, obv</span>
-<span class="nv">$ </span>sudo monit reload
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo monit -t       <span class="c"># fix any problems, obv</span>
+<span class="gp">$ </span>sudo monit reload
 </code></pre></div>
 <p>Confirm on your web interface that surprise-pass is loaded up and displaying all the goodies you like to see. When you restart nginx, Passenger should lose a PID. It&#39;ll alert you on Slack when you hit the app and create a new PID. Right on. <img class='emoji' title='fist' alt='fist' src='https://github.global.ssl.fastly.net/images/icons/emoji/fist.png' height='20' width='20' align='absmiddle' ></p>
 

@@ -93,19 +93,19 @@
 <p><a href="https://help.github.com/articles/generating-ssh-keys/#platform-linux">Github&#39;s SSH key article</a> is probably the best thing that&#39;s happened on the internet for people like me since sliced bread. (But not since buttered and toasted sliced bread...)</p>
 
 <p>Here&#39;s the abbreviated version of that article for our purposes, using our examples. Because examples are great! I&#39;ll use Surprise (app 1) as the example since the steps are repeated for Badger (app 2).</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -b <span class="m">4096</span> -C <span class="s2">&quot;devops@surprise&quot;</span>
-<span class="c"># really, we don&#39;t need to put an email. this just lets us know</span>
-<span class="c"># that it&#39;s the surprise repo we&#39;re dealing with.</span>
-Enter file in which to save the key <span class="o">(</span>/Users/you/.ssh/id_rsa<span class="o">)</span>: surprise_rsa
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -b 4096 -C <span class="s2">"devops@surprise"</span>
+<span class="c"># really, we don't need to put an email. this just lets us know</span>
+<span class="c"># that it's the surprise repo we're dealing with.</span>
+Enter file <span class="k">in </span>which to save the key <span class="o">(</span>/Users/you/.ssh/id_rsa<span class="o">)</span>: surprise_rsa
 <span class="c"># here put in something like surprise_rsa then hit enter</span>
-Enter passphrase <span class="o">(</span>empty <span class="k">for</span> no passphrase<span class="o">)</span>: <span class="c"># optional</span>
+Enter passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>: <span class="c"># optional</span>
 Enter same passphrase again: <span class="c"># optional</span>
 <span class="c"># these are optional but highly recommended</span>
 </code></pre></div>
 <p>You should get some funky design/image after this. Repeat these for badger.</p>
 
 <p>Once both are set up, we can proceed to the next step, adding the keys to the ssh-agent. You want to run the eval statement once. This tripped me up a couple of times.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">eval</span> <span class="s2">&quot;$(ssh-agent -s)&quot;</span>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">eval</span> <span class="s2">"</span><span class="k">$(</span>ssh-agent -s<span class="k">)</span><span class="s2">"</span>
 <span class="c"># this gets you a pid. Agent pid ####</span>
 ssh-add ~/.ssh/surprise_rsa
 ssh-add ~/.ssh/badger_rsa

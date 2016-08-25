@@ -95,9 +95,9 @@
 
 <p>My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn&#39;t have gems for p643 so used p451.)</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>rbenv global 2.0.0-p451
-<span class="nv">$ </span>gem install rails 4.0.13
-<span class="nv">$ </span>rails _4.0.13_ new appname</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>rbenv global 2.0.0-p451
+<span class="gp">$ </span>gem install rails 4.0.13
+<span class="gp">$ </span>rails _4.0.13_ new appname</code></pre></figure>
 
 <p>Please note the <code>_</code> surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.</p>
 

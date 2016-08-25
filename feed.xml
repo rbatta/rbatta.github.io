@@ -6,9 +6,149 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Jan 2016 14:41:14 -0800</pubDate>
-    <lastBuildDate>Thu, 07 Jan 2016 14:41:14 -0800</lastBuildDate>
-    <generator>Jekyll v2.5.3</generator>
+    <pubDate>Wed, 24 Aug 2016 23:38:04 -0700</pubDate>
+    <lastBuildDate>Wed, 24 Aug 2016 23:38:04 -0700</lastBuildDate>
+    <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Testing, testing, 1...2...3</title>
+        <description>&lt;p&gt;&lt;em&gt;Hello? Is anybody in there? Just nod if you can hear me...&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;For the past while, I&amp;#39;ve been writing a lot of tests to make up for the lack of them in some apps at work. Most of that time has been writing feature tests.  I&amp;#39;ve encountered a lot of weird little things that I&amp;#39;ve struggled with. I don&amp;#39;t quite know &lt;em&gt;why&lt;/em&gt; some things have happened, but I&amp;#39;ve figured out &lt;em&gt;how&lt;/em&gt; to get around or solve the problems I&amp;#39;ve been facing.&lt;/p&gt;
+
+&lt;p&gt;So this is all about the tips and tricks I&amp;#39;ve learned while writing feature tests.&lt;/p&gt;
+
+&lt;h3 id=&quot;but-first-a-digression&quot;&gt;But first, a digression&lt;/h3&gt;
+
+&lt;p&gt;When I first learned Rails, I learned Behavior Driven Development (BDD) with Cucumber. If you&amp;#39;re not aware, Cucumber isn&amp;#39;t just a vegetable anymore! Cucumber tests use a DSL called Gherkin, which is business-readable. (Tho, what&amp;#39;s up with the pickling vegetable names?) The concept behind it is that it&amp;#39;s for the client to read and understand, as if they were created from the 3x5 index cards used to define the feature at the beginning.  The format is set in a &amp;#39;Given-When-Then&amp;#39; setup, such as: &amp;#39;Given I have some chocolate, when I open the package, then it is eaten.&amp;#39; What was familiar English on the front, was actually a bunch of regex in the back combined with Capybara to drive the actions.&lt;/p&gt;
+
+&lt;p&gt;One of the common problems I&amp;#39;ve faced when using Cucumber was that the steps, the given/when/thens, would sometimes get repeated, not redundant, but slightly different in wording gave it its own step definition. Bloated. It was also annoying to try to find a step definition when one would say &amp;quot;When I click on a button&amp;quot; and another would say &amp;quot;When I click a button&amp;quot;. This would be even more accentuated if there were multiple devs involved in the project writing their own step definitions. I wonder if this was one of the reasons why people stopped using cukes for testing and started incorporating feature tests with RSpec.  &lt;/p&gt;
+
+&lt;p&gt;I, for one, have embraced using RSpec feature tests with Capybara. You still have the same expectations but without the &lt;em&gt;cucumbersome&lt;/em&gt; extra layers of Gherkin (which no client actually really reads) and bloated step definitions. Instead, it&amp;#39;s straight up RSpec and Capybara for you and your dev team.&lt;/p&gt;
+
+&lt;h2 id=&quot;tips-amp-tricks&quot;&gt;Tips &amp;amp; Tricks&lt;/h2&gt;
+
+&lt;h4 id=&quot;0-5-save-and-open-page&quot;&gt;0.5) Save and open page&lt;/h4&gt;
+
+&lt;p&gt;I&amp;#39;m always a bit surprised when I hear that devs have never heard of &lt;code&gt;save_and_open_page&lt;/code&gt;, a Capybara method that lets you view a simple html-only snapshot of the page at invocation. Unfortunately it renders the page without the benefit of JS so things the javascript would hide would be visible and the angular interpolations would display. As long as if you&amp;#39;re aware of the pitfalls, &lt;code&gt;save_and_open_page&lt;/code&gt; is a fantastic lil line that can help you troubleshoot. Stick it in the feature spec anywhere before your expectation. You may need the &lt;code&gt;launchy&lt;/code&gt; gem for this now.&lt;/p&gt;
+
+&lt;h4 id=&quot;1-would-you-like-some-javascript-with-those-features&quot;&gt;1) Would you like some Javascript with those features?&lt;/h4&gt;
+
+&lt;p&gt;Typically, our apps would have &lt;code&gt;@javascript&lt;/code&gt; at the beginning of each scenario when we wanted to test a feature that incorporates Javascript, such as Angular. I am pretty sure this is a carry-over from the Cucumber days but in RSpec land, you can get away with simply stating &lt;code&gt;js: true&lt;/code&gt; in your scenario, context, or even feature block.&lt;/p&gt;
+
+&lt;p&gt;As a lot of our apps use Angular, it&amp;#39;s easier for me to put the &lt;code&gt;js: true&lt;/code&gt; in the feature block. Here&amp;#39;s what I mean.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;rails_helper&#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Admin home page&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:devise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;js: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# and then continue with your scenario blocks, before blocks, and whatever else&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This gives for cleaner code, since each of your scenarios aren&amp;#39;t littered with &lt;code&gt;@javascript&lt;/code&gt; or tagged with &lt;code&gt;js: true&lt;/code&gt;. This really comes in handy if your front-end app is fairly JS heavy.&lt;/p&gt;
+
+&lt;h4 id=&quot;2-check-response-headers-for-downloads&quot;&gt;2) Check response headers for downloads&lt;/h4&gt;
+
+&lt;p&gt;One of our apps has a download function. I didn&amp;#39;t want to test the downloaded file, but simply that the download actually worked. Instead of creating a file and comparing that against the downloaded copy, I &amp;quot;cheated&amp;quot; a bit and decided to check the response headers. This &lt;a href=&quot;http://stackoverflow.com/a/21623939/2464546&quot;&gt;StackOverflow answer&lt;/a&gt; actually helped me out by pointing me in the direction I needed to go.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;scenario&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;it downloads a file&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;js: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;visit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;download_path&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;click_on&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Download&#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;response_headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Content-Type&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;image/jpeg&#39;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, I also had to turn off Javascript by inserting &lt;code&gt;js: false&lt;/code&gt; just for that test since the entire feature had Javascript turned on. This has to do with Capybara using Selenium (our default) to test the Javascript. Instead, having &lt;code&gt;js: false&lt;/code&gt; forced Capybara to use its natural default of RackTest. Note that this makes the particular test go faster since it doesn&amp;#39;t render Javascript.&lt;/p&gt;
+
+&lt;h4 id=&quot;3-responsive-web-design-and-continuous-integration&quot;&gt;3) Responsive web design and continuous integration&lt;/h4&gt;
+
+&lt;p&gt;OK. Story time. For one of our apps, I had an awful time troubleshooting failed tests on our CI environment -- TravisCI. For whatever bizarre reason, certain tests would fail on Travis but never locally. I couldn&amp;#39;t reproduce it at all, but the errors would almost always be about Capybara saying an element couldn&amp;#39;t be found.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Failure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;click_on&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Download&#39;&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;Capybara&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ElementNotFound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Unable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Download&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Annoying. I know. I&amp;#39;m looking straight at the page and saying &amp;quot;but there IS a download button! It&amp;#39;s right there!&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;I tried to add &lt;code&gt;id&lt;/code&gt;s; I tried renaming it; I tried a slew of different things, all using &lt;code&gt;save_and_open_page&lt;/code&gt; to see what the state of the page was. Without fail, &amp;quot;Download&amp;quot; appeared. As I surfed around the web, I had an epiphany. &lt;em&gt;What if the test is being run in a smaller browser window?&lt;/em&gt; I didn&amp;#39;t know what size &amp;quot;smaller&amp;quot; would be. I used Chrome&amp;#39;s mobile-mode to test my theory and BOOM! The buttons I had been looking for had disappeared when the browser was at around 400px. This explained why my tests would fail. Our app uses responsive web design with bootstrap, so css values like &lt;code&gt;hidden-lg&lt;/code&gt; or &lt;code&gt;visible-lg&lt;/code&gt; were being used. Was Travis running my tests at mobile size (e.g. 400-ish pixels)?&lt;/p&gt;
+
+&lt;p&gt;The real question is, how do I get Travis to run my tests at a particular size? After some sleuthing, I found out that by default, Travis runs Firefox at around 1024x768. Ok. I tested whether or not I could see my buttons at 1024. Yup, the hamburglar menu popped up at that width and my &amp;quot;Download&amp;quot; button disappeared. Travis has in their docs that the browser size can be resized to whatever dimensions you want. I added the following &lt;code&gt;before_install&lt;/code&gt; section to my &lt;code&gt;.travis.yml&lt;/code&gt; file, keeping the xvbf start in the &lt;code&gt;before_script&lt;/code&gt;. &lt;em&gt;Note: Travis docs says having &lt;code&gt;xvfb start&lt;/code&gt; doesn&amp;#39;t play well w/ the custom dimensions but I haven&amp;#39;t seen a problem with it yet.&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;s&quot;&gt;before_install&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/sbin/start-stop-daemon&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--start&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--quiet&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--pidfile&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/tmp/custom_xvfb_99.pid&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--make-pidfile&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--background&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--exec&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/usr/bin/Xvfb&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;:99&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;-ac&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;-screen&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1280x1024x16&quot;&lt;/span&gt;
+
+
+&lt;span class=&quot;s&quot;&gt;before_script&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;export DISPLAY=:99.0&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;sh -e /etc/init.d/xvfb start&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Tests were rerun, but they still failed. WTF, mate? Was my setting not being accepted? I surfed the web for something. Anything. I even &lt;a href=&quot;http://stackoverflow.com/questions/38214547/travis-ci-not-recognizing-large-resolution-on-xvfb-causing-feature-specs-to-fail&quot;&gt;posted on StackOverflow&lt;/a&gt;. Finally after about a week, I found the following article: &lt;a href=&quot;https://discuss.circleci.com/t/capybara-driver-rack-test/407&quot;&gt;A circleCI conversation about Capybara testing&lt;/a&gt; which included an interesting article called &lt;a href=&quot;http://blaulabs.de/2011/11/22/acceptance-testing-with-responsive-layouts/&quot;&gt;Testing responsive layouts&lt;/a&gt;. &lt;em&gt;Voila!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The two articles gave me all the information I needed to proceed. Selenium needed a browser window size setting, so I simply gave it one.  In my &lt;code&gt;spec/spec_helper.rb&lt;/code&gt; I added the following:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;set_selenium_window_size_to_large&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;browser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;manage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;resize_to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1280&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1280&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;set_selenium_window_size_to_small&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;browser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;manage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;resize_to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now I could simply call &lt;code&gt;set_selenium_window_size_to_large&lt;/code&gt; (or small) from within my feature tests.&lt;/p&gt;
+
+&lt;p&gt;And Travis? Travis was super happy to give me some green builds after that. &lt;img class=&#39;emoji&#39; title=&#39;grinning&#39; alt=&#39;grinning&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;  &lt;/p&gt;
+
+&lt;h4 id=&quot;4-refreshing-the-page&quot;&gt;4) Refreshing the page&lt;/h4&gt;
+
+&lt;p&gt;With the use of Angular, I&amp;#39;ve noticed some finickiness with some of my other tests. Once I solved the responsive-layout problem above, I encountered another issue of some tests failing, both locally and on Travis.&lt;/p&gt;
+
+&lt;p&gt;In this particular instance, it was another &lt;code&gt;Capybara::ElementNotFound&lt;/code&gt; error, but not associated with the browser resolution problem above. The error was triggered only on certain instances. An example test that failed:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;scenario&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;editing an answer&#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;click_on&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Edit&#39;&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;fill_in&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Answer&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;with: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;something else&#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;click_on&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Save&#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;have_content&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;something else&#39;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The page uses Angular to display a modal/overlay that allows you to edit the answer, then saves that upon close. You could then click on &amp;#39;Edit&amp;#39; to have the overlay pop up again to confirm the change. Unfortunately the tests did not like this. I suspect it was because the answer&amp;#39;s edit page was in a tabbed view. I had to actually force the page to refresh in order to get the page overlay to display once more. So how do I refresh the page without actually saying &lt;code&gt;visit such_and_such_path&lt;/code&gt;? Selenium had the answer.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;browser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;navigate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;refresh&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This does mean that I have to add in a couple more extra clicks, but it made the headache go away.&lt;/p&gt;
+
+&lt;h4 id=&quot;5-hunting-down-flaky-tests&quot;&gt;5) Hunting down flaky tests&lt;/h4&gt;
+
+&lt;p&gt;A couple of apps were failing their tests periodically: flaky tests. It seemed random. Underneath it all, there were 2 issues.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;First one.&lt;/strong&gt; Angular was too fast. During the scenario build, the transaction to create data wasn&amp;#39;t finished when Angular asked for that data. This caused Angular to get back an empty data set causing the test to fail. No good. A quick, &lt;em&gt;but brittle&lt;/em&gt;, fix to this was to insert a &lt;code&gt;sleep 1&lt;/code&gt; in the test. After speaking to a senior dev on the team, he sold me on the fact that having to rely on &lt;code&gt;sleep&lt;/code&gt; could mean that there is actually something wrong with the code. For example, the db transaction could be taking too long because it&amp;#39;s trying to do multiple things at once.  If you have the time to investigate further, that would be ideal. Unfortunately there were not enough client hours to justify spending it to solve this issue so &lt;code&gt;sleep 1&lt;/code&gt; it was.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Second one.&lt;/strong&gt; This one is a big mindboggling for me, but probably because I haven&amp;#39;t figured out why it happened in the first place. We originally were running our cukes in headless mode (aka, no firefox browser popping up). It&amp;#39;s faster and uses PhantomJS. However, everyone&amp;#39;s environment seemed to react differently. Some folks had perfectly passing tests while others didn&amp;#39;t. The environments should have been the same but were not. Worse was that the Gemfile.locks were all the same so it wasn&amp;#39;t a versioning issue either. I dared to actually try to build a Docker dev environment for everyone to use. At least with that, everyone&amp;#39;s environment would be the same. While setting this up, my coworker and I couldn&amp;#39;t get PhantomJS to load or run properly with Docker, so we opted to use Selenium instead. On a whim, we ran our tests with Selenium. Everything passed! And despite my disdain for Docker, thank you! Because had we not gone that route and encountered obstacles, we wouldn&amp;#39;t have switched to Selenium and fixed our build.&lt;/p&gt;
+
+&lt;p&gt;Ultimately, these might be common tips and tricks for feature tests, but I hope this helps anyone who is rather rusty or new to the game.  Of course as I write this, I&amp;#39;m wondering if xvfb&amp;#39;s screen size change is for &amp;quot;monitors&amp;quot; vs &amp;quot;browsers&amp;quot;......doh! &lt;img class=&#39;emoji&#39; title=&#39;sweat_smile&#39; alt=&#39;sweat_smile&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/sweat_smile.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 24 Aug 2016 15:38:56 -0700</pubDate>
+        <link>http://risaonrails.com/testing-testing-1-2-3/</link>
+        <guid isPermaLink="true">http://risaonrails.com/testing-testing-1-2-3/</guid>
+        
+        <category>testing</category>
+        
+        <category>capybara</category>
+        
+        <category>rspec</category>
+        
+        <category>rails</category>
+        
+        <category>tips</category>
+        
+        
+        <category>rails</category>
+        
+        <category>testing</category>
+        
+        <category>tips</category>
+        
+      </item>
     
       <item>
         <title>Thoughts on Atom, the text editor</title>
@@ -119,7 +259,7 @@
         
         <category>devops</category>
         
-        <category>hipaa</category>
+        <category>HIPAA</category>
         
       </item>
     
@@ -209,12 +349,12 @@ mysql -u root -p &amp;lt; all_db.sql
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# as user deploy&lt;/span&gt;
 mysql
 &lt;span class=&quot;c&quot;&gt;# then in mysql, list the databases&lt;/span&gt;
-show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# you shouldn&amp;#39;t see anything&lt;/span&gt;
+show databases;
+&lt;span class=&quot;c&quot;&gt;# you shouldn&#39;t see anything&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# now log in as root (with password)&lt;/span&gt;
 mysql -u root -p
-show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+show databases;
 &lt;span class=&quot;c&quot;&gt;# boom! all your databases are there&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -231,11 +371,11 @@ show databases&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 sudo nano configuration.php
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Scroll down to find the database section near the top and change the settings to reflect which user you put the data under. The dump file should have created the databases for you and should be the same.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;public &lt;span class=&quot;nv&quot;&gt;$dbtype&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;mysql&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-public &lt;span class=&quot;nv&quot;&gt;$host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-public &lt;span class=&quot;nv&quot;&gt;$user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;root&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                       &lt;span class=&quot;c&quot;&gt;# possibly change this&lt;/span&gt;
-public &lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;your_awesome_password&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
-public &lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;app_database&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                 &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;public &lt;span class=&quot;nv&quot;&gt;$dbtype&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;mysql&#39;&lt;/span&gt;;
+public &lt;span class=&quot;nv&quot;&gt;$host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;localhost&#39;&lt;/span&gt;;
+public &lt;span class=&quot;nv&quot;&gt;$user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;root&#39;&lt;/span&gt;;                       &lt;span class=&quot;c&quot;&gt;# possibly change this&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;your_awesome_password&#39;&lt;/span&gt;;  &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
+public &lt;span class=&quot;nv&quot;&gt;$db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;app_database&#39;&lt;/span&gt;;                 &lt;span class=&quot;c&quot;&gt;# change this&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Save and exit. This should be all you need to do for your Joomla settings.&lt;/p&gt;
 
@@ -308,19 +448,19 @@ sudo service apache2 restart &lt;span class=&quot;c&quot;&gt;# or reload&lt;/spa
 &lt;p&gt;&lt;a href=&quot;https://help.github.com/articles/generating-ssh-keys/#platform-linux&quot;&gt;Github&amp;#39;s SSH key article&lt;/a&gt; is probably the best thing that&amp;#39;s happened on the internet for people like me since sliced bread. (But not since buttered and toasted sliced bread...)&lt;/p&gt;
 
 &lt;p&gt;Here&amp;#39;s the abbreviated version of that article for our purposes, using our examples. Because examples are great! I&amp;#39;ll use Surprise (app 1) as the example since the steps are repeated for Badger (app 2).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ssh-keygen -t rsa -b &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; -C &lt;span class=&quot;s2&quot;&gt;&amp;quot;devops@surprise&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# really, we don&amp;#39;t need to put an email. this just lets us know&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# that it&amp;#39;s the surprise repo we&amp;#39;re dealing with.&lt;/span&gt;
-Enter file in which to save the key &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/you/.ssh/id_rsa&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: surprise_rsa
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ssh-keygen -t rsa -b 4096 -C &lt;span class=&quot;s2&quot;&gt;&quot;devops@surprise&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# really, we don&#39;t need to put an email. this just lets us know&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# that it&#39;s the surprise repo we&#39;re dealing with.&lt;/span&gt;
+Enter file &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;which to save the key &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/you/.ssh/id_rsa&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: surprise_rsa
 &lt;span class=&quot;c&quot;&gt;# here put in something like surprise_rsa then hit enter&lt;/span&gt;
-Enter passphrase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;empty &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; no passphrase&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;c&quot;&gt;# optional&lt;/span&gt;
+Enter passphrase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;empty &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;no passphrase&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;c&quot;&gt;# optional&lt;/span&gt;
 Enter same passphrase again: &lt;span class=&quot;c&quot;&gt;# optional&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# these are optional but highly recommended&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;You should get some funky design/image after this. Repeat these for badger.&lt;/p&gt;
 
 &lt;p&gt;Once both are set up, we can proceed to the next step, adding the keys to the ssh-agent. You want to run the eval statement once. This tripped me up a couple of times.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$(ssh-agent -s)&amp;quot;&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ssh-agent -s&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# this gets you a pid. Agent pid ####&lt;/span&gt;
 ssh-add ~/.ssh/surprise_rsa
 ssh-add ~/.ssh/badger_rsa
@@ -517,42 +657,42 @@ Host badger
 &lt;p&gt;Now, if you have not hit Surprise at all, you won&amp;#39;t have any passenger instances created. That makes sense. Why spawn a process when it isn&amp;#39;t being used? &lt;/p&gt;
 
 &lt;p&gt;The process is brutally simple, hit the app to spawn a Passenger process, then check &lt;code&gt;top&lt;/code&gt; to see what the name is and create the monit file.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;top -c
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;top -c
 &lt;span class=&quot;c&quot;&gt;# hit shift M to sort by memory&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# you should see near the top right&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# Passenger RubyApp: /home/rails/surprise/public &lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# copy paste that&lt;/span&gt;
 
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/conf.d/surprise-pass
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/conf.d/surprise-pass
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now in this file, write in the following:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;check process surprise-pass matching &lt;span class=&quot;s1&quot;&gt;&amp;#39;Passenger RubyApp: \/home\/rails\/surprise\/public&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalmem &amp;gt; 35% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalmem &amp;gt; 60% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/touch_surprise_sh  &lt;span class=&quot;c&quot;&gt;# restart app&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; changed pid &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb              &lt;span class=&quot;c&quot;&gt;# sanity check&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; totalcpu &amp;gt; 25% &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;check process surprise-pass matching &lt;span class=&quot;s1&quot;&gt;&#39;Passenger RubyApp: \/home\/rails\/surprise\/public&#39;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;totalmem &amp;gt; 35% &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
+  &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;totalmem &amp;gt; 60% &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/touch_surprise_sh  &lt;span class=&quot;c&quot;&gt;# restart app&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;changed pid &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb              &lt;span class=&quot;c&quot;&gt;# sanity check&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;totalcpu &amp;gt; 25% &lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; /etc/monit/slack.rb
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Save and exit. Notice the &lt;code&gt;\&lt;/code&gt; marks to escape the &lt;code&gt;/&lt;/code&gt; marks. Because monit does essentially a &lt;code&gt;ps aux | grep ____&lt;/code&gt;, copy pasting what you find in &lt;code&gt;top -c&lt;/code&gt; is a great way to get the process match.&lt;/p&gt;
 
 &lt;p&gt;A couple of things to note. 1) There is also a new file being executed here. More on this in a bit. 2) We are talking totalmem and totalcpu. Passenger can spin up child processes if it needs it, but I want to look at the total memory consumption of that particular app. Total cpu is not per core but for the whole thing. I also based these off of monit&amp;#39;s web interface information. It&amp;#39;s very handy to pick out the things you want to monitor in particular.&lt;/p&gt;
 
 &lt;p&gt;The new file &lt;code&gt;touch_surprise_sh&lt;/code&gt; is a super simple bash script that restarts Passenger (and not Nginx) via the &lt;code&gt;touch&lt;/code&gt; command.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/touch_surprise_sh
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo nano /etc/monit/touch_surprise_sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In the file type the following lines:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!/bin/bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
 
 touch /home/rails/surprise/tmp/restart.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Alternatively you can make it more verbose and sudo in as your user (rails) to restart Passenger.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo -u rails -H sh -c &amp;quot;touch /home/rails/surprise/tmp/restart.txt”
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;sudo -u rails -H sh -c &quot;touch /home/rails/surprise/tmp/restart.txt”
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Save and exit. Make it into an executable file.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo chmod +x /etc/monit/touch_surprise_sh
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;sudo chmod +x /etc/monit/touch_surprise_sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Do your standard monit sanity check, then reload monit.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit -t       &lt;span class=&quot;c&quot;&gt;# fix any problems, obv&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo monit reload
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo monit -t       &lt;span class=&quot;c&quot;&gt;# fix any problems, obv&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo monit reload
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Confirm on your web interface that surprise-pass is loaded up and displaying all the goodies you like to see. When you restart nginx, Passenger should lose a PID. It&amp;#39;ll alert you on Slack when you hit the app and create a new PID. Right on. &lt;img class=&#39;emoji&#39; title=&#39;fist&#39; alt=&#39;fist&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/fist.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
 
@@ -672,9 +812,9 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn&amp;#39;t have gems for p643 so used p451.)&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv global 2.0.0-p451
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install rails 4.0.13
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rails _4.0.13_ new appname&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rbenv global 2.0.0-p451
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install rails 4.0.13
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rails _4.0.13_ new appname&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Please note the &lt;code&gt;_&lt;/code&gt; surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.&lt;/p&gt;
 
@@ -721,7 +861,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;On your local machine, install Jekyll.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;gt-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
 
@@ -729,12 +869,12 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;&lt;em&gt;Note: If you create a repo and name it whatever you want and NOT &amp;quot;your-username.github.io&amp;quot;, Github will see this as a Page for your Repo. When this happens, Github will use the branch called &lt;code&gt;gh-pages&lt;/code&gt; instead of &lt;code&gt;master&lt;/code&gt; to auto-publish your site. It&amp;#39;s confusing and tripped me up massively in the beginning.&lt;/em&gt;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git@github.com/your-github-username/your-github-username.github.io.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git clone git@github.com/your-github-username/your-github-username.github.io.git&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;For sanity&amp;#39;s sake, before you hop into your directory, create a new directory and call it whatever you want. If it makes it easier for you, call it what you want your site to be called. Is it your blog? Call it that. Since I booched the whole Github Pages account vs repo thing, I already had a repo called &lt;code&gt;risa-on-rails&lt;/code&gt; so I used this. This new directory thing will come in handy later. Trust me.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir your-sites-blog-name
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;your-sites-blog-name&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir your-sites-blog-name
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;your-sites-blog-name&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Great! Now I realize this is an empty directory. It&amp;#39;s cool. Time to create a new Jekyll blog.&lt;/p&gt;
 
@@ -744,13 +884,13 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;Create a new Jekyll site by running &lt;code&gt;jekyll new .&lt;/code&gt; Make sure you&amp;#39;ve got that period in there, since that creates it within this directory.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jekyll new .&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jekyll new .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Jekyll will install a bunch of directories with &lt;em&gt;&amp;#39;s in them along with some other files, including a `&lt;/em&gt;config.yml` file. This file will be the driver of just about everything: name it here and use it everywhere!&lt;/p&gt;
 
 &lt;p&gt;Create 2 directories called &lt;code&gt;_plugins&lt;/code&gt; and &lt;code&gt;_drafts&lt;/code&gt;. Because you may want/need them.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir _plugins _drafts&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir _plugins _drafts&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This is probably a good time to do &lt;code&gt;git init&lt;/code&gt; and do your initial commit.&lt;/p&gt;
 
@@ -760,7 +900,7 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;If you change any of the variables, make sure you change them in the css and anywhere else in the other files. For me, I changed the &lt;code&gt;:title&lt;/code&gt; symbol to &lt;code&gt;:name&lt;/code&gt; for the name of my blog. Anywhere where &lt;code&gt;site.title&lt;/code&gt; was referenced, I changed to &lt;code&gt;site.name&lt;/code&gt;. That includes the css file too. I did this because I added in a &lt;code&gt;permalink: /:title/&lt;/code&gt; option to give all my pages their own permalinks instead of the weird directory structure Jekyll uses.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;s&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;gt-_posts-and-_drafts&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
 
@@ -769,7 +909,7 @@ touch /home/rails/surprise/tmp/restart.txt
 &lt;p&gt;The _drafts folder is exactly that, for drafts. You don&amp;#39;t need to append dates to it. In fact, when you&amp;#39;re ready to publish it, that&amp;#39;s when you can append dates. For that, we&amp;#39;ve got a handy tool, the &lt;a href=&quot;https://github.com/gummesson/jekyll-rake-boilerplate&quot;&gt;jekyll-rake-boilerplate Rakefile&lt;/a&gt;. Copy that Rakefile into your repo. Now you&amp;#39;ve got some added jekyll capabilities like: &lt;code&gt;rake watch[&amp;quot;drafts&amp;quot;]&lt;/code&gt; which is the equivalent to &lt;code&gt;jekyll serve --watch --drafts&lt;/code&gt;, and &lt;code&gt;rake draft[&amp;quot;your post&amp;#39;s title&amp;quot;]&lt;/code&gt; which creates a new draft post with the given title. Sweetness. &lt;code&gt;rake publish&lt;/code&gt; let&amp;#39;s you pick the draft you want to publish and appends the date automagically to your post, moving it from _drafts to _posts and eliminating the need to wonder what day it currently is.&lt;/p&gt;
 
 &lt;p&gt;To use the &lt;code&gt;rake draft[&amp;quot;title&amp;quot;]&lt;/code&gt; task, create a file called &lt;code&gt;_post.md&lt;/code&gt; in the root directory. In your &lt;code&gt;_config.yml&lt;/code&gt; add in the following so your rake task won&amp;#39;t break when it&amp;#39;s run:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;post:
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;post:
   template: _post.md
   extension: md
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -782,7 +922,7 @@ touch /home/rails/surprise/tmp/restart.txt
 &lt;p&gt;Start in your-sites-blog-name dir &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; create draft posts and stuff &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; rake publish draft &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; jekyll build site &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; copy &lt;em&gt;ONLY&lt;/em&gt; the &lt;code&gt;_site&lt;/code&gt; directory contents to your-username.github.io directory &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; cleanup anything you need and git add, commit &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; push to github &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; ??? &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; profit!&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s start by adding in my favourite simple plugin, the &lt;a href=&quot;https://gist.github.com/23maverick23/8532525&quot;&gt;jekyll-font-awesome&lt;/a&gt; plugin. Create a file in &lt;code&gt;_plugins/&lt;/code&gt; called &lt;code&gt;font_awesome.rb&lt;/code&gt; and paste the contents from that gist into this file. If you&amp;#39;re not familiar with fontawesome.io, it&amp;#39;s a bunch of rad icons for everything. Paste the link below into your head.html file at around line 6: &lt;code&gt;_includes/head.html&lt;/code&gt;, just like that.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;  &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css&amp;quot;&amp;gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css&quot;&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now you can add icons by using the syntax &lt;code&gt;{.% icon fa-something %}&lt;/code&gt; (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!&lt;/p&gt;
 
@@ -792,25 +932,25 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;OK. Remember the workflow up above? Let&amp;#39;s break it down into simpler steps. &lt;del&gt;I ended up using Automator on the Mac (it&amp;#39;s a native/default app and totally underrated IMO) to do this for me. The directions for that are beautifully written up &lt;a href=&quot;http://vincentp.me/blog/a-smarter-jekyll-workflow/&quot;&gt;in this blog post&lt;/a&gt;.&lt;/del&gt; &lt;em&gt;Edit: Automator let me down in the end. &lt;img class=&#39;emoji&#39; title=&#39;cry&#39; alt=&#39;cry&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/cry.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/em&gt; Here is my updated workflow:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# starting in your-sites-blog-name directory&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rake publish
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# starting in your-sites-blog-name directory&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rake publish
 &lt;span class=&quot;c&quot;&gt;# choose the draft post you want to publish&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# that moves down to _posts&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# make final checks and if all good then...&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;jekyll build
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git add .
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&amp;quot;yeah your awesome message about your post&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo cp -r _site/* ../your-username.github.io/
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jekyll build
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git add .
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;yeah your awesome message about your post&quot;&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo cp -r _site/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ../your-username.github.io/
 &lt;span class=&quot;c&quot;&gt;# put in your password&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# this overrides everything in the other directory&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../your-username.github.io
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../your-username.github.io
 &lt;span class=&quot;c&quot;&gt;# confirm that the contents of _site were copied over&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;# you may need to rm -rf Rakefile OR add a .gitignore file&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# and put Rakefile in it. Whatever you&amp;#39;d like to do&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rm -rf Rakefile
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git add .
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&amp;quot;your msg about your post that&amp;#39;s ready for Github&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;c&quot;&gt;# and put Rakefile in it. Whatever you&#39;d like to do&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rm -rf Rakefile
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git add .
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;your msg about your post that&#39;s ready for Github&quot;&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;BOOM. You should be good to go now. Check out your site at &lt;a href=&quot;http://your-username.github.io&quot;&gt;http://your-username.github.io&lt;/a&gt; :)&lt;/p&gt;
 
@@ -818,12 +958,12 @@ touch /home/rails/surprise/tmp/restart.txt
 
 &lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won&amp;#39;t matter. So here&amp;#39;s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that&amp;#39;s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; or &lt;code&gt;~/.bashrc&lt;/code&gt; file.  &lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;copy-it&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;=======================&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Jekyll cheats&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;=======================&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;make sure you are in correct directory before running this&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;copy-it = jekyll build then copy contents of _site to your-username master&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;copy-it&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;=======================&#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Jekyll cheats&#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;=======================&#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;make sure you are in correct directory before running this&#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;copy-it = jekyll build then copy contents of _site to your-username master&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Obviously change the directory names to fit your thing. Save it and source your file: &lt;code&gt;source ~/.bash_profile&lt;/code&gt; or &lt;code&gt;source ~/.zshrc&lt;/code&gt; or &lt;code&gt;source ~/.bashrc&lt;/code&gt;. You should see the commands displayed in your terminal.  Alternatively you can just restart terminal. &lt;/p&gt;
 
@@ -849,78 +989,6 @@ touch /home/rails/surprise/tmp/restart.txt
         <category>jekyll</category>
         
         <category>guide</category>
-        
-      </item>
-    
-      <item>
-        <title>Sandboxing Rails</title>
-        <description>&lt;p&gt;Hey, did you know that there&amp;#39;s an option called &lt;code&gt;--sandbox&lt;/code&gt; that you can append to console? &lt;/p&gt;
-
-&lt;p&gt;Yuuuup, you can run &lt;code&gt;rails console --sandbox&lt;/code&gt; when you load up your console. What&amp;#39;s it for? Simple -- to ensure that any changes you make to the database are &lt;em&gt;rolled back&lt;/em&gt; on exit.&lt;/p&gt;
-
-&lt;h3 id=&quot;why-use-this&quot;&gt;Why use this?&lt;/h3&gt;
-
-&lt;p&gt;Well, what if you&amp;#39;re going into your production box and need to poke around with the data. The site&amp;#39;s live, y&amp;#39;know. It&amp;#39;s great to be able to go into a production box, run &lt;code&gt;rails c&lt;/code&gt; and not have to worry that you may have accidentally deleted an entry or updated a value. Think of it as an extra safety net. Here&amp;#39;s what it&amp;#39;d look like.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails c --sandbox&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Once in, you can do the usual CRUD actions, even run &lt;code&gt;.save!&lt;/code&gt;, and not have to worry about how the actual production database is affected. Here&amp;#39;s proof.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;err&quot;&gt;❯❯❯&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;production&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sandbox&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Loading&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;production&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sandbox&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Any&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modifications&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;you&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;will&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;be&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rolled&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;back&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;002&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;create&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#&amp;lt;User id: nil, name: nil, email: nil, created_at: nil, updated_at: nil, password_digest: nil, remember_token: nil, admin: false&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;003&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;risa&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;risa&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;004&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;test@example.com&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;test@example.com&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;005&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;password&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;006&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password_confirmation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;password&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;007&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#&amp;lt;User id: nil, name: &amp;quot;risa&amp;quot;, email: &amp;quot;test@example.com&amp;quot;, created_at: nil, updated_at: nil, password_digest:    &amp;quot;$2a$10$qmgIZE5IqicXfOc6WxOb4.s7rVm4uLAciYJnAnvukJuu...&amp;quot;, remember_token: nil, admin: false&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;00&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save!&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;00&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#&amp;lt;User id: 1, name: &amp;quot;risa&amp;quot;, email: &amp;quot;test@example.com&amp;quot;, created_at: &amp;quot;2015-03-24 17:53:17&amp;quot;, updated_at: &amp;quot;2015-03-24 17:53:17&amp;quot;,     password_digest: &amp;quot;$2a$10$qmgIZE5IqicXfOc6WxOb4.s7rVm4uLAciYJnAnvukJuu...&amp;quot;, remember_token:    &amp;quot;eb878de3cfc54eda3df1ea974ac6a49a35a52f47&amp;quot;, admin: false&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;011&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
-
-&lt;span class=&quot;err&quot;&gt;❯❯❯&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;production&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sandbox&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Loading&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;production&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sandbox&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Any&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modifications&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;you&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;will&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;be&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rolled&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;back&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;002&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;BOOM. Sweet sweet success. No prod box will scare you from now on.&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Mon, 30 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/sandboxing-rails/</link>
-        <guid isPermaLink="true">http://risaonrails.com/sandboxing-rails/</guid>
-        
-        <category>rails</category>
-        
-        <category>sandbox</category>
-        
-        <category>console</category>
-        
-        <category>tips</category>
-        
-        
-        <category>rails</category>
-        
-        <category>console</category>
-        
-        <category>tips</category>
         
       </item>
     

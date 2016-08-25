@@ -73,13 +73,13 @@
 
 <p>I admit, setup was fairly simple.  Currently our stack is LEPPR (Linux Nginx Passenger Postgres Rails), not that it matters though. So real quick, here were the steps I used to set it up, before going to the meat of the article: integrating with Slack.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo apt-get install monit</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo apt-get install monit</code></pre></figure>
 
 <p>The file you want to edit will be <code>/etc/monit/monitrc</code> which is the main config file. Comment out the bits about the httpd section, about mid-way thru, and add in your info as needed. As always, geared for Digital Ocean:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">set httpd port 2812 and
+<div class="highlight"><pre><code class="language-" data-lang="">set httpd port 2812 and
   use address IP_ADDRESS       # Put your droplet IP here
   allow 0.0.0.0/0.0.0.0        # allow anyone to connect to the server and
-  allow admin:&#39;P@ssw0rd&#39;       # require user and password for login
+  allow admin:'P@ssw0rd'       # require user and password for login
 </code></pre></div>
 <p>What this does is allow you to hit up your IP address in the browser and see how things are looking: <a href="http://IP_ADDRESS:2812">http://IP_ADDRESS:2812</a>.</p>
 
@@ -104,28 +104,28 @@
 
 <p>Now, back to the box. We&#39;re rubyists here so this is how we roll. We&#39;re going to create a file called <code>slack.rb</code> in your <code>/etc/monit/</code> directory.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo touch /etc/monit/slack.rb
-<span class="nv">$ </span>sudo nano /etc/monit/slack.rb</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo touch /etc/monit/slack.rb
+<span class="gp">$ </span>sudo nano /etc/monit/slack.rb</code></pre></figure>
 
 <p>Now in this file, insert this:</p>
 
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#!/usr/bin/ruby</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#!/usr/bin/ruby</span>
 
-<span class="nb">require</span> <span class="s1">&#39;net/https&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
+<span class="nb">require</span> <span class="s1">'net/https'</span>
+<span class="nb">require</span> <span class="s1">'json'</span>
 
-<span class="n">uri</span> <span class="o">=</span> <span class="no">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;https://hooks.slack.com/services/HASH/Hash/LongHash&quot;</span><span class="p">)</span>
-<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-<span class="n">http</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="kp">true</span>
-<span class="n">request</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Post</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">request_uri</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;application/json&#39;</span><span class="p">})</span>
-<span class="n">request</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;channel&quot;</span>    <span class="o">=&gt;</span> <span class="s2">&quot;#monitoring&quot;</span><span class="p">,</span>  <span class="c1"># channel name</span>
-    <span class="s2">&quot;username&quot;</span>   <span class="o">=&gt;</span> <span class="s2">&quot;Monit Bot&quot;</span><span class="p">,</span>    <span class="c1"># you can name the bot whatever</span>
-    <span class="s2">&quot;icon_emoji&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;:.trollface:&quot;</span><span class="p">,</span>      <span class="c1"># because why the hell not!</span>
-    <span class="s2">&quot;text&quot;</span>       <span class="o">=&gt;</span> <span class="s2">&quot;[</span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MONIT_HOST&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MONIT_SERVICE&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">#{</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;MONIT_DESCRIPTION&#39;</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="p">}</span><span class="o">.</span><span class="n">to_json</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<span class="nb">puts</span> <span class="n">response</span><span class="o">.</span><span class="n">body</span></code></pre></div>
+<span class="n">uri</span> <span class="o">=</span> <span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="s2">"https://hooks.slack.com/services/HASH/Hash/LongHash"</span><span class="p">)</span>
+<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">uri</span><span class="p">.</span><span class="nf">host</span><span class="p">,</span> <span class="n">uri</span><span class="p">.</span><span class="nf">port</span><span class="p">)</span>
+<span class="n">http</span><span class="p">.</span><span class="nf">use_ssl</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">request</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Post</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">uri</span><span class="p">.</span><span class="nf">request_uri</span><span class="p">,</span> <span class="p">{</span><span class="s1">'Content-Type'</span> <span class="o">=&gt;</span> <span class="s1">'application/json'</span><span class="p">})</span>
+<span class="n">request</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"channel"</span>    <span class="o">=&gt;</span> <span class="s2">"#monitoring"</span><span class="p">,</span>  <span class="c1"># channel name</span>
+    <span class="s2">"username"</span>   <span class="o">=&gt;</span> <span class="s2">"Monit Bot"</span><span class="p">,</span>    <span class="c1"># you can name the bot whatever</span>
+    <span class="s2">"icon_emoji"</span> <span class="o">=&gt;</span> <span class="s2">":.trollface:"</span><span class="p">,</span>      <span class="c1"># because why the hell not!</span>
+    <span class="s2">"text"</span>       <span class="o">=&gt;</span> <span class="s2">"[</span><span class="si">#{</span><span class="no">ENV</span><span class="p">[</span><span class="s1">'MONIT_HOST'</span><span class="p">]</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="no">ENV</span><span class="p">[</span><span class="s1">'MONIT_SERVICE'</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">#{</span><span class="no">ENV</span><span class="p">[</span><span class="s1">'MONIT_DESCRIPTION'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<span class="p">}.</span><span class="nf">to_json</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span></code></pre></figure>
 
 <p><em>Edited note: You&#39;ll need to remove the . in trollface for it to work. Refer to how Slack does icons.</em></p>
 
@@ -133,31 +133,31 @@
 
 <p>Do a sanity check at this point to make sure everything&#39;s correct. Run the ruby script real quick-like.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>ruby /etc/monit/slack.rb</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>ruby /etc/monit/slack.rb</code></pre></figure>
 
 <p>Did you get a notification in Slack?  Great, now make that into an executable file!</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo chmod +x /etc/monit/slack.rb</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo chmod +x /etc/monit/slack.rb</code></pre></figure>
 
 <p>You will need to invoke this file whenever something happens, so to test it out, we&#39;re going to create an nginx file to monitor nginx. This will be kept in <code>/etc/monit/conf.d/</code> directory as a file called <code>nginx</code>.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">check process nginx with pidfile /var/run/nginx.pid
-  start <span class="nv">program</span> <span class="o">=</span> <span class="s2">&quot;/usr/sbin/service nginx start&quot;</span>
-  stop  <span class="nv">program</span> <span class="o">=</span> <span class="s2">&quot;/usr/sbin/service nginx stop&quot;</span>
-  <span class="k">if</span> failed host 127.0.0.1 port <span class="m">80</span> <span class="k">then</span> restart
-  <span class="k">if</span> changed pid <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb    <span class="c"># this is our sanity check</span>
-  <span class="k">if</span> failed host 127.0.0.1 port <span class="m">80</span> <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb <span class="k">else</span> <span class="k">if</span> succeeded <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb
-  <span class="k">if</span> cpu is greater than 40% <span class="k">for</span> <span class="m">2</span> cycles <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb <span class="k">else</span> <span class="k">if</span> succeeded <span class="k">then</span> <span class="nb">exec</span> /etc/monit/slack.rb
-  <span class="k">if</span> cpu &gt; 60% <span class="k">for</span> <span class="m">5</span> cycles <span class="k">then</span> restart</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">check process nginx with pidfile /var/run/nginx.pid
+  start program <span class="o">=</span> <span class="s2">"/usr/sbin/service nginx start"</span>
+  stop  program <span class="o">=</span> <span class="s2">"/usr/sbin/service nginx stop"</span>
+  <span class="k">if </span>failed host 127.0.0.1 port 80 <span class="k">then </span>restart
+  <span class="k">if </span>changed pid <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb    <span class="c"># this is our sanity check</span>
+  <span class="k">if </span>failed host 127.0.0.1 port 80 <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb <span class="k">else if </span>succeeded <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb
+  <span class="k">if </span>cpu is greater than 40% <span class="k">for </span>2 cycles <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb <span class="k">else if </span>succeeded <span class="k">then </span><span class="nb">exec</span> /etc/monit/slack.rb
+  <span class="k">if </span>cpu &gt; 60% <span class="k">for </span>5 cycles <span class="k">then </span>restart</code></pre></figure>
 
 <p>The basic format is that whenever you need to invoke an alert, instead of a <code>then alert</code>, you are changing it to execute the slack.rb file. You <strong>must</strong> specify the full path to slack.rb. Pretty much any time you see a <code>then alert</code>, change it to <code>then exec /etc/monit/slack.rb</code>. :)</p>
 
 <p>Check to ensure file is correct, reload monit to accept the changes, and then stop/start nginx.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo monit -t       <span class="c"># if errors, fix!</span>
-<span class="nv">$ </span>sudo monit reload
-<span class="nv">$ </span>sudo service nginx stop
-<span class="nv">$ </span>sudo service nginx start</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>sudo monit -t       <span class="c"># if errors, fix!</span>
+<span class="gp">$ </span>sudo monit reload
+<span class="gp">$ </span>sudo service nginx stop
+<span class="gp">$ </span>sudo service nginx start</code></pre></figure>
 
 <p>There&#39;s a few second delay but check out slack! You should see the message with your info all in there. HURRAY!</p>
 

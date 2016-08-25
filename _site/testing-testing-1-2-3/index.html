@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
+  <title>Testing, testing, 1...2...3</title>
+  <meta name="description" content="Hello? Is anybody in there? Just nod if you can hear me...">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/testing-testing-1-2-3/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Testing, testing, 1...2...3</h1>
+    <p class="post-meta">Aug 24, 2016</p>
+  </header>
+
+  <article class="post-content">
+    <p><em>Hello? Is anybody in there? Just nod if you can hear me...</em></p>
+
+<p>For the past while, I&#39;ve been writing a lot of tests to make up for the lack of them in some apps at work. Most of that time has been writing feature tests.  I&#39;ve encountered a lot of weird little things that I&#39;ve struggled with. I don&#39;t quite know <em>why</em> some things have happened, but I&#39;ve figured out <em>how</em> to get around or solve the problems I&#39;ve been facing.</p>
+
+<p>So this is all about the tips and tricks I&#39;ve learned while writing feature tests.</p>
+
+<h3 id="but-first-a-digression">But first, a digression</h3>
+
+<p>When I first learned Rails, I learned Behavior Driven Development (BDD) with Cucumber. If you&#39;re not aware, Cucumber isn&#39;t just a vegetable anymore! Cucumber tests use a DSL called Gherkin, which is business-readable. (Tho, what&#39;s up with the pickling vegetable names?) The concept behind it is that it&#39;s for the client to read and understand, as if they were created from the 3x5 index cards used to define the feature at the beginning.  The format is set in a &#39;Given-When-Then&#39; setup, such as: &#39;Given I have some chocolate, when I open the package, then it is eaten.&#39; What was familiar English on the front, was actually a bunch of regex in the back combined with Capybara to drive the actions.</p>
+
+<p>One of the common problems I&#39;ve faced when using Cucumber was that the steps, the given/when/thens, would sometimes get repeated, not redundant, but slightly different in wording gave it its own step definition. Bloated. It was also annoying to try to find a step definition when one would say &quot;When I click on a button&quot; and another would say &quot;When I click a button&quot;. This would be even more accentuated if there were multiple devs involved in the project writing their own step definitions. I wonder if this was one of the reasons why people stopped using cukes for testing and started incorporating feature tests with RSpec.  </p>
+
+<p>I, for one, have embraced using RSpec feature tests with Capybara. You still have the same expectations but without the <em>cucumbersome</em> extra layers of Gherkin (which no client actually really reads) and bloated step definitions. Instead, it&#39;s straight up RSpec and Capybara for you and your dev team.</p>
+
+<h2 id="tips-amp-tricks">Tips &amp; Tricks</h2>
+
+<h4 id="0-5-save-and-open-page">0.5) Save and open page</h4>
+
+<p>I&#39;m always a bit surprised when I hear that devs have never heard of <code>save_and_open_page</code>, a Capybara method that lets you view a simple html-only snapshot of the page at invocation. Unfortunately it renders the page without the benefit of JS so things the javascript would hide would be visible and the angular interpolations would display. As long as if you&#39;re aware of the pitfalls, <code>save_and_open_page</code> is a fantastic lil line that can help you troubleshoot. Stick it in the feature spec anywhere before your expectation. You may need the <code>launchy</code> gem for this now.</p>
+
+<h4 id="1-would-you-like-some-javascript-with-those-features">1) Would you like some Javascript with those features?</h4>
+
+<p>Typically, our apps would have <code>@javascript</code> at the beginning of each scenario when we wanted to test a feature that incorporates Javascript, such as Angular. I am pretty sure this is a carry-over from the Cucumber days but in RSpec land, you can get away with simply stating <code>js: true</code> in your scenario, context, or even feature block.</p>
+
+<p>As a lot of our apps use Angular, it&#39;s easier for me to put the <code>js: true</code> in the feature block. Here&#39;s what I mean.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">feature</span> <span class="s1">'Admin home page'</span><span class="p">,</span> <span class="ss">:devise</span><span class="p">,</span> <span class="ss">js: </span><span class="kp">true</span> <span class="k">do</span>
+  <span class="c1"># and then continue with your scenario blocks, before blocks, and whatever else</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This gives for cleaner code, since each of your scenarios aren&#39;t littered with <code>@javascript</code> or tagged with <code>js: true</code>. This really comes in handy if your front-end app is fairly JS heavy.</p>
+
+<h4 id="2-check-response-headers-for-downloads">2) Check response headers for downloads</h4>
+
+<p>One of our apps has a download function. I didn&#39;t want to test the downloaded file, but simply that the download actually worked. Instead of creating a file and comparing that against the downloaded copy, I &quot;cheated&quot; a bit and decided to check the response headers. This <a href="http://stackoverflow.com/a/21623939/2464546">StackOverflow answer</a> actually helped me out by pointing me in the direction I needed to go.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">scenario</span> <span class="s1">'it downloads a file'</span><span class="p">,</span> <span class="ss">js: </span><span class="kp">false</span> <span class="k">do</span>
+  <span class="n">visit</span> <span class="n">download_path</span>
+
+  <span class="n">click_on</span> <span class="s1">'Download'</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">.</span><span class="nf">response_headers</span><span class="p">[</span><span class="s1">'Content-Type'</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span> <span class="s1">'image/jpeg'</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>As you can see, I also had to turn off Javascript by inserting <code>js: false</code> just for that test since the entire feature had Javascript turned on. This has to do with Capybara using Selenium (our default) to test the Javascript. Instead, having <code>js: false</code> forced Capybara to use its natural default of RackTest. Note that this makes the particular test go faster since it doesn&#39;t render Javascript.</p>
+
+<h4 id="3-responsive-web-design-and-continuous-integration">3) Responsive web design and continuous integration</h4>
+
+<p>OK. Story time. For one of our apps, I had an awful time troubleshooting failed tests on our CI environment -- TravisCI. For whatever bizarre reason, certain tests would fail on Travis but never locally. I couldn&#39;t reproduce it at all, but the errors would almost always be about Capybara saying an element couldn&#39;t be found.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">click_on</span> <span class="s1">'Download'</span>
+
+<span class="no">Capybara</span><span class="o">::</span><span class="no">ElementNotFound</span><span class="p">:</span>
+  <span class="no">Unable</span> <span class="n">to</span> <span class="n">find</span> <span class="n">link</span> <span class="n">or</span> <span class="n">button</span> <span class="s2">"Download"</span>
+</code></pre></div>
+<p>Annoying. I know. I&#39;m looking straight at the page and saying &quot;but there IS a download button! It&#39;s right there!&quot;</p>
+
+<p>I tried to add <code>id</code>s; I tried renaming it; I tried a slew of different things, all using <code>save_and_open_page</code> to see what the state of the page was. Without fail, &quot;Download&quot; appeared. As I surfed around the web, I had an epiphany. <em>What if the test is being run in a smaller browser window?</em> I didn&#39;t know what size &quot;smaller&quot; would be. I used Chrome&#39;s mobile-mode to test my theory and BOOM! The buttons I had been looking for had disappeared when the browser was at around 400px. This explained why my tests would fail. Our app uses responsive web design with bootstrap, so css values like <code>hidden-lg</code> or <code>visible-lg</code> were being used. Was Travis running my tests at mobile size (e.g. 400-ish pixels)?</p>
+
+<p>The real question is, how do I get Travis to run my tests at a particular size? After some sleuthing, I found out that by default, Travis runs Firefox at around 1024x768. Ok. I tested whether or not I could see my buttons at 1024. Yup, the hamburglar menu popped up at that width and my &quot;Download&quot; button disappeared. Travis has in their docs that the browser size can be resized to whatever dimensions you want. I added the following <code>before_install</code> section to my <code>.travis.yml</code> file, keeping the xvbf start in the <code>before_script</code>. <em>Note: Travis docs says having <code>xvfb start</code> doesn&#39;t play well w/ the custom dimensions but I haven&#39;t seen a problem with it yet.</em></p>
+<div class="highlight"><pre><code class="language-yml" data-lang="yml"><span class="s">before_install</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s2">"</span><span class="s">/sbin/start-stop-daemon</span><span class="nv"> </span><span class="s">--start</span><span class="nv"> </span><span class="s">--quiet</span><span class="nv"> </span><span class="s">--pidfile</span><span class="nv"> </span><span class="s">/tmp/custom_xvfb_99.pid</span><span class="nv"> </span><span class="s">--make-pidfile</span><span class="nv"> </span><span class="s">--background</span><span class="nv"> </span><span class="s">--exec</span><span class="nv"> </span><span class="s">/usr/bin/Xvfb</span><span class="nv"> </span><span class="s">--</span><span class="nv"> </span><span class="s">:99</span><span class="nv"> </span><span class="s">-ac</span><span class="nv"> </span><span class="s">-screen</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">1280x1024x16"</span>
+
+
+<span class="s">before_script</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">export DISPLAY=:99.0</span>
+<span class="pi">-</span> <span class="s">sh -e /etc/init.d/xvfb start</span>
+</code></pre></div>
+<p>Tests were rerun, but they still failed. WTF, mate? Was my setting not being accepted? I surfed the web for something. Anything. I even <a href="http://stackoverflow.com/questions/38214547/travis-ci-not-recognizing-large-resolution-on-xvfb-causing-feature-specs-to-fail">posted on StackOverflow</a>. Finally after about a week, I found the following article: <a href="https://discuss.circleci.com/t/capybara-driver-rack-test/407">A circleCI conversation about Capybara testing</a> which included an interesting article called <a href="http://blaulabs.de/2011/11/22/acceptance-testing-with-responsive-layouts/">Testing responsive layouts</a>. <em>Voila!</em></p>
+
+<p>The two articles gave me all the information I needed to proceed. Selenium needed a browser window size setting, so I simply gave it one.  In my <code>spec/spec_helper.rb</code> I added the following:</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">set_selenium_window_size_to_large</span>
+  <span class="n">page</span><span class="p">.</span><span class="nf">driver</span><span class="p">.</span><span class="nf">browser</span><span class="p">.</span><span class="nf">manage</span><span class="p">.</span><span class="nf">window</span><span class="p">.</span><span class="nf">resize_to</span><span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">1280</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">set_selenium_window_size_to_small</span>
+  <span class="n">page</span><span class="p">.</span><span class="nf">driver</span><span class="p">.</span><span class="nf">browser</span><span class="p">.</span><span class="nf">manage</span><span class="p">.</span><span class="nf">window</span><span class="p">.</span><span class="nf">resize_to</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now I could simply call <code>set_selenium_window_size_to_large</code> (or small) from within my feature tests.</p>
+
+<p>And Travis? Travis was super happy to give me some green builds after that. <img class='emoji' title='grinning' alt='grinning' src='https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png' height='20' width='20' align='absmiddle' >  </p>
+
+<h4 id="4-refreshing-the-page">4) Refreshing the page</h4>
+
+<p>With the use of Angular, I&#39;ve noticed some finickiness with some of my other tests. Once I solved the responsive-layout problem above, I encountered another issue of some tests failing, both locally and on Travis.</p>
+
+<p>In this particular instance, it was another <code>Capybara::ElementNotFound</code> error, but not associated with the browser resolution problem above. The error was triggered only on certain instances. An example test that failed:</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">scenario</span> <span class="s1">'editing an answer'</span> <span class="k">do</span>
+  <span class="n">click_on</span> <span class="s1">'Edit'</span>
+
+  <span class="n">fill_in</span> <span class="s1">'Answer'</span><span class="p">,</span> <span class="ss">with: </span><span class="s1">'something else'</span>
+  <span class="n">click_on</span> <span class="s1">'Save'</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span> <span class="s1">'something else'</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The page uses Angular to display a modal/overlay that allows you to edit the answer, then saves that upon close. You could then click on &#39;Edit&#39; to have the overlay pop up again to confirm the change. Unfortunately the tests did not like this. I suspect it was because the answer&#39;s edit page was in a tabbed view. I had to actually force the page to refresh in order to get the page overlay to display once more. So how do I refresh the page without actually saying <code>visit such_and_such_path</code>? Selenium had the answer.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">page</span><span class="p">.</span><span class="nf">driver</span><span class="p">.</span><span class="nf">browser</span><span class="p">.</span><span class="nf">navigate</span><span class="p">.</span><span class="nf">refresh</span>
+</code></pre></div>
+<p>This does mean that I have to add in a couple more extra clicks, but it made the headache go away.</p>
+
+<h4 id="5-hunting-down-flaky-tests">5) Hunting down flaky tests</h4>
+
+<p>A couple of apps were failing their tests periodically: flaky tests. It seemed random. Underneath it all, there were 2 issues.</p>
+
+<p><strong>First one.</strong> Angular was too fast. During the scenario build, the transaction to create data wasn&#39;t finished when Angular asked for that data. This caused Angular to get back an empty data set causing the test to fail. No good. A quick, <em>but brittle</em>, fix to this was to insert a <code>sleep 1</code> in the test. After speaking to a senior dev on the team, he sold me on the fact that having to rely on <code>sleep</code> could mean that there is actually something wrong with the code. For example, the db transaction could be taking too long because it&#39;s trying to do multiple things at once.  If you have the time to investigate further, that would be ideal. Unfortunately there were not enough client hours to justify spending it to solve this issue so <code>sleep 1</code> it was.</p>
+
+<p><strong>Second one.</strong> This one is a big mindboggling for me, but probably because I haven&#39;t figured out why it happened in the first place. We originally were running our cukes in headless mode (aka, no firefox browser popping up). It&#39;s faster and uses PhantomJS. However, everyone&#39;s environment seemed to react differently. Some folks had perfectly passing tests while others didn&#39;t. The environments should have been the same but were not. Worse was that the Gemfile.locks were all the same so it wasn&#39;t a versioning issue either. I dared to actually try to build a Docker dev environment for everyone to use. At least with that, everyone&#39;s environment would be the same. While setting this up, my coworker and I couldn&#39;t get PhantomJS to load or run properly with Docker, so we opted to use Selenium instead. On a whim, we ran our tests with Selenium. Everything passed! And despite my disdain for Docker, thank you! Because had we not gone that route and encountered obstacles, we wouldn&#39;t have switched to Selenium and fixed our build.</p>
+
+<p>Ultimately, these might be common tips and tricks for feature tests, but I hope this helps anyone who is rather rusty or new to the game.  Of course as I write this, I&#39;m wondering if xvfb&#39;s screen size change is for &quot;monitors&quot; vs &quot;browsers&quot;......doh! <img class='emoji' title='sweat_smile' alt='sweat_smile' src='https://github.global.ssl.fastly.net/images/icons/emoji/sweat_smile.png' height='20' width='20' align='absmiddle' ></p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +5</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>

@@ -101,21 +101,21 @@
 <h3 id="go-in-go-out">Go in, go out</h3>
 
 <p>Once you&#39;ve followed the instructions for installation and have postgres running, we can confirm this by running <code>psql</code> in Terminal.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql
 </code></pre></div>
 <p>Did you get an error saying <code>FATAL role &quot;YOURNAME&quot; does not exist</code> ? It&#39;s saying that the user account you&#39;re logged in as isn&#39;t a postgres user. We&#39;ve got to create it. Use the command below and make sure to use the name that the role says doesn&#39;t exist. Say yes when they ask if the user (you) should be superuser. </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ createuser --interactive YOURNAME
+<div class="highlight"><pre><code class="language-" data-lang="">$ createuser --interactive YOURNAME
 # Shall the new role be a superuser? (y/n) Y
 </code></pre></div>
 <p>Did you get an error saying <code>FATAL database &quot;YOURNAME&quot; does not exist</code>? Simple enough, we&#39;ll just create it. Use the following command to create that particular database. Make sure you use the name that it references.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ createdb YOURNAME
+<div class="highlight"><pre><code class="language-" data-lang="">$ createdb YOURNAME
 </code></pre></div>
 <p>Ok, in we go. The postgres prompt you see should have your account name if you followed the above steps. Since my account name is risa, my postgres username and database are risa. The prompt for me looks like <code>risa=#</code>.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql
 risa=#
 </code></pre></div>
 <p>Great. Let&#39;s quit out of postgres. The command is <code>\q</code> (not the usual / one. It&#39;s the \ above the return button)</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">risa=# \q
+<div class="highlight"><pre><code class="language-" data-lang="">risa=# \q
 $
 </code></pre></div>
 <p>It&#39;s always important to know how to exit any program. Otherwise you might be stuck in <a href="https://twitter.com/iamdevloper/status/435555976687923200">vim foreverrrrr</a>.</p>
@@ -125,20 +125,20 @@ $
 <h3 id="navigation">Navigation</h3>
 
 <p>To find out where we&#39;re at currently, type <code>\conninfo</code>. </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql
 risa=# \conninfo
-# You are connected to database &quot;risa&quot; as user &quot;risa&quot; via socket in &quot;/tmp&quot; at port &quot;5432&quot;.
+# You are connected to database "risa" as user "risa" via socket in "/tmp" at port "5432".
 </code></pre></div>
 <p>To list the databases you&#39;ve got in postgres, type <code>\l</code> (l for list)</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">risa=# \l
-# you&#39;ll get an output that lists a bunch of databases, including template0 and template1.
+<div class="highlight"><pre><code class="language-" data-lang="">risa=# \l
+# you'll get an output that lists a bunch of databases, including template0 and template1.
 </code></pre></div>
 <p><em>Note: template1 is what all new databases use when they get created. If you add an extension like `pg</em>stat<em>statement` into template1, all your subsequent databases will have that extension turned on automatically. AWESOME.<br>
 Template0 is the ultimate empty database. If you accidentally mess up template1, then you can use template0 to fix it. 
 I&#39;ll include directions on this maybe at the end or in another blog, but this wasn&#39;t part of the workshop.</em></p>
 
 <p>To change databases, you will have to do <code>\c DATABASE_NAME</code>. Since I don&#39;t know what databases you&#39;ve already got in your system, I&#39;ll use template1 as an example.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">risa=# \c template1
+<div class="highlight"><pre><code class="language-" data-lang="">risa=# \c template1
 template1=#
 </code></pre></div>
 <p>Notice that the prompt changed. The prompt always points to the current database you&#39;re in. Sweet.</p>
@@ -154,20 +154,20 @@ It uses ruby 2.0.0, so you may have to use rvm or rbenv to change ruby versions 
 
 <p>Once cloned and ruby version is changed to 2.0.0, run the usual suspects:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bundle install
-<span class="nv">$ </span>rake db:setup</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>bundle install
+<span class="gp">$ </span>rake db:setup</code></pre></figure>
 
 <p>With Rails 4.0 and below, <code>rake db:setup</code> created a dev database with migrations run <strong>as well as an empty test database</strong>.  In Rails 4.1+, <code>db:setup</code> no longer creates an empty test database. You have to manually run <code>RAILS_ENV=test rake db:setup</code>. Silly, I know.</p>
 
 <p>So, what did that rake db:setup do? Let&#39;s find out.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql
 risa=# \l
 # you should see these 2 added into your database list
 # imgblog_dev       | risa  | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
 # imgblog_test      | risa  | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
 </code></pre></div>
 <p>Boom. Now, let&#39;s hop into the imgblog_dev database and check out the tables and stuff. BTW, you can press tab to autocomplete database names (and sometimes table names too). The command for displaying tables is <code>\dt</code>.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">risa=# \c imgblog_dev
+<div class="highlight"><pre><code class="language-" data-lang="">risa=# \c imgblog_dev
 imgblog_dev=# \dt
 # you should see 3 tables. images and users are the tables
 # schema_migrations has the indexes
@@ -175,25 +175,25 @@ imgblog_dev=# \dt
 <p>If you&#39;re curious as to how big your tables might be, you can also do <code>\dt+</code> which gives you sizes as well.</p>
 
 <p>To see what&#39;s in the tables, you can then do your standard SQL query:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">imgblog_dev=# select * from users;
+<div class="highlight"><pre><code class="language-" data-lang="">imgblog_dev=# select * from users;
 # this will display any/all your users and their columns. 
-# right now it&#39;s empty so you just see column names.
+# right now it's empty so you just see column names.
 </code></pre></div>
 <p>If you just want to see the column names of the users table, you can do <code>\d users</code> instead.</p>
 
 <p>Great. Let&#39;s hop back out and put some real data in to do some backups and restores. Assuming you&#39;re still in the root directory of the img_blog, run the rake command to create a bunch of fake data.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">imgblog_dev=# \q
+<div class="highlight"><pre><code class="language-" data-lang="">imgblog_dev=# \q
 $ rake db:populate
 </code></pre></div>
 <p>Hop in and confirm that data was created. I&#39;m going to append the database name to the <code>psql</code> statement to automatically go to that database.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql imgblog_dev
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql imgblog_dev
 imgblog_dev=# SELECT * FROM users;
 # you should see a bunch of output that might be cut off
 # scroll with the arrow keys
 # get the prompt back by pressing Q.
 </code></pre></div>
 <p>Let&#39;s count how many users and images were created. (Answer: 33 users, 66 images)</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">imgblog_dev=# select count(*) from users;
+<div class="highlight"><pre><code class="language-" data-lang="">imgblog_dev=# select count(*) from users;
 # you get back 33
 imgblog_dev=# select count(*) from images;
 # you get back 66
@@ -208,32 +208,32 @@ imgblog_dev=# \q
 <h4 id="backup-first">Backup first</h4>
 
 <p>Backups are created with the <code>pg_dump</code> command, but in order for it to know what to do, you have to append flags (options) to the command and send the output to a file.  We&#39;re going to be taking backups of <code>imgblog_dev</code>.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_dump -d imgblog_dev &gt; ~/Desktop/dump1.sql
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_dump -d imgblog_dev &gt; ~/Desktop/dump1.sql
 </code></pre></div>
 <p>If I had to read it out loud, it is saying &quot;Take a dump (haha) of database imgblog_dev and send it to the Desktop and call it dump1.sql.&quot; The <code>-d</code> flag stands for database. The <code>&gt;</code> is to output the contents to a file in some location. In this case it&#39;s to the Desktop, as dump1.sql. Why <code>.sql</code> ? Truthfully, the extension doesn&#39;t matter. It can be <code>.txt</code>, <code>.asdf</code>, or whatever. But for sanity sake, <code>.sql</code>. You&#39;ll see why when you open up the file.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ subl ~/Desktop/dump1.sql
+<div class="highlight"><pre><code class="language-" data-lang="">$ subl ~/Desktop/dump1.sql
 </code></pre></div>
 <p>Assuming you&#39;ve got sublime as your text editor with that shortcut, that&#39;ll work. Otherwise do what you normally do when opening up files. :) When you do, you&#39;ll see that it&#39;s got a bunch of SQL commands. If you look more closely, you&#39;ll see that they have some <code>CREATE TABLE</code> commands and then <code>COPY</code> commands for the actual data. You&#39;ve taken a human-readable backup of the database.</p>
 
 <p>What if all we want is the data? Imagine we&#39;re transfering the information to another database and it&#39;s already got tables set up because we&#39;ve run migrations. What then? Let&#39;s set some more flags.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_dump -d imgblog_dev -a -O &gt; ~/Desktop/dump2.sql
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_dump -d imgblog_dev -a -O &gt; ~/Desktop/dump2.sql
 </code></pre></div>
 <p>Ok, so we&#39;ve set 2 more flags: <code>-a</code> and <code>-O</code> (capital o, not zero). The <code>-a</code> flag stands for <code>--data-only</code>, so telling it to take only the data. The <code>-O</code> command is <code>--no-owner</code> which means remove all traces of ownership when getting this backup.  If you open up this file and compare it to dump1, here&#39;s the kind of thing you&#39;ll see.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># On ~ line 34 of dump1.sql, you&#39;ll see the owner as yourself
+<div class="highlight"><pre><code class="language-" data-lang=""># On ~ line 34 of dump1.sql, you'll see the owner as yourself
 -- Name: images; Type: TABLE; Schema: public; Owner: risa; Tablespace: 
 
-# On ~ line 15 of dump2.sql, you don&#39;t see an owner listed
+# On ~ line 15 of dump2.sql, you don't see an owner listed
 -- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: -
 </code></pre></div>
 <p>Quick visual check also comfirms that dump2 only has data listed. No reference to tables.</p>
 
 <p>Imagine you&#39;re working on a production database, hosted on Digital Ocean at IP address 127.0.0.1 and port 5432. (Reality: 127.0.0.1 == localhost == your computer&#39;s own IP address) This theoretical database is like 2GB large (whoa), and you need to transfer it to your dev env. It&#39;s gonna be a pain to download all 2GB. Let&#39;s compress it down, like an archive file.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_dump -h 127.0.0.1 -p 5432 -d imgblog_dev -a -O -Fc &gt; ~/Desktop/dump3.dump
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_dump -h 127.0.0.1 -p 5432 -d imgblog_dev -a -O -Fc &gt; ~/Desktop/dump3.dump
 </code></pre></div>
 <p>The flags to connect: <code>-h</code> is for host, usually an IP or a .com kind of address; <code>-p</code> is for port, default postgres port is 5432 but it can be set to anything.  The next new flag is the <code>-Fc</code> flag. I like to think of it as &quot;format compressed&quot; but in reality it is &quot;format custom.&quot; There are other <code>-F</code> options, like <code>-Ft</code> and <code>-Fd</code> which will also archive your file, but <code>-Fc</code> is the one you want. Finally, notice that I changed the extension to <code>.dump</code>. Again, it&#39;s a sanity thing. Appending that lets me know that it&#39;s actually a compressed file that I&#39;m dealing with.</p>
 
 <p>If you open this file, you&#39;ll immediately notice how it is completely human-readable gibberish and gobbledigook. :) It&#39;s compressed after all. Postgres can understand it; we just know that the file is a lot smaller in size.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_dump -h 127.0.0.1 -p 5432 -U risa -d imgblog_dev -Fc -a -O &gt; ~/Desktop/dump4.dump
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_dump -h 127.0.0.1 -p 5432 -U risa -d imgblog_dev -Fc -a -O &gt; ~/Desktop/dump4.dump
 </code></pre></div>
 <p>This combines pretty much all the flags I&#39;ve covered thus far with the addition of <code>-U</code> which is user. In your case, make sure you put your postgres username in, since you won&#39;t have a risa user (unless your name is Risa as well. Hi!)</p>
 
@@ -246,7 +246,7 @@ imgblog_dev=# \q
 <p>Let&#39;s get to it. First we&#39;re going to totally break things, because when I gave the workshop, it was live, and I broke things :) We are going to restore to the <code>imgblog_test</code> database. </p>
 
 <p>But, one important thing. <strong>One Very Important Thing</strong> When doing pg<em>dump, you have the two paths: human-readable and archive/compressed formats. If you choose the human-readable path, you _</em><em>MUST</em>__ use <code>psql</code>. If you choose the archive/compressed format, you <strong><em>MUST</em></strong> use pg_restore. Got that? In pseudocode it&#39;s:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">use pg_dump
+<div class="highlight"><pre><code class="language-" data-lang="">use pg_dump
   if use -Fc
     use pg_restore
   else
@@ -254,17 +254,17 @@ imgblog_dev=# \q
   end
 </code></pre></div>
 <p>Now that we got that sorted, let&#39;s use the compressed dump to import/restore.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_restore -d imgblog_test &lt; ~/Desktop/dump3.dump
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_restore -d imgblog_test &lt; ~/Desktop/dump3.dump
 </code></pre></div>
 <p>If you&#39;ve been following very carefully, you will get a bunch of error output. Postgres did NOT like what just happened.  Here&#39;s the proof:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_restore: [archiver (db)] could not execute query: ERROR:  relation &quot;images&quot; does not exist
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_restore: [archiver (db)] could not execute query: ERROR:  relation "images" does not exist
 Command was: COPY images (id, img_url, img_name, description, user_id, created_at, updated_at, tags, gif, pictures) FROM stdin;
 </code></pre></div>
 <p>Key in the part where it says: <code>ERROR: relation &quot;images&quot; does not exist</code>. Why&#39;d it say that?  Remember how I said that in Rails 4.0, <code>rake db:setup</code> creates an empty test database? Yeah.... Empty database has no tables. The import would not have worked because dump3.dump is a data-only and no-owner dump. It needs tables for data to be inserted.  Instead, let&#39;s run dump1. Remember, since dump1 is a human-readable file, it needs to be run as psql.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql imgblog_test -f ~/Desktop/dump1.sql
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql imgblog_test -f ~/Desktop/dump1.sql
 </code></pre></div>
 <p>The output should be a list of SET&#39;s and CREATE&#39;s and COPY&#39;s. They will correspond to the SETs and CREATEs and COPYs in your dump1.sql file. Confirm that data has been transferred properly.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ psql imgblog_test
+<div class="highlight"><pre><code class="language-" data-lang="">$ psql imgblog_test
 imgblog_test=# \dt
 # confirm you have images, schema_migrations, and users
 imgblog_test=# select count(*) from users;
@@ -274,18 +274,18 @@ imgblog_test=# select count(*) from images;
 imgblog_test=# \q
 </code></pre></div>
 <p>Fantastic job! Let&#39;s drop the database and confirm that it is no longer there. I am using a shortcut to display the list of databases without hopping into postgres. Then we&#39;ll set it up properly.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ RAILS_ENV=test rake db:drop
+<div class="highlight"><pre><code class="language-" data-lang="">$ RAILS_ENV=test rake db:drop
 $ psql -l
 # confirm that imgblog_test does not exist
 $ RAILS_ENV=test rake db:setup
 # this runs db:create, migrate, and seed
 </code></pre></div>
 <p>Ok, now let&#39;s use that data-only dump file (dump3). The output of that is below the command.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ pg_restore -d imgblog_test &lt; ~/Desktop/dump3.dump
+<div class="highlight"><pre><code class="language-" data-lang="">$ pg_restore -d imgblog_test &lt; ~/Desktop/dump3.dump
 # the output
 pg_restore: [archiver (db)] Error while PROCESSING TOC:
 pg_restore: [archiver (db)] Error from TOC entry 2284; 0    34203 TABLE DATA schema_migrations risa
-pg_restore: [archiver (db)] COPY failed for table &quot;schema_    migrations&quot;: ERROR:  duplicate key value violates unique    constraint &quot;unique_schema_migrations&quot;
+pg_restore: [archiver (db)] COPY failed for table "schema_    migrations": ERROR:  duplicate key value violates unique    constraint "unique_schema_migrations"
 DETAIL:  Key (version)=(20141122220745) already exists.
 CONTEXT:  COPY schema_migrations, line 1
 WARNING: errors ignored on restore: 1
@@ -294,7 +294,7 @@ WARNING: errors ignored on restore: 1
 ...I will let you figure that one out on your own. :)</p>
 
 <p>OK, ONE LAST RESTORE! Imagine that you have to restore the database from your machine to another machine. Yup, you&#39;ll need those host and port (and user, but skipping here) flags.  Before we do that, let&#39;s reset the test database.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ RAILS_ENV=test rake db:reset
+<div class="highlight"><pre><code class="language-" data-lang="">$ RAILS_ENV=test rake db:reset
 $ pg_restore -h 127.0.0.1 -p 5432 -d imgblog_test &lt; ~/Documents/dump4.dump
 </code></pre></div>
 <p>Again, same kind of errors, but hop in and check the data. Did it transfer over?  Awesome!</p>

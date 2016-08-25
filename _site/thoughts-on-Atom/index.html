@@ -8,10 +8,10 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
-  <title>Creating new old-version Rails apps</title>
-  <meta name="description" content="As always, a work story. Here at Team DevOps, we&#39;ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We&#3...">
+  <title>Thoughts on Atom, the text editor</title>
+  <meta name="description" content="I want to take the time to give my opinion on Atom, the text editor. As a developer, I can choose between a plethora of options for text editors, including b...">
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://risaonrails.com/creating-new-old-version-rails-apps/">
+  <link rel="canonical" href="http://risaonrails.com/thoughts-on-Atom/">
   <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <link rel="stylesheet" href="css/anchor.css">
@@ -62,48 +62,47 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Creating new old-version Rails apps</h1>
-    <p class="post-meta">Apr 2, 2015</p>
+    <h1 class="post-title">Thoughts on Atom, the text editor</h1>
+    <p class="post-meta">Dec 10, 2015</p>
   </header>
 
   <article class="post-content">
-    <p>As always, a work story. Here at Team DevOps, we&#39;ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We&#39;re also Rails developers too, even if we don&#39;t look like it. Admittedly, it&#39;s been so long since I&#39;ve started a Rails app from scratch I almost forgot how to do <code>rails new</code>... Yeah, only slightly embarrassed.</p>
+    <p>I want to take the time to give my opinion on Atom, the text editor. As a developer, I can choose between a plethora of options for text editors, including but not limited to vim, emacs, Sublime, and Atom. As a developer that prefers GUI and using a mouse, I&#39;m going to casually ignore any terminal(ly ill) related editors. Why? I think this sums it up pretty nicely:</p>
 
-<p>I&#39;m more familiar with Ruby 2.0.0 and Rails 4.0.x than 2.2.x and 4.2.x, so I decided to make my app using the older versions. Of course, I&#39;ve since updated my rubies and rails versions, so without thinking much about it, I did <code>rails new</code>. Figured I could just bundle update when I switched ruby/rails versions.</p>
+<p><a href="https://twitter.com/iamdevloper/status/435555976687923200"><img src="/assets/iamdevloper.png" alt="IamDevloper&#39;s tweet about vim"></a></p>
 
-<p>Oh god, that was a terrible, TERRIBLE mistake.</p>
+<p>Probably much like every Rails developer that taught themselves, I learned Rails using Sublime. And, quite frankly, Sublime is great! It has a ton of functionality, packages to add more functionality, and a fairly decent default colour scheme. But, teaching yourself how to learn how to install new packages for whatever new functionality was a pain in the butt.</p>
 
-<p><img src="http://www.nicknotas.com/wp-content/uploads/2013/04/Ive_Made_a_Huge_Mistake.jpg" alt="Huge mistake"></p>
+<p>Then came Atom. At first, I thought, &quot;Not <em>another</em> editor! What makes it so much better than Sublime??&quot; and thought nothing of it. I continued to use Sublime. But then I started to write a lot in Markdown. In particular, Github markdown because of support docs.</p>
 
-<p>What got created was an awesomely standard Rails 4.2.0 app with Ruby 2.2.0. No problem. In my Gemfile I added in <code>ruby 2.0.0</code> and bundle updated and thought nothing of it. I moved on and edited my database.yml file and decided to add some of my standard gems I&#39;d be using for TDD: guard and spork. But since it was rails 4.2, I wasn&#39;t sure how my guard/spork setup would work, since I was plugging and chugging from an old 4.0.x app I had. Well, whatever.</p>
+<p>A colleague of mine mentioned an app that displayed a file in markdown, some app that started with a big teal M. I have no idea what it was, but having to use another app to view Markdown format was a pain.</p>
 
-<p>I&#39;ll just change rails 4.2.x to rails 4.0.x! No problemo!! Lemme bundle update and then run <code>guard init rspec</code>. </p>
+<p>Another colleague suggested Atom. Atom had this thing called &quot;Markdown preview&quot;, done with a keyboard shortcut of <code>cntl-shift-m</code>. Boom! To my left was my .md file I was working on and to my right was the preview version. Fantastic!</p>
 
-<p><img src="http://stream1.gifsoup.com/view/897102/mushroom-cloud-o.gif" alt="Kaboom!"></p>
+<p>But, after my stint at that particular job was over, I stopped using Atom and went back to Sublime. It wasn&#39;t until about a month later when that very same colleague mentioned in a tweet that Atom had gotten to be considerably better than Sublime and that he himself completely switched. I decided to give Atom another go, mostly after Yet Another Popup(tm) happened on Sublime. (Yeah I didn&#39;t want to shell out $70 for it, mostly because I don&#39;t use all those packages they have.)</p>
 
-<p>What. Have. I. Done. Guard was complaining that I had started things up with a newer version so it wouldn&#39;t be able to use the version 4.0.13 wanted (2.6). Not only that but <code>rails g anything</code> wasn&#39;t working either. Geezus. So I completely uninstalled guard and then installed only the correct version, but even then the Guardfile created seemed weird. Rails didn&#39;t let me install rspec either without complaining. Not to mention Rake. Oy vey. How much had changed between Rails 4.0 and 4.2??! What is this business about <code>activejob_railties</code>??</p>
+<p>I haven&#39;t looked back. Admittedly I haven&#39;t really added extra functionality or anything; I&#39;ve added a few extra packages (such as particular syntax highlighting) and themes but outside of that, no major changes.  </p>
 
-<p>OK, there were some major changes that I haven&#39;t really been paying attention to. ActiveJob was a new addition to 4.2. On top of that, the <code>config/initializers/application.rb</code> file format had changed from referencing the <code>AppName::Application...</code> to <code>Rails.application...</code> Then there were the additional railties that were added in. This is just the tip of the iceberg...</p>
+<p>Here are some of Atom&#39;s functionalities that I enjoy fully. It&#39;s the little things!</p>
 
-<p>Yeah let&#39;s queue up the whole <code>I don&#39;t know what I&#39;m doing</code> meme here. Seriously. At this point the only thing I could sensibly do was to completely start over and create a Rails 4.0.x app. But how would I do that?? </p>
+<ul>
+<li>I can change the theme and syntax highlighting super quickly and easily.</li>
+<li>It tells me which branch I&#39;m currently on, how many package/theme updates are available, and if there&#39;s anything wrong with the editor (like something was deprecated) at the very bottom.</li>
+<li>It changes the colours of my files in my document tree based on whether it&#39;s new or modified (this might be because of a theme, but I loooove it!)</li>
+<li>Atom tells me how much added time a plugin or theme will cause Atom&#39;s startup time to slow down.</li>
+<li>Adding new themes/plugins/functionality is super simple.</li>
+<li>If writing in markdown, typing <code>code</code> then pressing tab autocompletes it to the ` triple tick marks, then you can add ruby to the end of that to get ruby syntax highlighting in your .md&#39;s.</li>
+<li>Typing <code>pry</code> then hitting tab autocompletes it to <code>binding.pry</code></li>
+<li>Markdown preview seriously needs a lot more love.</li>
+</ul>
 
-<p>The Rails guides didn&#39;t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.</p>
+<p>As a heads up, I currently use One Dark / Seti as my theme/syntax highlight.</p>
 
-<h3 id="the-way-of-the-old-rails-warrior">The way of the old rails warrior</h3>
+<p>Note though, that the functionalities I was used to in Sublime still worked in Atom, and that was a huge relief and made the transition much smoother.</p>
 
-<p>I can just refer an older Rails version when doing <code>rails new</code>! Since I wanted 4.0.13, I did this: <code>rails 4.0.13 new appname</code>. This did not work.</p>
+<p><a href="http://www.sublimetext.com/">Sublime</a> is created by crazy Aussies. <a href="https://atom.io/">Atom</a> is created by Github (aka, crazy SFers).</p>
 
-<p>My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn&#39;t have gems for p643 so used p451.)</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>rbenv global 2.0.0-p451
-<span class="gp">$ </span>gem install rails 4.0.13
-<span class="gp">$ </span>rails _4.0.13_ new appname</code></pre></figure>
-
-<p>Please note the <code>_</code> surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.</p>
-
-<p>Now, how do I write new models again...?</p>
-
-<p><i class="fa fa-angle-double-up"></i> Level up +1 for super obscure learnings.</p>
+<p><i class="fa fa-angle-double-up"></i> Level up +0. It&#39;s an opinionated piece, what did you expect?</p>
 
 <hr>
 

@@ -83,7 +83,7 @@
 
 <p>On your local machine, install Jekyll.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>gem install jekyll</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gem install jekyll</code></pre></figure>
 
 <h3 id="gt-github-pages-for-your-github-account">&gt; Github Pages for your github account</h3>
 
@@ -91,12 +91,12 @@
 
 <p><em>Note: If you create a repo and name it whatever you want and NOT &quot;your-username.github.io&quot;, Github will see this as a Page for your Repo. When this happens, Github will use the branch called <code>gh-pages</code> instead of <code>master</code> to auto-publish your site. It&#39;s confusing and tripped me up massively in the beginning.</em></p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone git@github.com/your-github-username/your-github-username.github.io.git</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>git clone git@github.com/your-github-username/your-github-username.github.io.git</code></pre></figure>
 
 <p>For sanity&#39;s sake, before you hop into your directory, create a new directory and call it whatever you want. If it makes it easier for you, call it what you want your site to be called. Is it your blog? Call it that. Since I booched the whole Github Pages account vs repo thing, I already had a repo called <code>risa-on-rails</code> so I used this. This new directory thing will come in handy later. Trust me.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkdir your-sites-blog-name
-<span class="nv">$ </span><span class="nb">cd </span>your-sites-blog-name</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>mkdir your-sites-blog-name
+<span class="gp">$ </span><span class="nb">cd </span>your-sites-blog-name</code></pre></figure>
 
 <p>Great! Now I realize this is an empty directory. It&#39;s cool. Time to create a new Jekyll blog.</p>
 
@@ -106,13 +106,13 @@
 
 <p>Create a new Jekyll site by running <code>jekyll new .</code> Make sure you&#39;ve got that period in there, since that creates it within this directory.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>jekyll new .</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>jekyll new .</code></pre></figure>
 
 <p>Jekyll will install a bunch of directories with <em>&#39;s in them along with some other files, including a `</em>config.yml` file. This file will be the driver of just about everything: name it here and use it everywhere!</p>
 
 <p>Create 2 directories called <code>_plugins</code> and <code>_drafts</code>. Because you may want/need them.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkdir _plugins _drafts</code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>mkdir _plugins _drafts</code></pre></figure>
 
 <p>This is probably a good time to do <code>git init</code> and do your initial commit.</p>
 
@@ -122,7 +122,7 @@
 
 <p>If you change any of the variables, make sure you change them in the css and anywhere else in the other files. For me, I changed the <code>:title</code> symbol to <code>:name</code> for the name of my blog. Anywhere where <code>site.title</code> was referenced, I changed to <code>site.name</code>. That includes the css file too. I did this because I added in a <code>permalink: /:title/</code> option to give all my pages their own permalinks instead of the weird directory structure Jekyll uses.</p>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">permalink</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/:title/</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="s">permalink</span><span class="pi">:</span> <span class="s">/:title/</span></code></pre></figure>
 
 <h3 id="gt-_posts-and-_drafts">&gt; _posts/ and _drafts/</h3>
 
@@ -131,7 +131,7 @@
 <p>The _drafts folder is exactly that, for drafts. You don&#39;t need to append dates to it. In fact, when you&#39;re ready to publish it, that&#39;s when you can append dates. For that, we&#39;ve got a handy tool, the <a href="https://github.com/gummesson/jekyll-rake-boilerplate">jekyll-rake-boilerplate Rakefile</a>. Copy that Rakefile into your repo. Now you&#39;ve got some added jekyll capabilities like: <code>rake watch[&quot;drafts&quot;]</code> which is the equivalent to <code>jekyll serve --watch --drafts</code>, and <code>rake draft[&quot;your post&#39;s title&quot;]</code> which creates a new draft post with the given title. Sweetness. <code>rake publish</code> let&#39;s you pick the draft you want to publish and appends the date automagically to your post, moving it from _drafts to _posts and eliminating the need to wonder what day it currently is.</p>
 
 <p>To use the <code>rake draft[&quot;title&quot;]</code> task, create a file called <code>_post.md</code> in the root directory. In your <code>_config.yml</code> add in the following so your rake task won&#39;t break when it&#39;s run:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">post:
+<div class="highlight"><pre><code class="language-" data-lang="">post:
   template: _post.md
   extension: md
 </code></pre></div>
@@ -144,7 +144,7 @@
 <p>Start in your-sites-blog-name dir <i class="fa fa-angle-right"></i> create draft posts and stuff <i class="fa fa-angle-right"></i> rake publish draft <i class="fa fa-angle-right"></i> jekyll build site <i class="fa fa-angle-right"></i> copy <em>ONLY</em> the <code>_site</code> directory contents to your-username.github.io directory <i class="fa fa-angle-right"></i> cleanup anything you need and git add, commit <i class="fa fa-angle-right"></i> push to github <i class="fa fa-angle-right"></i> ??? <i class="fa fa-angle-right"></i> profit!</p>
 
 <p>Let&#39;s start by adding in my favourite simple plugin, the <a href="https://gist.github.com/23maverick23/8532525">jekyll-font-awesome</a> plugin. Create a file in <code>_plugins/</code> called <code>font_awesome.rb</code> and paste the contents from that gist into this file. If you&#39;re not familiar with fontawesome.io, it&#39;s a bunch of rad icons for everything. Paste the link below into your head.html file at around line 6: <code>_includes/head.html</code>, just like that.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">  &lt;link rel=&quot;stylesheet&quot; href=&quot;//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css&quot;&gt;
+<div class="highlight"><pre><code class="language-" data-lang="">  &lt;link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"&gt;
 </code></pre></div>
 <p>Now you can add icons by using the syntax <code>{.% icon fa-something %}</code> (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!</p>
 
@@ -154,25 +154,25 @@
 
 <p>OK. Remember the workflow up above? Let&#39;s break it down into simpler steps. <del>I ended up using Automator on the Mac (it&#39;s a native/default app and totally underrated IMO) to do this for me. The directions for that are beautifully written up <a href="http://vincentp.me/blog/a-smarter-jekyll-workflow/">in this blog post</a>.</del> <em>Edit: Automator let me down in the end. <img class='emoji' title='cry' alt='cry' src='https://github.global.ssl.fastly.net/images/icons/emoji/cry.png' height='20' width='20' align='absmiddle' ></em> Here is my updated workflow:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># starting in your-sites-blog-name directory</span>
-<span class="nv">$ </span>rake publish
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># starting in your-sites-blog-name directory</span>
+<span class="gp">$ </span>rake publish
 <span class="c"># choose the draft post you want to publish</span>
 <span class="c"># that moves down to _posts</span>
 <span class="c"># make final checks and if all good then...</span>
-<span class="nv">$ </span>jekyll build
-<span class="nv">$ </span>git add .
-<span class="nv">$ </span>git commit -m <span class="s2">&quot;yeah your awesome message about your post&quot;</span>
-<span class="nv">$ </span>sudo cp -r _site/* ../your-username.github.io/
+<span class="gp">$ </span>jekyll build
+<span class="gp">$ </span>git add .
+<span class="gp">$ </span>git commit -m <span class="s2">"yeah your awesome message about your post"</span>
+<span class="gp">$ </span>sudo cp -r _site/<span class="k">*</span> ../your-username.github.io/
 <span class="c"># put in your password</span>
 <span class="c"># this overrides everything in the other directory</span>
-<span class="nv">$ </span><span class="nb">cd</span> ../your-username.github.io
+<span class="gp">$ </span><span class="nb">cd</span> ../your-username.github.io
 <span class="c"># confirm that the contents of _site were copied over</span>
 <span class="c"># you may need to rm -rf Rakefile OR add a .gitignore file</span>
-<span class="c"># and put Rakefile in it. Whatever you&#39;d like to do</span>
-<span class="nv">$ </span>rm -rf Rakefile
-<span class="nv">$ </span>git add .
-<span class="nv">$ </span>git commit -m <span class="s2">&quot;your msg about your post that&#39;s ready for Github&quot;</span>
-<span class="nv">$ </span>git push origin master</code></pre></div>
+<span class="c"># and put Rakefile in it. Whatever you'd like to do</span>
+<span class="gp">$ </span>rm -rf Rakefile
+<span class="gp">$ </span>git add .
+<span class="gp">$ </span>git commit -m <span class="s2">"your msg about your post that's ready for Github"</span>
+<span class="gp">$ </span>git push origin master</code></pre></figure>
 
 <p>BOOM. You should be good to go now. Check out your site at <a href="http://your-username.github.io">http://your-username.github.io</a> :)</p>
 
@@ -180,12 +180,12 @@
 
 <p>I like to make my workflow a lot easier by making aliases. The order of some of the commands won&#39;t matter. So here&#39;s the alias I created, using <code>sudo cp</code> to overwrite things properly. It involves putting in my password but that&#39;s still less typing overall. Easy peasy. This alias will be put into your <code>~/.bash_profile</code> or <code>~/.zshrc</code> or <code>~/.bashrc</code> file.  </p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">alias </span>copy-it<span class="o">=</span><span class="s1">&#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&#39;</span>
-<span class="nb">echo</span> <span class="s1">&#39;=======================&#39;</span>
-<span class="nb">echo</span> <span class="s1">&#39;Jekyll cheats&#39;</span>
-<span class="nb">echo</span> <span class="s1">&#39;=======================&#39;</span>
-<span class="nb">echo</span> <span class="s1">&#39;make sure you are in correct directory before running this&#39;</span>
-<span class="nb">echo</span> <span class="s1">&#39;copy-it = jekyll build then copy contents of _site to your-username master&#39;</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">alias </span>copy-it<span class="o">=</span><span class="s1">'jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;'</span>
+<span class="nb">echo</span> <span class="s1">'======================='</span>
+<span class="nb">echo</span> <span class="s1">'Jekyll cheats'</span>
+<span class="nb">echo</span> <span class="s1">'======================='</span>
+<span class="nb">echo</span> <span class="s1">'make sure you are in correct directory before running this'</span>
+<span class="nb">echo</span> <span class="s1">'copy-it = jekyll build then copy contents of _site to your-username master'</span></code></pre></figure>
 
 <p>Obviously change the directory names to fit your thing. Save it and source your file: <code>source ~/.bash_profile</code> or <code>source ~/.zshrc</code> or <code>source ~/.bashrc</code>. You should see the commands displayed in your terminal.  Alternatively you can just restart terminal. </p>
 
