@@ -6,9 +6,120 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 24 Aug 2016 23:38:04 -0700</pubDate>
-    <lastBuildDate>Wed, 24 Aug 2016 23:38:04 -0700</lastBuildDate>
+    <pubDate>Sun, 25 Sep 2016 17:13:29 -0700</pubDate>
+    <lastBuildDate>Sun, 25 Sep 2016 17:13:29 -0700</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>I used vi the other day</title>
+        <description>&lt;p&gt;I am really not a fan of using &lt;code&gt;vi&lt;/code&gt; or &lt;code&gt;vim&lt;/code&gt; or &lt;code&gt;emacs&lt;/code&gt; or whatever complicated built-in editor. If ever I&amp;#39;m on the server, I use &lt;code&gt;nano&lt;/code&gt; because it&amp;#39;s stupidly simple and gets the job done. Yes I realize there are a bazillion reasons as to why &lt;code&gt;vi&lt;/code&gt; is better, but the amount of time needed to fully learn everything &lt;em&gt;PLUS&lt;/em&gt; set up my working environment just the way I would want it isn&amp;#39;t worth it to me. The value add does not justify the learning/time cost.&lt;/p&gt;
+
+&lt;p&gt;HOWEVER! As with all things, it&amp;#39;s important to still be somewhat familiar with it. I have seriously been refusing to learn how to use &lt;code&gt;vi&lt;/code&gt;, despite insistence from numerous colleagues. It wasn&amp;#39;t until recently (now a few months ago, oh how quickly time flies) that I had learned a cool new trick. And I shall impart this knowledge to you, fellow reader, or to future me.&lt;/p&gt;
+
+&lt;h2 id=&quot;but-first&quot;&gt;But first...&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s go over some basics.&lt;/p&gt;
+
+&lt;h3 id=&quot;super-basic-commands&quot;&gt;Super basic commands&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s how to enter and exit out of &lt;code&gt;vi&lt;/code&gt;/&lt;code&gt;vim&lt;/code&gt;. &lt;code&gt;vim&lt;/code&gt; is the &amp;quot;improved&amp;quot; version of &lt;code&gt;vi&lt;/code&gt;, you know, version 2. &lt;img class=&#39;emoji&#39; title=&#39;wink&#39; alt=&#39;wink&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/wink.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to open a file with vi&lt;/span&gt;
+vi file_name.text
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to exit out of a file without saving&lt;/span&gt;
+:q
+&lt;span class=&quot;c&quot;&gt;# to force quit w/o saving&lt;/span&gt;
+:q!
+
+&lt;span class=&quot;c&quot;&gt;# to exit out of a file &amp;amp;&amp;amp; save&lt;/span&gt;
+:wq
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note, you must add the &lt;code&gt;:&lt;/code&gt; in there.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;q&lt;/code&gt; is for quit, &lt;code&gt;w&lt;/code&gt; is for write, so &lt;code&gt;:wq&lt;/code&gt; is to write (save) and exit.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s move on now. Inserting text.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to go into &#39;typing things into editor because its technically a text editor&#39; mode&lt;/span&gt;
+i  &lt;span class=&quot;c&quot;&gt;# (for insert)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# to exit out of insert mode&lt;/span&gt;
+cntl-c
+&lt;span class=&quot;c&quot;&gt;# or&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;lt;ESC&amp;gt;  &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# sometimes the ESC button works, sometimes it doesn&#39;t&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: the ESC seems to work on Linux distros, such as Ubuntu, so when you&amp;#39;re on the server then you can press &lt;code&gt;Esc&lt;/code&gt;. On my Mac, that isn&amp;#39;t the case and only &lt;code&gt;cntl-c&lt;/code&gt; works.&lt;/p&gt;
+
+&lt;p&gt;And now let&amp;#39;s delete a full line of text. Or a chunk of text.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to delete the current line&lt;/span&gt;
+dd                    &lt;span class=&quot;c&quot;&gt;# =&amp;gt; cntl-k on nano&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# to delete 20 lines (+1 extra on a mac)&lt;/span&gt;
+20d &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;press enter&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Note: this deletes 20+1 lines from where the blinker/cursor is.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# to delete line 5 only&lt;/span&gt;
+:5d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Jumping down to a particular line number. This is the equivalent to scrolling to line 10 and inserting your cursor there.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# jump down to line 10&lt;/span&gt;
+:10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;the-fun-stuff&quot;&gt;The fun stuff&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s where the power of &lt;code&gt;vi&lt;/code&gt; and &lt;code&gt;vim&lt;/code&gt; lie. You can jump down to a certain line number, you can delete multiple lines, you can find and replace text within a file. All the things you can do in your standard editor like Atom or Sublime, you can now do in &lt;code&gt;vi&lt;/code&gt;! Woo! /s&lt;/p&gt;
+
+&lt;p&gt;But really, I happen to enjoy using my mouse and highlighting/scrolling with it. Moving my hands from the keyboard doesn&amp;#39;t make me a horrible programmer. Writing horrible code makes me a horrible programmer.  It also doesn&amp;#39;t really let me be less efficient either. Honestly, switching from keyboard to trackpad/mouse/pen allows your brain to switch gears and quietly pause and reflect on your coding decisions, such as &amp;quot;Did I really mean to write that line of code? Maybe I should delete it&amp;quot; vs going back and willy-nilly pull the trigger and delete 15 lines of code only to realize afterwards that it was probably a bad idea and you should have kept it because now you could have used it. It&amp;#39;s a built in mechanism to prevent yourself from pulling the trigger too quickly. (&lt;em&gt;Insert social commentary of how this should always be applied, mostly when actual weapons are involved...&lt;/em&gt;) However, in server-land, you don&amp;#39;t get the built-in benefits of actually having a GUI, which means text editing must be done in a GUI-less environment.&lt;/p&gt;
+
+&lt;p&gt;I digress.&lt;/p&gt;
+
+&lt;p&gt;The main point of this entire post was really for this next reason.  May I present to you.... &lt;strong&gt;Find and replace all!&lt;/strong&gt; This has been the one main benefit to using vi. And if I am doing batch text changes, to a config file for example, this is the best way to do it.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# find all instances of phrase and replace it with something else&lt;/span&gt;
+:%s/original_word/new_word
+
+&lt;span class=&quot;c&quot;&gt;# for example...&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# find all asdf and replace with 0000&lt;/span&gt;
+:%s/asdf/0000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There is a caveat to the above. This will change all instances without confirmation, so if there is one you want to skip, this is not the command for you.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s look at the other options and iterations of the Find and Replace All command.  First, let&amp;#39;s confirm our individual find/replaces. Appending &lt;code&gt;gc&lt;/code&gt; will do a global search with confirmation. You will have to type &lt;code&gt;y&lt;/code&gt; or &lt;code&gt;n&lt;/code&gt; for replace or skip.  It will highlight the word it is looking to replace. I prefer this as it reminds me of &lt;code&gt;git add -p&lt;/code&gt; and forcibly confirming each one.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# confirm each change before replacing&lt;/span&gt;
+:%s/asdf/0000/gc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What happens if the word you want to replace is kind of funky? like &lt;code&gt;http://localhost&lt;/code&gt; needs to be replaced with &lt;code&gt;$APP_URL&lt;/code&gt;? Uh oh, you can&amp;#39;t use &lt;code&gt;/&lt;/code&gt; since the command also uses it as the delimiter. What do? Simple. Change the delimiter! I prefer the &lt;code&gt;#&lt;/code&gt; for this, but it can be any symbol as long as if it&amp;#39;s consistently used across the command.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# change delimiter and confirm before replacing&lt;/span&gt;
+:%s#original_word#new_word#gc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using the example (without bash code-style turned on)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;:%s#http://localhost#$APP_URL#gc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It looks ugly but, wowza, this really works.  If I had used &lt;code&gt;nano&lt;/code&gt; to find text and then delete and replace it, that would have taken me ages. I could have also copied the text and pasted it into Atom to replace what I needed to replace, but both of these are costly. And my time is extremely expensive. In this case, the value add of this simple use case is incredibly high and far outweighs the knowledge cost.&lt;/p&gt;
+
+&lt;p&gt;So there you have it! Possibly the best thing about &lt;code&gt;vi&lt;/code&gt;.  I am sure I will encounter other fun handy things with &lt;code&gt;vi&lt;/code&gt;, but for now, I&amp;#39;m pretty good with this list as is.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;#39;t forget to &lt;code&gt;:wq&lt;/code&gt; your changes! &lt;img class=&#39;emoji&#39; title=&#39;grinning&#39; alt=&#39;grinning&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5 (+10 if you&amp;#39;ve been avoiding vi as if it were the bubonic plague)&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 25 Sep 2016 10:17:17 -0700</pubDate>
+        <link>http://risaonrails.com/i-used-vi-the-other-day/</link>
+        <guid isPermaLink="true">http://risaonrails.com/i-used-vi-the-other-day/</guid>
+        
+        <category>vi</category>
+        
+        <category>sysadmin</category>
+        
+        <category>devops</category>
+        
+        
+        <category>rails</category>
+        
+        <category>devops</category>
+        
+      </item>
     
       <item>
         <title>Testing, testing, 1...2...3</title>
@@ -840,155 +951,6 @@ touch /home/rails/surprise/tmp/restart.txt
         <category>development</category>
         
         <category>tip</category>
-        
-      </item>
-    
-      <item>
-        <title>Jekyll: The blog maker</title>
-        <description>&lt;p&gt;As you may have figured out, I use Jekyll to create my Github Pages. And boy did I have a hard time understanding what the heck was going on. I dunno, maybe docs and I just don&amp;#39;t get along. Most of the how-to guides out there were like &amp;quot;oh yeah rip off this template from this site and start using jekyll!&amp;quot; but that feels like a cop-out to me, and I like to bash my head into the wall. Or keyboard.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i1.kym-cdn.com/photos/images/masonry/000/021/531/SmashingHeadOnKeyboard.gif&quot; alt=&quot;Bash your head in&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Pretty. Much. Every. Day.&lt;/p&gt;
-
-&lt;p&gt;Anyway, here&amp;#39;s what I&amp;#39;ve learned thus far with using Jekyll and Github Pages. Maybe this will help you out, too. I hope to expand my knowledge as well.  Glad that it&amp;#39;s written in Ruby, so implementation of things are much easier to understand (for me).&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-github-pages-overview&quot;&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
-
-&lt;p&gt;First issue I did not realize, and maybe I should have actually &lt;em&gt;read&lt;/em&gt; the instructions better,... there is a HUGE difference between creating a Github Page for a repo and for your account. I wanted to create one for my account but made it for my repo instead. Whoops.&lt;/p&gt;
-
-&lt;p&gt;Github &lt;a href=&quot;https://pages.github.com/&quot;&gt;explains this fairly well&lt;/a&gt;, but here&amp;#39;s my version for one-stop shopping goodness. I assume you&amp;#39;re a developer and are knowledgable about the standard &lt;code&gt;git&lt;/code&gt; type of commands.&lt;/p&gt;
-
-&lt;p&gt;On your local machine, install Jekyll.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;gt-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
-
-&lt;p&gt;Create a new repo in Github called &amp;quot;your-github-username.github.io&amp;quot;. In my case it&amp;#39;s a repo called &amp;quot;rbatta.github.io&amp;quot; since my Github username is rbatta. When you git clone to your local machine, your &lt;code&gt;master&lt;/code&gt; branch will be the one Github uses to publish your site. You get that? &lt;em&gt;Master branch is what Github uses to publish your site.&lt;/em&gt; Git clone your new repo and hop into that directory.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Note: If you create a repo and name it whatever you want and NOT &amp;quot;your-username.github.io&amp;quot;, Github will see this as a Page for your Repo. When this happens, Github will use the branch called &lt;code&gt;gh-pages&lt;/code&gt; instead of &lt;code&gt;master&lt;/code&gt; to auto-publish your site. It&amp;#39;s confusing and tripped me up massively in the beginning.&lt;/em&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git clone git@github.com/your-github-username/your-github-username.github.io.git&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;For sanity&amp;#39;s sake, before you hop into your directory, create a new directory and call it whatever you want. If it makes it easier for you, call it what you want your site to be called. Is it your blog? Call it that. Since I booched the whole Github Pages account vs repo thing, I already had a repo called &lt;code&gt;risa-on-rails&lt;/code&gt; so I used this. This new directory thing will come in handy later. Trust me.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir your-sites-blog-name
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;your-sites-blog-name&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Great! Now I realize this is an empty directory. It&amp;#39;s cool. Time to create a new Jekyll blog.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;But wait!&lt;/strong&gt; Why are we in &lt;code&gt;your-sites-blog-name&lt;/code&gt; and not in &lt;code&gt;your-username.github.io&lt;/code&gt; directory? Well, like I said before, the &lt;code&gt;master&lt;/code&gt; branch is what Github uses to publish your blog. &lt;strong&gt;&lt;em&gt;NOT&lt;/em&gt;&lt;/strong&gt; publish your repo. We&amp;#39;ll keep the &lt;code&gt;master&lt;/code&gt; directory clean until we&amp;#39;re ready to push things up. So in the meantime, we&amp;#39;ll use the &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory to do all of our work.&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-jekyll-setup&quot;&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
-
-&lt;p&gt;Create a new Jekyll site by running &lt;code&gt;jekyll new .&lt;/code&gt; Make sure you&amp;#39;ve got that period in there, since that creates it within this directory.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jekyll new .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Jekyll will install a bunch of directories with &lt;em&gt;&amp;#39;s in them along with some other files, including a `&lt;/em&gt;config.yml` file. This file will be the driver of just about everything: name it here and use it everywhere!&lt;/p&gt;
-
-&lt;p&gt;Create 2 directories called &lt;code&gt;_plugins&lt;/code&gt; and &lt;code&gt;_drafts&lt;/code&gt;. Because you may want/need them.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir _plugins _drafts&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;This is probably a good time to do &lt;code&gt;git init&lt;/code&gt; and do your initial commit.&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-_config-yml&quot;&gt;&amp;gt; _config.yml&lt;/h3&gt;
-
-&lt;p&gt;Fill in the information given. For &lt;code&gt;baseurl:&lt;/code&gt; keep that as blank quotes so that when you serve up your site, it&amp;#39;ll load at &lt;code&gt;127.0.0.1:4000&lt;/code&gt; instead of &lt;code&gt;127.0.0.1:4000/baseurl-you-gave-it&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;If you change any of the variables, make sure you change them in the css and anywhere else in the other files. For me, I changed the &lt;code&gt;:title&lt;/code&gt; symbol to &lt;code&gt;:name&lt;/code&gt; for the name of my blog. Anywhere where &lt;code&gt;site.title&lt;/code&gt; was referenced, I changed to &lt;code&gt;site.name&lt;/code&gt;. That includes the css file too. I did this because I added in a &lt;code&gt;permalink: /:title/&lt;/code&gt; option to give all my pages their own permalinks instead of the weird directory structure Jekyll uses.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;s&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;gt-_posts-and-_drafts&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
-
-&lt;p&gt;By default, anything that you put in the _posts directory will be published. Of course you need to make sure it&amp;#39;s in the format of &lt;code&gt;yyyy-mm-dd-post-name&lt;/code&gt; with whatever extension you use. I prefer markdown so all my posts end with &lt;code&gt;.md&lt;/code&gt;. You&amp;#39;re the author of your blogposts so choose whatever format you&amp;#39;d like: Textile or Markdown are the two default choices Jekyll supports. You can choose others with plugins.&lt;/p&gt;
-
-&lt;p&gt;The _drafts folder is exactly that, for drafts. You don&amp;#39;t need to append dates to it. In fact, when you&amp;#39;re ready to publish it, that&amp;#39;s when you can append dates. For that, we&amp;#39;ve got a handy tool, the &lt;a href=&quot;https://github.com/gummesson/jekyll-rake-boilerplate&quot;&gt;jekyll-rake-boilerplate Rakefile&lt;/a&gt;. Copy that Rakefile into your repo. Now you&amp;#39;ve got some added jekyll capabilities like: &lt;code&gt;rake watch[&amp;quot;drafts&amp;quot;]&lt;/code&gt; which is the equivalent to &lt;code&gt;jekyll serve --watch --drafts&lt;/code&gt;, and &lt;code&gt;rake draft[&amp;quot;your post&amp;#39;s title&amp;quot;]&lt;/code&gt; which creates a new draft post with the given title. Sweetness. &lt;code&gt;rake publish&lt;/code&gt; let&amp;#39;s you pick the draft you want to publish and appends the date automagically to your post, moving it from _drafts to _posts and eliminating the need to wonder what day it currently is.&lt;/p&gt;
-
-&lt;p&gt;To use the &lt;code&gt;rake draft[&amp;quot;title&amp;quot;]&lt;/code&gt; task, create a file called &lt;code&gt;_post.md&lt;/code&gt; in the root directory. In your &lt;code&gt;_config.yml&lt;/code&gt; add in the following so your rake task won&amp;#39;t break when it&amp;#39;s run:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;post:
-  template: _post.md
-  extension: md
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In your &lt;code&gt;_post.md&lt;/code&gt; file, you need to ensure that you&amp;#39;ve got the YAML markup at the beginning with the --- thing. If you need a template, copy paste it from the Rakefile site or use the welcome-to-jekyll post&amp;#39;s YAML header. Think of this as your template for ALL your posts. Update as you see fit.&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-_plugins&quot;&gt;&amp;gt; _plugins&lt;/h3&gt;
-
-&lt;p&gt;There are some cool plugins for added functionality for Jekyll. However when publishing to Github, that&amp;#39;s stripped away and is not built when the site is published. Something something safety precautions. Ehhh. This is why we created a separate directory to work in. The &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory has all your drafts and posts and plugins and directories, but we will be creating the &amp;#39;static&amp;#39; website and pushing that to the &lt;code&gt;your-username.github.io&lt;/code&gt; directory for the master branch, to deploy to Github to publish. Wow, that came off a bit more complicated than I expected. Here&amp;#39;s the workflow.  We&amp;#39;ll go more into detail later on with this.&lt;/p&gt;
-
-&lt;p&gt;Start in your-sites-blog-name dir &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; create draft posts and stuff &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; rake publish draft &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; jekyll build site &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; copy &lt;em&gt;ONLY&lt;/em&gt; the &lt;code&gt;_site&lt;/code&gt; directory contents to your-username.github.io directory &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; cleanup anything you need and git add, commit &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; push to github &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; ??? &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; profit!&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s start by adding in my favourite simple plugin, the &lt;a href=&quot;https://gist.github.com/23maverick23/8532525&quot;&gt;jekyll-font-awesome&lt;/a&gt; plugin. Create a file in &lt;code&gt;_plugins/&lt;/code&gt; called &lt;code&gt;font_awesome.rb&lt;/code&gt; and paste the contents from that gist into this file. If you&amp;#39;re not familiar with fontawesome.io, it&amp;#39;s a bunch of rad icons for everything. Paste the link below into your head.html file at around line 6: &lt;code&gt;_includes/head.html&lt;/code&gt;, just like that.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css&quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now you can add icons by using the syntax &lt;code&gt;{.% icon fa-something %}&lt;/code&gt; (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-publishing&quot;&gt;&amp;gt; Publishing&lt;/h3&gt;
-
-&lt;p&gt;When you are ready to publish, build the site with Jekyll by running &lt;code&gt;jekyll build&lt;/code&gt;.  This creates a directory called &lt;code&gt;_site/&lt;/code&gt; which houses the raw ol&amp;#39; school HTML of your posts with a css directory that the pages reference.&lt;/p&gt;
-
-&lt;p&gt;OK. Remember the workflow up above? Let&amp;#39;s break it down into simpler steps. &lt;del&gt;I ended up using Automator on the Mac (it&amp;#39;s a native/default app and totally underrated IMO) to do this for me. The directions for that are beautifully written up &lt;a href=&quot;http://vincentp.me/blog/a-smarter-jekyll-workflow/&quot;&gt;in this blog post&lt;/a&gt;.&lt;/del&gt; &lt;em&gt;Edit: Automator let me down in the end. &lt;img class=&#39;emoji&#39; title=&#39;cry&#39; alt=&#39;cry&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/cry.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/em&gt; Here is my updated workflow:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# starting in your-sites-blog-name directory&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rake publish
-&lt;span class=&quot;c&quot;&gt;# choose the draft post you want to publish&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# that moves down to _posts&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# make final checks and if all good then...&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jekyll build
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git add .
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;yeah your awesome message about your post&quot;&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo cp -r _site/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ../your-username.github.io/
-&lt;span class=&quot;c&quot;&gt;# put in your password&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# this overrides everything in the other directory&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../your-username.github.io
-&lt;span class=&quot;c&quot;&gt;# confirm that the contents of _site were copied over&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# you may need to rm -rf Rakefile OR add a .gitignore file&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# and put Rakefile in it. Whatever you&#39;d like to do&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rm -rf Rakefile
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git add .
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;your msg about your post that&#39;s ready for Github&quot;&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;BOOM. You should be good to go now. Check out your site at &lt;a href=&quot;http://your-username.github.io&quot;&gt;http://your-username.github.io&lt;/a&gt; :)&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
-
-&lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won&amp;#39;t matter. So here&amp;#39;s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that&amp;#39;s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; or &lt;code&gt;~/.bashrc&lt;/code&gt; file.  &lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;copy-it&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;=======================&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Jekyll cheats&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;=======================&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;make sure you are in correct directory before running this&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;copy-it = jekyll build then copy contents of _site to your-username master&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Obviously change the directory names to fit your thing. Save it and source your file: &lt;code&gt;source ~/.bash_profile&lt;/code&gt; or &lt;code&gt;source ~/.zshrc&lt;/code&gt; or &lt;code&gt;source ~/.bashrc&lt;/code&gt;. You should see the commands displayed in your terminal.  Alternatively you can just restart terminal. &lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Note: If you run &lt;code&gt;copy-it&lt;/code&gt; you &lt;em&gt;MUST&lt;/em&gt; be in the correct directory (your-sites-blog-name)!! Don&amp;#39;t forget to git add and commit prior to running &lt;code&gt;copy-it&lt;/code&gt;, too!&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;After running the command, you end up in your-username.github.io directory. Confirm your changes with a &lt;code&gt;git diff&lt;/code&gt;. Then commit and push that sucker up! You are on your way to blogging freedom now. (And so am I!)&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Tue, 31 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/jekyll-the-blog-maker/</link>
-        <guid isPermaLink="true">http://risaonrails.com/jekyll-the-blog-maker/</guid>
-        
-        <category>jekyll</category>
-        
-        <category>guide</category>
-        
-        
-        <category>jekyll</category>
-        
-        <category>guide</category>
         
       </item>
     
