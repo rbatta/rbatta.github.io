@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
+  <title>Optimizing an App Part 1</title>
+  <meta name="description" content="Jumping right into itNB: This is a two part series on small little optimizations that had huge impacts on a client&#39;s app.">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/optimizing-queries/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Optimizing an App Part 1</h1>
+    <p class="post-meta">May 26, 2017</p>
+  </header>
+
+  <article class="post-content">
+    <h2 id="jumping-right-into-it">Jumping right into it</h2>
+
+<p><em>NB: This is a two part series on small little optimizations that had huge impacts on a client&#39;s app.</em></p>
+
+<p>A while ago, a colleague/mentor of mine was telling me about the power of <code>.to_sql</code>, which, when used in console, outputs the SQL query to the ActiveRecord query you wrote. It&#39;s a super handy tool.</p>
+
+<p>At the time, I didn&#39;t think too much about it except that it was something nifty to keep in my toolbox.</p>
+
+<p>And now, last month. A client of mine had asked me to help troubleshoot some issues with his staging app. The app only had 2 active users, but memory usage was inexplicably high. As in, the app kept running at around 70-120% of the 512MB allotted RAM on Heroku&#39;s hobby tier.</p>
+
+<h2 id="why-not-get-a-bigger-dyno">Why not get a bigger dyno?</h2>
+
+<p>Remember, the app only had 2 active users. For something like that, there really isn&#39;t a reason for the app to be maxing out on memory usage. Luckily Heroku has a metrics tab that allows you to see the state of the dyno for the past 24 hours. At first I thought it was a question of leaky memory, but the data didn&#39;t hold true. It would start at around 256MB, which is normal and great, but almost immediately would shoot up towards max capacity, then every hour it&#39;d cause the dyno to restart due to OOM (out of memory) errors.  The client was baffled. So was I.</p>
+
+<p><em>NB: a leaky app would have had a slow creep of memory usage over a longer period of time, something that&#39;d look like a y = ax + b kind of graph. The current app was looking more like a y = ax^3 + b kind of graph. Exponential growth</em></p>
+
+<p>As the app was for staging, neither he nor I wanted to bump up the dyno to account for the RAM, even though that would immediately solve the problem.  I spoke with his developer, and he walked me through the app&#39;s functionality and showed me their logs.</p>
+
+<p>Almost immediately I noticed a few things. One, he had his production config set to <code>:debug</code>, which, admittedly is the default, but it makes for extremely noisy output. Two, even with all that excess noise, the app was still outputting so much stuff.</p>
+
+<p><img src="https://media.giphy.com/media/1M9fmo1WAFVK0/giphy.gif" alt="But why?"></p>
+
+<p>We dove deeper.</p>
+
+<h2 id="hello-ruby">Hello, Ruby</h2>
+
+<p>I asked the dev to run the app locally so I could scrutinize the output of the logs while pouring over the code line by line. Literally, line by line. I haven&#39;t had to visually parse through code like this since learning Java in Intro to CS 102.</p>
+
+<p>Something stood out. There was code that said something to the effect of:</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">self</span><span class="p">.</span><span class="nf">post</span><span class="p">.</span><span class="nf">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="nf">id</span>
+</code></pre></div>
+<p><img src="https://media.giphy.com/media/El10jTzCzQymk/giphy.gif" alt=""></p>
+
+<p>It almost slipped by me, except the  <code>[-1]</code> part stood out, I was a bit baffled as I&#39;d never seen code like this in Rails before, even though it&#39;s a common thing for Arrays in Ruby.</p>
+
+<p>Let&#39;s break this code down. The <code>self</code> refers to an ActiveRecord instance, e.g. <code>User.first</code>. In this particular instance, a User has a <em>1:1</em> relationship with Post. This Post instance object has a <em>1:many</em> relationship with items. In case you missed this lesson when learning about arrays in Ruby, the <code>[-1]</code> is to return the very last item in the array.  This kind of call is essentially saying in simple English: &quot;I need all the Items of this Post, and then I want the last one of that list, and I want its id.&quot;  Because of the <em>1:many</em> relationship Post has with Items, the SQL query is a <code>where</code> lookup, which returns an array of ActiveRecord objects.</p>
+
+<p>One thing that I&#39;ve learned is that Arrays are great if there&#39;s only a small number of them, but if there are many, it&#39;s super sluggish. It&#39;s really not ideal when you&#39;re talking about a ton of records.  Not only that but when you do <code>post.items</code>, the returned collection of AR objects gets shoved into Ruby memory.  Imagine shoving 100,000 records into memory.... No bueno.  Essentially, the code would return all the items as an array, put it into Ruby memory, then from there get the last object&#39;s id.</p>
+
+<p>Repeat that kind of query a bunch of times, and I hope you see where this is going.</p>
+
+<p>To top it off, the developer <em>only</em> wanted the last item&#39;s ID. We didn&#39;t need anything else. Technically we didn&#39;t want all the items belonging to the post, nor did we even want the last item&#39;s full AR object. In simple English, it was &quot;Return the id of the last item that belongs to Post.&quot; So why make Rails do this? To me, this screams &quot;I can be a SQL query!&quot; Asking your database to do SQL queries is <em>far more efficient</em> than asking ActiveRecord/Rails to translate to SQL and return a bunch of objects <em>and then</em> get other data.</p>
+
+<p>Now we had something we could optimize.</p>
+
+<h2 id="sql-power-to-the-rescue">SQL power to the rescue</h2>
+
+<p>We wanted the last item&#39;s ID based on the current post. We wanted a SQL query that looked something like: (in pseudo code)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">select max id from items where user.post is a number (e.g. 1)
+</code></pre></div>
+<p>And SQL-fied:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="s1">'items'</span><span class="p">.</span><span class="s1">'id'</span><span class="p">)</span> <span class="k">FROM</span> <span class="s1">'items'</span> <span class="k">WHERE</span> <span class="s1">'user'</span><span class="p">.</span><span class="s1">'post_id'</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+<p>Let&#39;s see if Rails can do this. We know the <code>post_id</code> because it&#39;s been given to us as part of <code>user</code> so...</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Item</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="ss">post_id: </span><span class="mi">1</span><span class="p">).</span><span class="nf">maximum</span><span class="p">(</span><span class="ss">:id</span><span class="p">)</span>
+</code></pre></div>
+<p>We ran the above and appended <code>.to_sql</code> and confirmed that the generated SQL was exactly what we wanted above. Thank you to my colleague/mentor, Adam!</p>
+
+<p>Here&#39;s what it looked like afterwards, because &quot;pics or it didn&#39;t happen&quot; (which, if you think about it, is the new millennium equivalent of &quot;a picture is worth a 1000 words&quot;). It would have been great if I had gotten a screenshot of what it looked like before, but as you can see, none of this &quot;off the chart&quot; business.</p>
+
+<p><img src="http://i.imgur.com/peFpxtQ.png" alt="Imgur"></p>
+
+<h2 id="punt-it">Punt it!</h2>
+
+<p>Lesson learned. If you can punt the work to the database, let it do the heavy lifting of searching/sorting/finding. Don&#39;t let Rails do it.</p>
+
+<p>This one change resulted in the memory to drop to a steady 256MB. We haven&#39;t seen it bust out the OOM errors despite throwing more users and data at it. EXCELLENT.</p>
+
+<p>Stay tuned for Part 2, where I talk about some other small optimizations including our favourite N+1 query.</p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +5</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>

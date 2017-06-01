@@ -6,9 +6,100 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 25 Sep 2016 17:13:29 -0700</pubDate>
-    <lastBuildDate>Sun, 25 Sep 2016 17:13:29 -0700</lastBuildDate>
+    <pubDate>Thu, 01 Jun 2017 10:53:46 -0700</pubDate>
+    <lastBuildDate>Thu, 01 Jun 2017 10:53:46 -0700</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Optimizing an App Part 1</title>
+        <description>&lt;h2 id=&quot;jumping-right-into-it&quot;&gt;Jumping right into it&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;NB: This is a two part series on small little optimizations that had huge impacts on a client&amp;#39;s app.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;A while ago, a colleague/mentor of mine was telling me about the power of &lt;code&gt;.to_sql&lt;/code&gt;, which, when used in console, outputs the SQL query to the ActiveRecord query you wrote. It&amp;#39;s a super handy tool.&lt;/p&gt;
+
+&lt;p&gt;At the time, I didn&amp;#39;t think too much about it except that it was something nifty to keep in my toolbox.&lt;/p&gt;
+
+&lt;p&gt;And now, last month. A client of mine had asked me to help troubleshoot some issues with his staging app. The app only had 2 active users, but memory usage was inexplicably high. As in, the app kept running at around 70-120% of the 512MB allotted RAM on Heroku&amp;#39;s hobby tier.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-not-get-a-bigger-dyno&quot;&gt;Why not get a bigger dyno?&lt;/h2&gt;
+
+&lt;p&gt;Remember, the app only had 2 active users. For something like that, there really isn&amp;#39;t a reason for the app to be maxing out on memory usage. Luckily Heroku has a metrics tab that allows you to see the state of the dyno for the past 24 hours. At first I thought it was a question of leaky memory, but the data didn&amp;#39;t hold true. It would start at around 256MB, which is normal and great, but almost immediately would shoot up towards max capacity, then every hour it&amp;#39;d cause the dyno to restart due to OOM (out of memory) errors.  The client was baffled. So was I.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NB: a leaky app would have had a slow creep of memory usage over a longer period of time, something that&amp;#39;d look like a y = ax + b kind of graph. The current app was looking more like a y = ax^3 + b kind of graph. Exponential growth&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As the app was for staging, neither he nor I wanted to bump up the dyno to account for the RAM, even though that would immediately solve the problem.  I spoke with his developer, and he walked me through the app&amp;#39;s functionality and showed me their logs.&lt;/p&gt;
+
+&lt;p&gt;Almost immediately I noticed a few things. One, he had his production config set to &lt;code&gt;:debug&lt;/code&gt;, which, admittedly is the default, but it makes for extremely noisy output. Two, even with all that excess noise, the app was still outputting so much stuff.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/1M9fmo1WAFVK0/giphy.gif&quot; alt=&quot;But why?&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;We dove deeper.&lt;/p&gt;
+
+&lt;h2 id=&quot;hello-ruby&quot;&gt;Hello, Ruby&lt;/h2&gt;
+
+&lt;p&gt;I asked the dev to run the app locally so I could scrutinize the output of the logs while pouring over the code line by line. Literally, line by line. I haven&amp;#39;t had to visually parse through code like this since learning Java in Intro to CS 102.&lt;/p&gt;
+
+&lt;p&gt;Something stood out. There was code that said something to the effect of:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;id&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/El10jTzCzQymk/giphy.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It almost slipped by me, except the  &lt;code&gt;[-1]&lt;/code&gt; part stood out, I was a bit baffled as I&amp;#39;d never seen code like this in Rails before, even though it&amp;#39;s a common thing for Arrays in Ruby.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s break this code down. The &lt;code&gt;self&lt;/code&gt; refers to an ActiveRecord instance, e.g. &lt;code&gt;User.first&lt;/code&gt;. In this particular instance, a User has a &lt;em&gt;1:1&lt;/em&gt; relationship with Post. This Post instance object has a &lt;em&gt;1:many&lt;/em&gt; relationship with items. In case you missed this lesson when learning about arrays in Ruby, the &lt;code&gt;[-1]&lt;/code&gt; is to return the very last item in the array.  This kind of call is essentially saying in simple English: &amp;quot;I need all the Items of this Post, and then I want the last one of that list, and I want its id.&amp;quot;  Because of the &lt;em&gt;1:many&lt;/em&gt; relationship Post has with Items, the SQL query is a &lt;code&gt;where&lt;/code&gt; lookup, which returns an array of ActiveRecord objects.&lt;/p&gt;
+
+&lt;p&gt;One thing that I&amp;#39;ve learned is that Arrays are great if there&amp;#39;s only a small number of them, but if there are many, it&amp;#39;s super sluggish. It&amp;#39;s really not ideal when you&amp;#39;re talking about a ton of records.  Not only that but when you do &lt;code&gt;post.items&lt;/code&gt;, the returned collection of AR objects gets shoved into Ruby memory.  Imagine shoving 100,000 records into memory.... No bueno.  Essentially, the code would return all the items as an array, put it into Ruby memory, then from there get the last object&amp;#39;s id.&lt;/p&gt;
+
+&lt;p&gt;Repeat that kind of query a bunch of times, and I hope you see where this is going.&lt;/p&gt;
+
+&lt;p&gt;To top it off, the developer &lt;em&gt;only&lt;/em&gt; wanted the last item&amp;#39;s ID. We didn&amp;#39;t need anything else. Technically we didn&amp;#39;t want all the items belonging to the post, nor did we even want the last item&amp;#39;s full AR object. In simple English, it was &amp;quot;Return the id of the last item that belongs to Post.&amp;quot; So why make Rails do this? To me, this screams &amp;quot;I can be a SQL query!&amp;quot; Asking your database to do SQL queries is &lt;em&gt;far more efficient&lt;/em&gt; than asking ActiveRecord/Rails to translate to SQL and return a bunch of objects &lt;em&gt;and then&lt;/em&gt; get other data.&lt;/p&gt;
+
+&lt;p&gt;Now we had something we could optimize.&lt;/p&gt;
+
+&lt;h2 id=&quot;sql-power-to-the-rescue&quot;&gt;SQL power to the rescue&lt;/h2&gt;
+
+&lt;p&gt;We wanted the last item&amp;#39;s ID based on the current post. We wanted a SQL query that looked something like: (in pseudo code)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;select max id from items where user.post is a number (e.g. 1)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And SQL-fied:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sql&quot; data-lang=&quot;sql&quot;&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;items&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;id&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;items&#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;user&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;post_id&#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let&amp;#39;s see if Rails can do this. We know the &lt;code&gt;post_id&lt;/code&gt; because it&amp;#39;s been given to us as part of &lt;code&gt;user&lt;/code&gt; so...&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;post_id: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;maximum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We ran the above and appended &lt;code&gt;.to_sql&lt;/code&gt; and confirmed that the generated SQL was exactly what we wanted above. Thank you to my colleague/mentor, Adam!&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what it looked like afterwards, because &amp;quot;pics or it didn&amp;#39;t happen&amp;quot; (which, if you think about it, is the new millennium equivalent of &amp;quot;a picture is worth a 1000 words&amp;quot;). It would have been great if I had gotten a screenshot of what it looked like before, but as you can see, none of this &amp;quot;off the chart&amp;quot; business.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/peFpxtQ.png&quot; alt=&quot;Imgur&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;punt-it&quot;&gt;Punt it!&lt;/h2&gt;
+
+&lt;p&gt;Lesson learned. If you can punt the work to the database, let it do the heavy lifting of searching/sorting/finding. Don&amp;#39;t let Rails do it.&lt;/p&gt;
+
+&lt;p&gt;This one change resulted in the memory to drop to a steady 256MB. We haven&amp;#39;t seen it bust out the OOM errors despite throwing more users and data at it. EXCELLENT.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned for Part 2, where I talk about some other small optimizations including our favourite N+1 query.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Fri, 26 May 2017 07:46:28 -0700</pubDate>
+        <link>http://risaonrails.com/optimizing-queries/</link>
+        <guid isPermaLink="true">http://risaonrails.com/optimizing-queries/</guid>
+        
+        <category>rails</category>
+        
+        <category>optimization</category>
+        
+        
+        <category>rails</category>
+        
+      </item>
     
       <item>
         <title>I used vi the other day</title>
@@ -890,67 +981,6 @@ touch /home/rails/surprise/tmp/restart.txt
         <category>rails</category>
         
         <category>devops</category>
-        
-      </item>
-    
-      <item>
-        <title>Creating new old-version Rails apps</title>
-        <description>&lt;p&gt;As always, a work story. Here at Team DevOps, we&amp;#39;ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We&amp;#39;re also Rails developers too, even if we don&amp;#39;t look like it. Admittedly, it&amp;#39;s been so long since I&amp;#39;ve started a Rails app from scratch I almost forgot how to do &lt;code&gt;rails new&lt;/code&gt;... Yeah, only slightly embarrassed.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#39;m more familiar with Ruby 2.0.0 and Rails 4.0.x than 2.2.x and 4.2.x, so I decided to make my app using the older versions. Of course, I&amp;#39;ve since updated my rubies and rails versions, so without thinking much about it, I did &lt;code&gt;rails new&lt;/code&gt;. Figured I could just bundle update when I switched ruby/rails versions.&lt;/p&gt;
-
-&lt;p&gt;Oh god, that was a terrible, TERRIBLE mistake.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://www.nicknotas.com/wp-content/uploads/2013/04/Ive_Made_a_Huge_Mistake.jpg&quot; alt=&quot;Huge mistake&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;What got created was an awesomely standard Rails 4.2.0 app with Ruby 2.2.0. No problem. In my Gemfile I added in &lt;code&gt;ruby 2.0.0&lt;/code&gt; and bundle updated and thought nothing of it. I moved on and edited my database.yml file and decided to add some of my standard gems I&amp;#39;d be using for TDD: guard and spork. But since it was rails 4.2, I wasn&amp;#39;t sure how my guard/spork setup would work, since I was plugging and chugging from an old 4.0.x app I had. Well, whatever.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#39;ll just change rails 4.2.x to rails 4.0.x! No problemo!! Lemme bundle update and then run &lt;code&gt;guard init rspec&lt;/code&gt;. &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://stream1.gifsoup.com/view/897102/mushroom-cloud-o.gif&quot; alt=&quot;Kaboom!&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;What. Have. I. Done. Guard was complaining that I had started things up with a newer version so it wouldn&amp;#39;t be able to use the version 4.0.13 wanted (2.6). Not only that but &lt;code&gt;rails g anything&lt;/code&gt; wasn&amp;#39;t working either. Geezus. So I completely uninstalled guard and then installed only the correct version, but even then the Guardfile created seemed weird. Rails didn&amp;#39;t let me install rspec either without complaining. Not to mention Rake. Oy vey. How much had changed between Rails 4.0 and 4.2??! What is this business about &lt;code&gt;activejob_railties&lt;/code&gt;??&lt;/p&gt;
-
-&lt;p&gt;OK, there were some major changes that I haven&amp;#39;t really been paying attention to. ActiveJob was a new addition to 4.2. On top of that, the &lt;code&gt;config/initializers/application.rb&lt;/code&gt; file format had changed from referencing the &lt;code&gt;AppName::Application...&lt;/code&gt; to &lt;code&gt;Rails.application...&lt;/code&gt; Then there were the additional railties that were added in. This is just the tip of the iceberg...&lt;/p&gt;
-
-&lt;p&gt;Yeah let&amp;#39;s queue up the whole &lt;code&gt;I don&amp;#39;t know what I&amp;#39;m doing&lt;/code&gt; meme here. Seriously. At this point the only thing I could sensibly do was to completely start over and create a Rails 4.0.x app. But how would I do that?? &lt;/p&gt;
-
-&lt;p&gt;The Rails guides didn&amp;#39;t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.&lt;/p&gt;
-
-&lt;h3 id=&quot;the-way-of-the-old-rails-warrior&quot;&gt;The way of the old rails warrior&lt;/h3&gt;
-
-&lt;p&gt;I can just refer an older Rails version when doing &lt;code&gt;rails new&lt;/code&gt;! Since I wanted 4.0.13, I did this: &lt;code&gt;rails 4.0.13 new appname&lt;/code&gt;. This did not work.&lt;/p&gt;
-
-&lt;p&gt;My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn&amp;#39;t have gems for p643 so used p451.)&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rbenv global 2.0.0-p451
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install rails 4.0.13
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rails _4.0.13_ new appname&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Please note the &lt;code&gt;_&lt;/code&gt; surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.&lt;/p&gt;
-
-&lt;p&gt;Now, how do I write new models again...?&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1 for super obscure learnings.&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Thu, 02 Apr 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/creating-new-old-version-rails-apps/</link>
-        <guid isPermaLink="true">http://risaonrails.com/creating-new-old-version-rails-apps/</guid>
-        
-        <category>rails</category>
-        
-        <category>tip</category>
-        
-        
-        <category>rails</category>
-        
-        <category>development</category>
-        
-        <category>tip</category>
         
       </item>
     
