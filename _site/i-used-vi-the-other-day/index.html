@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
+  <title>I used vi the other day</title>
+  <meta name="description" content="I am really not a fan of using vi or vim or emacs or whatever complicated built-in editor. If ever I&#39;m on the server, I use nano because it&#39;s stupidl...">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://risaonrails.com/i-used-vi-the-other-day/">
+  <link rel="alternate" type="application/rss+xml" title="" href="http://risaonrails.com/feed.xml" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/anchor.css">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-name" href="/">Risa on Rails</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About Risa</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/level-up/">Level up!</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">I used vi the other day</h1>
+    <p class="post-meta">Sep 25, 2016</p>
+  </header>
+
+  <article class="post-content">
+    <p>I am really not a fan of using <code>vi</code> or <code>vim</code> or <code>emacs</code> or whatever complicated built-in editor. If ever I&#39;m on the server, I use <code>nano</code> because it&#39;s stupidly simple and gets the job done. Yes I realize there are a bazillion reasons as to why <code>vi</code> is better, but the amount of time needed to fully learn everything <em>PLUS</em> set up my working environment just the way I would want it isn&#39;t worth it to me. The value add does not justify the learning/time cost.</p>
+
+<p>HOWEVER! As with all things, it&#39;s important to still be somewhat familiar with it. I have seriously been refusing to learn how to use <code>vi</code>, despite insistence from numerous colleagues. It wasn&#39;t until recently (now a few months ago, oh how quickly time flies) that I had learned a cool new trick. And I shall impart this knowledge to you, fellow reader, or to future me.</p>
+
+<h2 id="but-first">But first...</h2>
+
+<p>Let&#39;s go over some basics.</p>
+
+<h3 id="super-basic-commands">Super basic commands</h3>
+
+<p>Here&#39;s how to enter and exit out of <code>vi</code>/<code>vim</code>. <code>vim</code> is the &quot;improved&quot; version of <code>vi</code>, you know, version 2. <img class='emoji' title='wink' alt='wink' src='https://github.global.ssl.fastly.net/images/icons/emoji/wink.png' height='20' width='20' align='absmiddle' ></p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># to open a file with vi</span>
+vi file_name.text
+</code></pre></div><div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># to exit out of a file without saving</span>
+:q
+<span class="c"># to force quit w/o saving</span>
+:q!
+
+<span class="c"># to exit out of a file &amp;&amp; save</span>
+:wq
+</code></pre></div>
+<p>Note, you must add the <code>:</code> in there.</p>
+
+<p><code>q</code> is for quit, <code>w</code> is for write, so <code>:wq</code> is to write (save) and exit.</p>
+
+<p>Let&#39;s move on now. Inserting text.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># to go into 'typing things into editor because its technically a text editor' mode</span>
+i  <span class="c"># (for insert)</span>
+
+<span class="c"># to exit out of insert mode</span>
+cntl-c
+<span class="c"># or</span>
+<span class="gp">&lt;ESC&gt;  </span><span class="c"># sometimes the ESC button works, sometimes it doesn't</span>
+</code></pre></div>
+<p>Note: the ESC seems to work on Linux distros, such as Ubuntu, so when you&#39;re on the server then you can press <code>Esc</code>. On my Mac, that isn&#39;t the case and only <code>cntl-c</code> works.</p>
+
+<p>And now let&#39;s delete a full line of text. Or a chunk of text.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># to delete the current line</span>
+dd                    <span class="c"># =&gt; cntl-k on nano</span>
+
+<span class="c"># to delete 20 lines (+1 extra on a mac)</span>
+20d <span class="o">(</span><span class="k">then </span>press enter<span class="o">)</span>
+<span class="c"># Note: this deletes 20+1 lines from where the blinker/cursor is.</span>
+
+<span class="c"># to delete line 5 only</span>
+:5d
+</code></pre></div>
+<p>Jumping down to a particular line number. This is the equivalent to scrolling to line 10 and inserting your cursor there.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># jump down to line 10</span>
+:10
+</code></pre></div>
+<h3 id="the-fun-stuff">The fun stuff</h3>
+
+<p>Here&#39;s where the power of <code>vi</code> and <code>vim</code> lie. You can jump down to a certain line number, you can delete multiple lines, you can find and replace text within a file. All the things you can do in your standard editor like Atom or Sublime, you can now do in <code>vi</code>! Woo! /s</p>
+
+<p>But really, I happen to enjoy using my mouse and highlighting/scrolling with it. Moving my hands from the keyboard doesn&#39;t make me a horrible programmer. Writing horrible code makes me a horrible programmer.  It also doesn&#39;t really let me be less efficient either. Honestly, switching from keyboard to trackpad/mouse/pen allows your brain to switch gears and quietly pause and reflect on your coding decisions, such as &quot;Did I really mean to write that line of code? Maybe I should delete it&quot; vs going back and willy-nilly pull the trigger and delete 15 lines of code only to realize afterwards that it was probably a bad idea and you should have kept it because now you could have used it. It&#39;s a built in mechanism to prevent yourself from pulling the trigger too quickly. (<em>Insert social commentary of how this should always be applied, mostly when actual weapons are involved...</em>) However, in server-land, you don&#39;t get the built-in benefits of actually having a GUI, which means text editing must be done in a GUI-less environment.</p>
+
+<p>I digress.</p>
+
+<p>The main point of this entire post was really for this next reason.  May I present to you.... <strong>Find and replace all!</strong> This has been the one main benefit to using vi. And if I am doing batch text changes, to a config file for example, this is the best way to do it.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># find all instances of phrase and replace it with something else</span>
+:%s/original_word/new_word
+
+<span class="c"># for example...</span>
+<span class="c"># find all asdf and replace with 0000</span>
+:%s/asdf/0000
+</code></pre></div>
+<p>There is a caveat to the above. This will change all instances without confirmation, so if there is one you want to skip, this is not the command for you.</p>
+
+<p>Let&#39;s look at the other options and iterations of the Find and Replace All command.  First, let&#39;s confirm our individual find/replaces. Appending <code>gc</code> will do a global search with confirmation. You will have to type <code>y</code> or <code>n</code> for replace or skip.  It will highlight the word it is looking to replace. I prefer this as it reminds me of <code>git add -p</code> and forcibly confirming each one.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># confirm each change before replacing</span>
+:%s/asdf/0000/gc
+</code></pre></div>
+<p>What happens if the word you want to replace is kind of funky? like <code>http://localhost</code> needs to be replaced with <code>$APP_URL</code>? Uh oh, you can&#39;t use <code>/</code> since the command also uses it as the delimiter. What do? Simple. Change the delimiter! I prefer the <code>#</code> for this, but it can be any symbol as long as if it&#39;s consistently used across the command.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># change delimiter and confirm before replacing</span>
+:%s#original_word#new_word#gc
+</code></pre></div>
+<p>Using the example (without bash code-style turned on)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">:%s#http://localhost#$APP_URL#gc
+</code></pre></div>
+<p>It looks ugly but, wowza, this really works.  If I had used <code>nano</code> to find text and then delete and replace it, that would have taken me ages. I could have also copied the text and pasted it into Atom to replace what I needed to replace, but both of these are costly. And my time is extremely expensive. In this case, the value add of this simple use case is incredibly high and far outweighs the knowledge cost.</p>
+
+<p>So there you have it! Possibly the best thing about <code>vi</code>.  I am sure I will encounter other fun handy things with <code>vi</code>, but for now, I&#39;m pretty good with this list as is.</p>
+
+<p>Don&#39;t forget to <code>:wq</code> your changes! <img class='emoji' title='grinning' alt='grinning' src='https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png' height='20' width='20' align='absmiddle' ></p>
+
+<p><i class="fa fa-angle-double-up"></i> Level up +5 (+10 if you&#39;ve been avoiding vi as if it were the bubonic plague)</p>
+
+<hr>
+
+<p>Questions? Comments? Hit me up at <a href="mailto:risaonrails@gmail.com">risaonrails <i class="fa fa-paper-plane-o"></i></a>!</p>
+
+    
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'risaonrails';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Risa on Rails</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>What's up, buttercup?</li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="mailto:risaonrails@gmail.com">
+              <span class="icon  icon--email">
+                <i class="fa fa-paper-plane-o"></i>
+              </span>
+
+              <span class="username">risaonrails</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://linkedin.com/in/risabatta">
+              <span class="icon  icon--linkedin">
+                <i class="fa fa-linkedin"></i>
+              </span>
+
+              <span class="username">risabatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://github.com/rbatta">
+              <span class="icon  icon--github">
+                <i class="fa fa-github-alt"></i>
+              </span>
+
+              <span class="username">rbatta</span>
+            </a>
+          </li>
+          
+          
+          <li>
+            <a href="https://twitter.com/mookiy">
+              <span class="icon  icon--twitter">
+                <i class="fa fa-twitter"></i>
+              </span>
+
+              <span class="username">mookiy</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Risa writes about Rails, Postgres, DevOps, and other things. She loves pairing, internet memes, cats, and all the cute things.
+</p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+$(function() {
+  return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    var $el, icon, id;
+    $el = $(el);
+    id = $el.attr('id');
+    icon = '<i class="fa fa-link fa-spin"></i>';
+    if (id) {
+      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+    }
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+
+</html>

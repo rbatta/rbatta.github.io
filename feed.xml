@@ -6,12 +6,76 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 01 Jun 2017 10:53:46 -0700</pubDate>
-    <lastBuildDate>Thu, 01 Jun 2017 10:53:46 -0700</lastBuildDate>
+    <pubDate>Mon, 03 Jul 2017 10:01:56 -0700</pubDate>
+    <lastBuildDate>Mon, 03 Jul 2017 10:01:56 -0700</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
     
       <item>
-        <title>Optimizing an App Part 1</title>
+        <title>Regex and Ruby</title>
+        <description>&lt;h2 id=&quot;regex&quot;&gt;Regex&lt;/h2&gt;
+
+&lt;p&gt;I wanted to give a quick tip on something I recently discovered about regex and Ruby, while trying to look for some regex to use.&lt;/p&gt;
+
+&lt;p&gt;This is a journey of self discovery... Wait, no, that&amp;#39;s not right. It was definitely an adventure. And it started when the search for a particular regex got mashed up with knowing Rubocop preferring string literals to be immutable with &lt;code&gt;.freeze&lt;/code&gt;.  Oh, how we dive into rabbit holes.&lt;/p&gt;
+
+&lt;h3 id=&quot;immutability&quot;&gt;Immutability&lt;/h3&gt;
+
+&lt;p&gt;As mentioned above, string literals should be made immutable with &lt;code&gt;.freeze&lt;/code&gt;. It&amp;#39;s a thing that Rubocop picks up on and alerts you.  &lt;code&gt;.freeze&lt;/code&gt; does 2 things: one, the object can&amp;#39;t be changed (immutable), and two, it doesn&amp;#39;t create as many objects, so in terms of memory use, it&amp;#39;s hella beneficial.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.honeybadger.io/when-to-use-freeze-and-frozen-in-ruby/&quot;&gt;Click here&lt;/a&gt; to read a fantastic article that talks about this exact thing in a much better way than I can.&lt;/p&gt;
+
+&lt;p&gt;Now, knowing this, I wondered if I could do something similar with regex. While Googling for it, I came upon a &lt;a href=&quot;https://bugs.ruby-lang.org/issues/8948&quot;&gt;discussion on exactly this topic&lt;/a&gt; in the Ruby developer forums.&lt;/p&gt;
+
+&lt;p&gt;And I found out that Ruby has immutable regex. This is great news!&lt;/p&gt;
+
+&lt;p&gt;But, more importantly? &lt;strong&gt;&lt;em&gt;Dynamic Regex&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;dynamic-regex&quot;&gt;Dynamic Regex&lt;/h3&gt;
+
+&lt;p&gt;Admittedly I didn&amp;#39;t know that regex &lt;em&gt;could&lt;/em&gt; be dynamic, but given that this is Ruby we&amp;#39;re talking about, I should have assumed it. From the link above, user &lt;a href=&quot;https://bugs.ruby-lang.org/users/772&quot;&gt;Eregon&lt;/a&gt; provides examples, and they speak for themselves. But I&amp;#39;ve re-done them in my own console to confirm:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dynamic_regex&lt;/span&gt;
+  &lt;span class=&quot;sr&quot;&gt;/ab&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;057&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic_regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;object_id&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70175794398600&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;05&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic_regex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;object_id&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70175794381460&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dynamic_regex_frozen&lt;/span&gt;
+  &lt;span class=&quot;sr&quot;&gt;/ab&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/o&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;052&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic_regex_frozen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;object_id&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70175794516740&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mo&quot;&gt;053&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic_regex_frozen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;object_id&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70175794516740&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I never knew this was even a thing. I&amp;#39;m glad I know about it, though I don&amp;#39;t know when I&amp;#39;ll ever use it. But, it&amp;#39;s a little bit of knowledge gained.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +2&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Mon, 03 Jul 2017 03:01:30 -0700</pubDate>
+        <link>http://risaonrails.com/regex-and-ruby/</link>
+        <guid isPermaLink="true">http://risaonrails.com/regex-and-ruby/</guid>
+        
+        <category>ruby</category>
+        
+        <category>regex</category>
+        
+        
+        <category>rails</category>
+        
+        <category>ruby</category>
+        
+      </item>
+    
+      <item>
+        <title>Optimizing an App, Part 1</title>
         <description>&lt;h2 id=&quot;jumping-right-into-it&quot;&gt;Jumping right into it&lt;/h2&gt;
 
 &lt;p&gt;&lt;em&gt;NB: This is a two part series on small little optimizations that had huge impacts on a client&amp;#39;s app.&lt;/em&gt;&lt;/p&gt;
@@ -43,7 +107,7 @@
 &lt;p&gt;Something stood out. There was code that said something to the effect of:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;id&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/El10jTzCzQymk/giphy.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/El10jTzCzQymk/giphy.gif&quot; alt=&quot;hmmm....fascinating&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;It almost slipped by me, except the  &lt;code&gt;[-1]&lt;/code&gt; part stood out, I was a bit baffled as I&amp;#39;d never seen code like this in Rails before, even though it&amp;#39;s a common thing for Arrays in Ruby.&lt;/p&gt;
 
@@ -72,7 +136,7 @@
 
 &lt;p&gt;Here&amp;#39;s what it looked like afterwards, because &amp;quot;pics or it didn&amp;#39;t happen&amp;quot; (which, if you think about it, is the new millennium equivalent of &amp;quot;a picture is worth a 1000 words&amp;quot;). It would have been great if I had gotten a screenshot of what it looked like before, but as you can see, none of this &amp;quot;off the chart&amp;quot; business.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/peFpxtQ.png&quot; alt=&quot;Imgur&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/peFpxtQ.png&quot; alt=&quot;before and after pic&quot;&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;punt-it&quot;&gt;Punt it!&lt;/h2&gt;
 
@@ -924,63 +988,6 @@ touch /home/rails/surprise/tmp/restart.txt
         <category>monit</category>
         
         <category>passenger</category>
-        
-      </item>
-    
-      <item>
-        <title>Woohoo, Nginx training!</title>
-        <description>&lt;p&gt;I freaking love San Francisco. Seriously. It&amp;#39;s pretty much the center of everything tech related. And if it&amp;#39;s not in the city, then it&amp;#39;s in Silicon Valley, just a short trip away (depending on what time you leave).&lt;/p&gt;
-
-&lt;p&gt;I also secretly love Twitter. Why? Because every single conference, meetup, or event I&amp;#39;ve wanted to attend has either been retweeted into my feed or has popped up as a suggested tweet / ad. Yeah, Twitter&amp;#39;s algorithm is brilliant. Gotta hand it to them. &lt;/p&gt;
-
-&lt;p&gt;So what&amp;#39;s any of this got to do with Nginx? Well the other day I tweeted about something I learned with Nginx and their location blocks. Not long after, when I was checking my feed, I saw a suggested ad/tweet thingy that said something about an Nginx User Summit and Training thing happening relatively soon and in SF. I clicked on it. Hold the phone. There&amp;#39;s going to be a fundamentals of training course?! This is perfect! My coworker and I have been flailing our arms trying to learn and properly use Nginx for about a couple of weeks, and here there was a 1-day training being offered!&lt;/p&gt;
-
-&lt;p&gt;We spoke to the boss lady who immediately said yes and bought our tickets for us (early bird tix were about $145 incl silly service fees and taxes). We were off to training! Truth is, even if she didn&amp;#39;t pay for it, I would have footed the bill because I saw that training to be crucial to my own success. Thankfully our boss is super awesome and encourages learning.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://swagct.com/generators/images/successkid_thumb.jpg&quot; alt=&quot;Success kid&quot;&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;training-day&quot;&gt;Training Day&lt;/h3&gt;
-
-&lt;p&gt;The Summit/Training was held at RocketSpace in downtown SF. The space was really nice, and we were given a bunch of different swag (tees, water bottles, cute lil cars with M&amp;amp;Ms in them, an O&amp;#39;Reilly book about microservices, etc). The best part was the fact that the tables were lined with paper and had crayons. :D Oh yeah the 12-yr-old me was stoked!&lt;/p&gt;
-
-&lt;p&gt;Training started promptly at 9:30 and went over the basics of how to install and configure Nginx. We were all given AWS EC2 or Digital Ocean droplets to work with. My coworker and I lucked out with DO boxes (who needs some long URL to type in for ssh&amp;#39;ing? Just give me a freaking IP!)&lt;/p&gt;
-
-&lt;p&gt;The pace was pretty good (admittedly a bit slow for my tastes) and was very comprehensive. It went over what each of the major blocks/contents and common directives were, how to set up SSL, how to set up multiple apps, load balancing, and how to act like a proxy server. All the things I needed to really learn were covered. Between each section was a 5-10min break for people to attempt the &amp;#39;exercise&amp;#39;, which was stepped thru by the instructor prior, so it wasn&amp;#39;t anything extremely complicated.&lt;/p&gt;
-
-&lt;p&gt;I only really recall 2-3 Nginx folks walking around to check to see if anyone needed extra assistance, tho there were about 10-12 Nginx folks overall. The guys sitting across from us needed some assistance because their boxes didn&amp;#39;t have port 8080 open (or listening, rather), which couldn&amp;#39;t be resolved for whatever reason, even with a couple of Nginx folks helping out. &lt;/p&gt;
-
-&lt;p&gt;The final exercise was more complicated and right up my alley - a task to set up Nginx as backend and proxy servers, incorporating things we&amp;#39;ve already learned as well as proxy caching. The answers are apparently going to be emailed to us later so I&amp;#39;ll check against that once we receive it.&lt;/p&gt;
-
-&lt;p&gt;Once training was over, the lightning talks began. Admittedly, this was where my interest wained, tho the guy talking about load testing with a thing called Bees with Machine Guns was really cool. My coworker and I opted not to stay until the end for the social hour and excused ourselves. &lt;/p&gt;
-
-&lt;h3 id=&quot;overall-thoughts&quot;&gt;Overall thoughts&lt;/h3&gt;
-
-&lt;p&gt;Seriously, this training was kind of amazingly perfect timing for my coworker and myself. Would I recommend it? Hellz yes! It&amp;#39;s the perfect beginner course to anyone getting to know and understand Nginx. It&amp;#39;s really simple to use, now that I understand it better. It was also validating to know that the things we were teaching ourselves by fiddling around with the servers were all correct.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#39;m always game on attending training of any sort. Really glad I was able to go to this particular one. I hope to attend more and different training courses.&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1. Attending the training and learning something is +10 life exp!&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Tue, 07 Apr 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/woohoo-nginx-training/</link>
-        <guid isPermaLink="true">http://risaonrails.com/woohoo-nginx-training/</guid>
-        
-        <category>devops</category>
-        
-        <category>nginx</category>
-        
-        <category>training</category>
-        
-        
-        <category>nginx</category>
-        
-        <category>rails</category>
-        
-        <category>devops</category>
         
       </item>
     

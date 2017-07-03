@@ -8,7 +8,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='http://fonts.googleapis.com/css?family=Ubuntu:500italic' rel='stylesheet' type='text/css'>
-  <title>Optimizing an App, Part 1</title>
+  <title>Optimizing an App Part 1</title>
   <meta name="description" content="Jumping right into itNB: This is a two part series on small little optimizations that had huge impacts on a client&#39;s app.">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://risaonrails.com/optimizing-queries/">
@@ -62,7 +62,7 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Optimizing an App, Part 1</h1>
+    <h1 class="post-title">Optimizing an App Part 1</h1>
     <p class="post-meta">May 26, 2017</p>
   </header>
 
@@ -98,7 +98,7 @@
 <p>Something stood out. There was code that said something to the effect of:</p>
 <div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">self</span><span class="p">.</span><span class="nf">post</span><span class="p">.</span><span class="nf">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="nf">id</span>
 </code></pre></div>
-<p><img src="https://media.giphy.com/media/El10jTzCzQymk/giphy.gif" alt="hmmm....fascinating"></p>
+<p><img src="https://media.giphy.com/media/El10jTzCzQymk/giphy.gif" alt=""></p>
 
 <p>It almost slipped by me, except the  <code>[-1]</code> part stood out, I was a bit baffled as I&#39;d never seen code like this in Rails before, even though it&#39;s a common thing for Arrays in Ruby.</p>
 
@@ -127,7 +127,7 @@
 
 <p>Here&#39;s what it looked like afterwards, because &quot;pics or it didn&#39;t happen&quot; (which, if you think about it, is the new millennium equivalent of &quot;a picture is worth a 1000 words&quot;). It would have been great if I had gotten a screenshot of what it looked like before, but as you can see, none of this &quot;off the chart&quot; business.</p>
 
-<p><img src="http://i.imgur.com/peFpxtQ.png" alt="before and after pic"></p>
+<p><img src="http://i.imgur.com/peFpxtQ.png" alt="Imgur"></p>
 
 <h2 id="punt-it">Punt it!</h2>
 

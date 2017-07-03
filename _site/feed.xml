@@ -6,9 +6,211 @@
 </description>
     <link>http://risaonrails.com/</link>
     <atom:link href="http://risaonrails.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 24 Aug 2016 23:26:28 -0700</pubDate>
-    <lastBuildDate>Wed, 24 Aug 2016 23:26:28 -0700</lastBuildDate>
+    <pubDate>Thu, 01 Jun 2017 10:53:46 -0700</pubDate>
+    <lastBuildDate>Thu, 01 Jun 2017 10:53:46 -0700</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Optimizing an App Part 1</title>
+        <description>&lt;h2 id=&quot;jumping-right-into-it&quot;&gt;Jumping right into it&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;NB: This is a two part series on small little optimizations that had huge impacts on a client&amp;#39;s app.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;A while ago, a colleague/mentor of mine was telling me about the power of &lt;code&gt;.to_sql&lt;/code&gt;, which, when used in console, outputs the SQL query to the ActiveRecord query you wrote. It&amp;#39;s a super handy tool.&lt;/p&gt;
+
+&lt;p&gt;At the time, I didn&amp;#39;t think too much about it except that it was something nifty to keep in my toolbox.&lt;/p&gt;
+
+&lt;p&gt;And now, last month. A client of mine had asked me to help troubleshoot some issues with his staging app. The app only had 2 active users, but memory usage was inexplicably high. As in, the app kept running at around 70-120% of the 512MB allotted RAM on Heroku&amp;#39;s hobby tier.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-not-get-a-bigger-dyno&quot;&gt;Why not get a bigger dyno?&lt;/h2&gt;
+
+&lt;p&gt;Remember, the app only had 2 active users. For something like that, there really isn&amp;#39;t a reason for the app to be maxing out on memory usage. Luckily Heroku has a metrics tab that allows you to see the state of the dyno for the past 24 hours. At first I thought it was a question of leaky memory, but the data didn&amp;#39;t hold true. It would start at around 256MB, which is normal and great, but almost immediately would shoot up towards max capacity, then every hour it&amp;#39;d cause the dyno to restart due to OOM (out of memory) errors.  The client was baffled. So was I.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NB: a leaky app would have had a slow creep of memory usage over a longer period of time, something that&amp;#39;d look like a y = ax + b kind of graph. The current app was looking more like a y = ax^3 + b kind of graph. Exponential growth&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As the app was for staging, neither he nor I wanted to bump up the dyno to account for the RAM, even though that would immediately solve the problem.  I spoke with his developer, and he walked me through the app&amp;#39;s functionality and showed me their logs.&lt;/p&gt;
+
+&lt;p&gt;Almost immediately I noticed a few things. One, he had his production config set to &lt;code&gt;:debug&lt;/code&gt;, which, admittedly is the default, but it makes for extremely noisy output. Two, even with all that excess noise, the app was still outputting so much stuff.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/1M9fmo1WAFVK0/giphy.gif&quot; alt=&quot;But why?&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;We dove deeper.&lt;/p&gt;
+
+&lt;h2 id=&quot;hello-ruby&quot;&gt;Hello, Ruby&lt;/h2&gt;
+
+&lt;p&gt;I asked the dev to run the app locally so I could scrutinize the output of the logs while pouring over the code line by line. Literally, line by line. I haven&amp;#39;t had to visually parse through code like this since learning Java in Intro to CS 102.&lt;/p&gt;
+
+&lt;p&gt;Something stood out. There was code that said something to the effect of:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;id&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/El10jTzCzQymk/giphy.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It almost slipped by me, except the  &lt;code&gt;[-1]&lt;/code&gt; part stood out, I was a bit baffled as I&amp;#39;d never seen code like this in Rails before, even though it&amp;#39;s a common thing for Arrays in Ruby.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s break this code down. The &lt;code&gt;self&lt;/code&gt; refers to an ActiveRecord instance, e.g. &lt;code&gt;User.first&lt;/code&gt;. In this particular instance, a User has a &lt;em&gt;1:1&lt;/em&gt; relationship with Post. This Post instance object has a &lt;em&gt;1:many&lt;/em&gt; relationship with items. In case you missed this lesson when learning about arrays in Ruby, the &lt;code&gt;[-1]&lt;/code&gt; is to return the very last item in the array.  This kind of call is essentially saying in simple English: &amp;quot;I need all the Items of this Post, and then I want the last one of that list, and I want its id.&amp;quot;  Because of the &lt;em&gt;1:many&lt;/em&gt; relationship Post has with Items, the SQL query is a &lt;code&gt;where&lt;/code&gt; lookup, which returns an array of ActiveRecord objects.&lt;/p&gt;
+
+&lt;p&gt;One thing that I&amp;#39;ve learned is that Arrays are great if there&amp;#39;s only a small number of them, but if there are many, it&amp;#39;s super sluggish. It&amp;#39;s really not ideal when you&amp;#39;re talking about a ton of records.  Not only that but when you do &lt;code&gt;post.items&lt;/code&gt;, the returned collection of AR objects gets shoved into Ruby memory.  Imagine shoving 100,000 records into memory.... No bueno.  Essentially, the code would return all the items as an array, put it into Ruby memory, then from there get the last object&amp;#39;s id.&lt;/p&gt;
+
+&lt;p&gt;Repeat that kind of query a bunch of times, and I hope you see where this is going.&lt;/p&gt;
+
+&lt;p&gt;To top it off, the developer &lt;em&gt;only&lt;/em&gt; wanted the last item&amp;#39;s ID. We didn&amp;#39;t need anything else. Technically we didn&amp;#39;t want all the items belonging to the post, nor did we even want the last item&amp;#39;s full AR object. In simple English, it was &amp;quot;Return the id of the last item that belongs to Post.&amp;quot; So why make Rails do this? To me, this screams &amp;quot;I can be a SQL query!&amp;quot; Asking your database to do SQL queries is &lt;em&gt;far more efficient&lt;/em&gt; than asking ActiveRecord/Rails to translate to SQL and return a bunch of objects &lt;em&gt;and then&lt;/em&gt; get other data.&lt;/p&gt;
+
+&lt;p&gt;Now we had something we could optimize.&lt;/p&gt;
+
+&lt;h2 id=&quot;sql-power-to-the-rescue&quot;&gt;SQL power to the rescue&lt;/h2&gt;
+
+&lt;p&gt;We wanted the last item&amp;#39;s ID based on the current post. We wanted a SQL query that looked something like: (in pseudo code)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;select max id from items where user.post is a number (e.g. 1)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And SQL-fied:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sql&quot; data-lang=&quot;sql&quot;&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;items&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;id&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;items&#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;user&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;post_id&#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let&amp;#39;s see if Rails can do this. We know the &lt;code&gt;post_id&lt;/code&gt; because it&amp;#39;s been given to us as part of &lt;code&gt;user&lt;/code&gt; so...&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;post_id: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;maximum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We ran the above and appended &lt;code&gt;.to_sql&lt;/code&gt; and confirmed that the generated SQL was exactly what we wanted above. Thank you to my colleague/mentor, Adam!&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what it looked like afterwards, because &amp;quot;pics or it didn&amp;#39;t happen&amp;quot; (which, if you think about it, is the new millennium equivalent of &amp;quot;a picture is worth a 1000 words&amp;quot;). It would have been great if I had gotten a screenshot of what it looked like before, but as you can see, none of this &amp;quot;off the chart&amp;quot; business.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/peFpxtQ.png&quot; alt=&quot;Imgur&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;punt-it&quot;&gt;Punt it!&lt;/h2&gt;
+
+&lt;p&gt;Lesson learned. If you can punt the work to the database, let it do the heavy lifting of searching/sorting/finding. Don&amp;#39;t let Rails do it.&lt;/p&gt;
+
+&lt;p&gt;This one change resulted in the memory to drop to a steady 256MB. We haven&amp;#39;t seen it bust out the OOM errors despite throwing more users and data at it. EXCELLENT.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned for Part 2, where I talk about some other small optimizations including our favourite N+1 query.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Fri, 26 May 2017 07:46:28 -0700</pubDate>
+        <link>http://risaonrails.com/optimizing-queries/</link>
+        <guid isPermaLink="true">http://risaonrails.com/optimizing-queries/</guid>
+        
+        <category>rails</category>
+        
+        <category>optimization</category>
+        
+        
+        <category>rails</category>
+        
+      </item>
+    
+      <item>
+        <title>I used vi the other day</title>
+        <description>&lt;p&gt;I am really not a fan of using &lt;code&gt;vi&lt;/code&gt; or &lt;code&gt;vim&lt;/code&gt; or &lt;code&gt;emacs&lt;/code&gt; or whatever complicated built-in editor. If ever I&amp;#39;m on the server, I use &lt;code&gt;nano&lt;/code&gt; because it&amp;#39;s stupidly simple and gets the job done. Yes I realize there are a bazillion reasons as to why &lt;code&gt;vi&lt;/code&gt; is better, but the amount of time needed to fully learn everything &lt;em&gt;PLUS&lt;/em&gt; set up my working environment just the way I would want it isn&amp;#39;t worth it to me. The value add does not justify the learning/time cost.&lt;/p&gt;
+
+&lt;p&gt;HOWEVER! As with all things, it&amp;#39;s important to still be somewhat familiar with it. I have seriously been refusing to learn how to use &lt;code&gt;vi&lt;/code&gt;, despite insistence from numerous colleagues. It wasn&amp;#39;t until recently (now a few months ago, oh how quickly time flies) that I had learned a cool new trick. And I shall impart this knowledge to you, fellow reader, or to future me.&lt;/p&gt;
+
+&lt;h2 id=&quot;but-first&quot;&gt;But first...&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s go over some basics.&lt;/p&gt;
+
+&lt;h3 id=&quot;super-basic-commands&quot;&gt;Super basic commands&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s how to enter and exit out of &lt;code&gt;vi&lt;/code&gt;/&lt;code&gt;vim&lt;/code&gt;. &lt;code&gt;vim&lt;/code&gt; is the &amp;quot;improved&amp;quot; version of &lt;code&gt;vi&lt;/code&gt;, you know, version 2. &lt;img class=&#39;emoji&#39; title=&#39;wink&#39; alt=&#39;wink&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/wink.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to open a file with vi&lt;/span&gt;
+vi file_name.text
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to exit out of a file without saving&lt;/span&gt;
+:q
+&lt;span class=&quot;c&quot;&gt;# to force quit w/o saving&lt;/span&gt;
+:q!
+
+&lt;span class=&quot;c&quot;&gt;# to exit out of a file &amp;amp;&amp;amp; save&lt;/span&gt;
+:wq
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note, you must add the &lt;code&gt;:&lt;/code&gt; in there.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;q&lt;/code&gt; is for quit, &lt;code&gt;w&lt;/code&gt; is for write, so &lt;code&gt;:wq&lt;/code&gt; is to write (save) and exit.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s move on now. Inserting text.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to go into &#39;typing things into editor because its technically a text editor&#39; mode&lt;/span&gt;
+i  &lt;span class=&quot;c&quot;&gt;# (for insert)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# to exit out of insert mode&lt;/span&gt;
+cntl-c
+&lt;span class=&quot;c&quot;&gt;# or&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;lt;ESC&amp;gt;  &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# sometimes the ESC button works, sometimes it doesn&#39;t&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: the ESC seems to work on Linux distros, such as Ubuntu, so when you&amp;#39;re on the server then you can press &lt;code&gt;Esc&lt;/code&gt;. On my Mac, that isn&amp;#39;t the case and only &lt;code&gt;cntl-c&lt;/code&gt; works.&lt;/p&gt;
+
+&lt;p&gt;And now let&amp;#39;s delete a full line of text. Or a chunk of text.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# to delete the current line&lt;/span&gt;
+dd                    &lt;span class=&quot;c&quot;&gt;# =&amp;gt; cntl-k on nano&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# to delete 20 lines (+1 extra on a mac)&lt;/span&gt;
+20d &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;then &lt;/span&gt;press enter&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Note: this deletes 20+1 lines from where the blinker/cursor is.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# to delete line 5 only&lt;/span&gt;
+:5d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Jumping down to a particular line number. This is the equivalent to scrolling to line 10 and inserting your cursor there.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# jump down to line 10&lt;/span&gt;
+:10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;the-fun-stuff&quot;&gt;The fun stuff&lt;/h3&gt;
+
+&lt;p&gt;Here&amp;#39;s where the power of &lt;code&gt;vi&lt;/code&gt; and &lt;code&gt;vim&lt;/code&gt; lie. You can jump down to a certain line number, you can delete multiple lines, you can find and replace text within a file. All the things you can do in your standard editor like Atom or Sublime, you can now do in &lt;code&gt;vi&lt;/code&gt;! Woo! /s&lt;/p&gt;
+
+&lt;p&gt;But really, I happen to enjoy using my mouse and highlighting/scrolling with it. Moving my hands from the keyboard doesn&amp;#39;t make me a horrible programmer. Writing horrible code makes me a horrible programmer.  It also doesn&amp;#39;t really let me be less efficient either. Honestly, switching from keyboard to trackpad/mouse/pen allows your brain to switch gears and quietly pause and reflect on your coding decisions, such as &amp;quot;Did I really mean to write that line of code? Maybe I should delete it&amp;quot; vs going back and willy-nilly pull the trigger and delete 15 lines of code only to realize afterwards that it was probably a bad idea and you should have kept it because now you could have used it. It&amp;#39;s a built in mechanism to prevent yourself from pulling the trigger too quickly. (&lt;em&gt;Insert social commentary of how this should always be applied, mostly when actual weapons are involved...&lt;/em&gt;) However, in server-land, you don&amp;#39;t get the built-in benefits of actually having a GUI, which means text editing must be done in a GUI-less environment.&lt;/p&gt;
+
+&lt;p&gt;I digress.&lt;/p&gt;
+
+&lt;p&gt;The main point of this entire post was really for this next reason.  May I present to you.... &lt;strong&gt;Find and replace all!&lt;/strong&gt; This has been the one main benefit to using vi. And if I am doing batch text changes, to a config file for example, this is the best way to do it.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# find all instances of phrase and replace it with something else&lt;/span&gt;
+:%s/original_word/new_word
+
+&lt;span class=&quot;c&quot;&gt;# for example...&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# find all asdf and replace with 0000&lt;/span&gt;
+:%s/asdf/0000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There is a caveat to the above. This will change all instances without confirmation, so if there is one you want to skip, this is not the command for you.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s look at the other options and iterations of the Find and Replace All command.  First, let&amp;#39;s confirm our individual find/replaces. Appending &lt;code&gt;gc&lt;/code&gt; will do a global search with confirmation. You will have to type &lt;code&gt;y&lt;/code&gt; or &lt;code&gt;n&lt;/code&gt; for replace or skip.  It will highlight the word it is looking to replace. I prefer this as it reminds me of &lt;code&gt;git add -p&lt;/code&gt; and forcibly confirming each one.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# confirm each change before replacing&lt;/span&gt;
+:%s/asdf/0000/gc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What happens if the word you want to replace is kind of funky? like &lt;code&gt;http://localhost&lt;/code&gt; needs to be replaced with &lt;code&gt;$APP_URL&lt;/code&gt;? Uh oh, you can&amp;#39;t use &lt;code&gt;/&lt;/code&gt; since the command also uses it as the delimiter. What do? Simple. Change the delimiter! I prefer the &lt;code&gt;#&lt;/code&gt; for this, but it can be any symbol as long as if it&amp;#39;s consistently used across the command.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# change delimiter and confirm before replacing&lt;/span&gt;
+:%s#original_word#new_word#gc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using the example (without bash code-style turned on)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;:%s#http://localhost#$APP_URL#gc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It looks ugly but, wowza, this really works.  If I had used &lt;code&gt;nano&lt;/code&gt; to find text and then delete and replace it, that would have taken me ages. I could have also copied the text and pasted it into Atom to replace what I needed to replace, but both of these are costly. And my time is extremely expensive. In this case, the value add of this simple use case is incredibly high and far outweighs the knowledge cost.&lt;/p&gt;
+
+&lt;p&gt;So there you have it! Possibly the best thing about &lt;code&gt;vi&lt;/code&gt;.  I am sure I will encounter other fun handy things with &lt;code&gt;vi&lt;/code&gt;, but for now, I&amp;#39;m pretty good with this list as is.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;#39;t forget to &lt;code&gt;:wq&lt;/code&gt; your changes! &lt;img class=&#39;emoji&#39; title=&#39;grinning&#39; alt=&#39;grinning&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/grinning.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5 (+10 if you&amp;#39;ve been avoiding vi as if it were the bubonic plague)&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 25 Sep 2016 10:17:17 -0700</pubDate>
+        <link>http://risaonrails.com/i-used-vi-the-other-day/</link>
+        <guid isPermaLink="true">http://risaonrails.com/i-used-vi-the-other-day/</guid>
+        
+        <category>vi</category>
+        
+        <category>sysadmin</category>
+        
+        <category>devops</category>
+        
+        
+        <category>rails</category>
+        
+        <category>devops</category>
+        
+      </item>
     
       <item>
         <title>Testing, testing, 1...2...3</title>
@@ -779,216 +981,6 @@ touch /home/rails/surprise/tmp/restart.txt
         <category>rails</category>
         
         <category>devops</category>
-        
-      </item>
-    
-      <item>
-        <title>Creating new old-version Rails apps</title>
-        <description>&lt;p&gt;As always, a work story. Here at Team DevOps, we&amp;#39;ve been tasked to create a couple of Rails apps using different Ruby versions. After all, why not? We&amp;#39;re also Rails developers too, even if we don&amp;#39;t look like it. Admittedly, it&amp;#39;s been so long since I&amp;#39;ve started a Rails app from scratch I almost forgot how to do &lt;code&gt;rails new&lt;/code&gt;... Yeah, only slightly embarrassed.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#39;m more familiar with Ruby 2.0.0 and Rails 4.0.x than 2.2.x and 4.2.x, so I decided to make my app using the older versions. Of course, I&amp;#39;ve since updated my rubies and rails versions, so without thinking much about it, I did &lt;code&gt;rails new&lt;/code&gt;. Figured I could just bundle update when I switched ruby/rails versions.&lt;/p&gt;
-
-&lt;p&gt;Oh god, that was a terrible, TERRIBLE mistake.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://www.nicknotas.com/wp-content/uploads/2013/04/Ive_Made_a_Huge_Mistake.jpg&quot; alt=&quot;Huge mistake&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;What got created was an awesomely standard Rails 4.2.0 app with Ruby 2.2.0. No problem. In my Gemfile I added in &lt;code&gt;ruby 2.0.0&lt;/code&gt; and bundle updated and thought nothing of it. I moved on and edited my database.yml file and decided to add some of my standard gems I&amp;#39;d be using for TDD: guard and spork. But since it was rails 4.2, I wasn&amp;#39;t sure how my guard/spork setup would work, since I was plugging and chugging from an old 4.0.x app I had. Well, whatever.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#39;ll just change rails 4.2.x to rails 4.0.x! No problemo!! Lemme bundle update and then run &lt;code&gt;guard init rspec&lt;/code&gt;. &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://stream1.gifsoup.com/view/897102/mushroom-cloud-o.gif&quot; alt=&quot;Kaboom!&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;What. Have. I. Done. Guard was complaining that I had started things up with a newer version so it wouldn&amp;#39;t be able to use the version 4.0.13 wanted (2.6). Not only that but &lt;code&gt;rails g anything&lt;/code&gt; wasn&amp;#39;t working either. Geezus. So I completely uninstalled guard and then installed only the correct version, but even then the Guardfile created seemed weird. Rails didn&amp;#39;t let me install rspec either without complaining. Not to mention Rake. Oy vey. How much had changed between Rails 4.0 and 4.2??! What is this business about &lt;code&gt;activejob_railties&lt;/code&gt;??&lt;/p&gt;
-
-&lt;p&gt;OK, there were some major changes that I haven&amp;#39;t really been paying attention to. ActiveJob was a new addition to 4.2. On top of that, the &lt;code&gt;config/initializers/application.rb&lt;/code&gt; file format had changed from referencing the &lt;code&gt;AppName::Application...&lt;/code&gt; to &lt;code&gt;Rails.application...&lt;/code&gt; Then there were the additional railties that were added in. This is just the tip of the iceberg...&lt;/p&gt;
-
-&lt;p&gt;Yeah let&amp;#39;s queue up the whole &lt;code&gt;I don&amp;#39;t know what I&amp;#39;m doing&lt;/code&gt; meme here. Seriously. At this point the only thing I could sensibly do was to completely start over and create a Rails 4.0.x app. But how would I do that?? &lt;/p&gt;
-
-&lt;p&gt;The Rails guides didn&amp;#39;t have any indication on how to reference versions when creating it, so off to Google and StackOverflow.&lt;/p&gt;
-
-&lt;h3 id=&quot;the-way-of-the-old-rails-warrior&quot;&gt;The way of the old rails warrior&lt;/h3&gt;
-
-&lt;p&gt;I can just refer an older Rails version when doing &lt;code&gt;rails new&lt;/code&gt;! Since I wanted 4.0.13, I did this: &lt;code&gt;rails 4.0.13 new appname&lt;/code&gt;. This did not work.&lt;/p&gt;
-
-&lt;p&gt;My syntax was incorrect, and maybe I need rails 4.0.13 installed. I also wanted to build the app with ruby 2.0.0 so in the end these were the correct steps. (I use rbenv on my machine, and apparently didn&amp;#39;t have gems for p643 so used p451.)&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rbenv global 2.0.0-p451
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install rails 4.0.13
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rails _4.0.13_ new appname&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Please note the &lt;code&gt;_&lt;/code&gt; surrounding the version. This is key! Once I did that and installed the app, everything was set properly. I created a rails 4.0.x app that was locked in with ruby 2.0.0. FINALLY. Bundle installed, set up guard and spork and rspec and I was on my merry way to coding heaven. I commited that sucker faster than a speeding bullet.&lt;/p&gt;
-
-&lt;p&gt;Now, how do I write new models again...?&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +1 for super obscure learnings.&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Thu, 02 Apr 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/creating-new-old-version-rails-apps/</link>
-        <guid isPermaLink="true">http://risaonrails.com/creating-new-old-version-rails-apps/</guid>
-        
-        <category>rails</category>
-        
-        <category>tip</category>
-        
-        
-        <category>rails</category>
-        
-        <category>development</category>
-        
-        <category>tip</category>
-        
-      </item>
-    
-      <item>
-        <title>Jekyll: The blog maker</title>
-        <description>&lt;p&gt;As you may have figured out, I use Jekyll to create my Github Pages. And boy did I have a hard time understanding what the heck was going on. I dunno, maybe docs and I just don&amp;#39;t get along. Most of the how-to guides out there were like &amp;quot;oh yeah rip off this template from this site and start using jekyll!&amp;quot; but that feels like a cop-out to me, and I like to bash my head into the wall. Or keyboard.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i1.kym-cdn.com/photos/images/masonry/000/021/531/SmashingHeadOnKeyboard.gif&quot; alt=&quot;Bash your head in&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Pretty. Much. Every. Day.&lt;/p&gt;
-
-&lt;p&gt;Anyway, here&amp;#39;s what I&amp;#39;ve learned thus far with using Jekyll and Github Pages. Maybe this will help you out, too. I hope to expand my knowledge as well.  Glad that it&amp;#39;s written in Ruby, so implementation of things are much easier to understand (for me).&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-github-pages-overview&quot;&gt;&amp;gt; Github Pages Overview&lt;/h3&gt;
-
-&lt;p&gt;First issue I did not realize, and maybe I should have actually &lt;em&gt;read&lt;/em&gt; the instructions better,... there is a HUGE difference between creating a Github Page for a repo and for your account. I wanted to create one for my account but made it for my repo instead. Whoops.&lt;/p&gt;
-
-&lt;p&gt;Github &lt;a href=&quot;https://pages.github.com/&quot;&gt;explains this fairly well&lt;/a&gt;, but here&amp;#39;s my version for one-stop shopping goodness. I assume you&amp;#39;re a developer and are knowledgable about the standard &lt;code&gt;git&lt;/code&gt; type of commands.&lt;/p&gt;
-
-&lt;p&gt;On your local machine, install Jekyll.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;gt-github-pages-for-your-github-account&quot;&gt;&amp;gt; Github Pages for your github account&lt;/h3&gt;
-
-&lt;p&gt;Create a new repo in Github called &amp;quot;your-github-username.github.io&amp;quot;. In my case it&amp;#39;s a repo called &amp;quot;rbatta.github.io&amp;quot; since my Github username is rbatta. When you git clone to your local machine, your &lt;code&gt;master&lt;/code&gt; branch will be the one Github uses to publish your site. You get that? &lt;em&gt;Master branch is what Github uses to publish your site.&lt;/em&gt; Git clone your new repo and hop into that directory.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Note: If you create a repo and name it whatever you want and NOT &amp;quot;your-username.github.io&amp;quot;, Github will see this as a Page for your Repo. When this happens, Github will use the branch called &lt;code&gt;gh-pages&lt;/code&gt; instead of &lt;code&gt;master&lt;/code&gt; to auto-publish your site. It&amp;#39;s confusing and tripped me up massively in the beginning.&lt;/em&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git clone git@github.com/your-github-username/your-github-username.github.io.git&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;For sanity&amp;#39;s sake, before you hop into your directory, create a new directory and call it whatever you want. If it makes it easier for you, call it what you want your site to be called. Is it your blog? Call it that. Since I booched the whole Github Pages account vs repo thing, I already had a repo called &lt;code&gt;risa-on-rails&lt;/code&gt; so I used this. This new directory thing will come in handy later. Trust me.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir your-sites-blog-name
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;your-sites-blog-name&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Great! Now I realize this is an empty directory. It&amp;#39;s cool. Time to create a new Jekyll blog.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;But wait!&lt;/strong&gt; Why are we in &lt;code&gt;your-sites-blog-name&lt;/code&gt; and not in &lt;code&gt;your-username.github.io&lt;/code&gt; directory? Well, like I said before, the &lt;code&gt;master&lt;/code&gt; branch is what Github uses to publish your blog. &lt;strong&gt;&lt;em&gt;NOT&lt;/em&gt;&lt;/strong&gt; publish your repo. We&amp;#39;ll keep the &lt;code&gt;master&lt;/code&gt; directory clean until we&amp;#39;re ready to push things up. So in the meantime, we&amp;#39;ll use the &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory to do all of our work.&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-jekyll-setup&quot;&gt;&amp;gt; Jekyll setup&lt;/h3&gt;
-
-&lt;p&gt;Create a new Jekyll site by running &lt;code&gt;jekyll new .&lt;/code&gt; Make sure you&amp;#39;ve got that period in there, since that creates it within this directory.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jekyll new .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Jekyll will install a bunch of directories with &lt;em&gt;&amp;#39;s in them along with some other files, including a `&lt;/em&gt;config.yml` file. This file will be the driver of just about everything: name it here and use it everywhere!&lt;/p&gt;
-
-&lt;p&gt;Create 2 directories called &lt;code&gt;_plugins&lt;/code&gt; and &lt;code&gt;_drafts&lt;/code&gt;. Because you may want/need them.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir _plugins _drafts&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;This is probably a good time to do &lt;code&gt;git init&lt;/code&gt; and do your initial commit.&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-_config-yml&quot;&gt;&amp;gt; _config.yml&lt;/h3&gt;
-
-&lt;p&gt;Fill in the information given. For &lt;code&gt;baseurl:&lt;/code&gt; keep that as blank quotes so that when you serve up your site, it&amp;#39;ll load at &lt;code&gt;127.0.0.1:4000&lt;/code&gt; instead of &lt;code&gt;127.0.0.1:4000/baseurl-you-gave-it&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;If you change any of the variables, make sure you change them in the css and anywhere else in the other files. For me, I changed the &lt;code&gt;:title&lt;/code&gt; symbol to &lt;code&gt;:name&lt;/code&gt; for the name of my blog. Anywhere where &lt;code&gt;site.title&lt;/code&gt; was referenced, I changed to &lt;code&gt;site.name&lt;/code&gt;. That includes the css file too. I did this because I added in a &lt;code&gt;permalink: /:title/&lt;/code&gt; option to give all my pages their own permalinks instead of the weird directory structure Jekyll uses.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;s&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/:title/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;gt-_posts-and-_drafts&quot;&gt;&amp;gt; _posts/ and _drafts/&lt;/h3&gt;
-
-&lt;p&gt;By default, anything that you put in the _posts directory will be published. Of course you need to make sure it&amp;#39;s in the format of &lt;code&gt;yyyy-mm-dd-post-name&lt;/code&gt; with whatever extension you use. I prefer markdown so all my posts end with &lt;code&gt;.md&lt;/code&gt;. You&amp;#39;re the author of your blogposts so choose whatever format you&amp;#39;d like: Textile or Markdown are the two default choices Jekyll supports. You can choose others with plugins.&lt;/p&gt;
-
-&lt;p&gt;The _drafts folder is exactly that, for drafts. You don&amp;#39;t need to append dates to it. In fact, when you&amp;#39;re ready to publish it, that&amp;#39;s when you can append dates. For that, we&amp;#39;ve got a handy tool, the &lt;a href=&quot;https://github.com/gummesson/jekyll-rake-boilerplate&quot;&gt;jekyll-rake-boilerplate Rakefile&lt;/a&gt;. Copy that Rakefile into your repo. Now you&amp;#39;ve got some added jekyll capabilities like: &lt;code&gt;rake watch[&amp;quot;drafts&amp;quot;]&lt;/code&gt; which is the equivalent to &lt;code&gt;jekyll serve --watch --drafts&lt;/code&gt;, and &lt;code&gt;rake draft[&amp;quot;your post&amp;#39;s title&amp;quot;]&lt;/code&gt; which creates a new draft post with the given title. Sweetness. &lt;code&gt;rake publish&lt;/code&gt; let&amp;#39;s you pick the draft you want to publish and appends the date automagically to your post, moving it from _drafts to _posts and eliminating the need to wonder what day it currently is.&lt;/p&gt;
-
-&lt;p&gt;To use the &lt;code&gt;rake draft[&amp;quot;title&amp;quot;]&lt;/code&gt; task, create a file called &lt;code&gt;_post.md&lt;/code&gt; in the root directory. In your &lt;code&gt;_config.yml&lt;/code&gt; add in the following so your rake task won&amp;#39;t break when it&amp;#39;s run:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;post:
-  template: _post.md
-  extension: md
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In your &lt;code&gt;_post.md&lt;/code&gt; file, you need to ensure that you&amp;#39;ve got the YAML markup at the beginning with the --- thing. If you need a template, copy paste it from the Rakefile site or use the welcome-to-jekyll post&amp;#39;s YAML header. Think of this as your template for ALL your posts. Update as you see fit.&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-_plugins&quot;&gt;&amp;gt; _plugins&lt;/h3&gt;
-
-&lt;p&gt;There are some cool plugins for added functionality for Jekyll. However when publishing to Github, that&amp;#39;s stripped away and is not built when the site is published. Something something safety precautions. Ehhh. This is why we created a separate directory to work in. The &lt;code&gt;your-sites-blog-name&lt;/code&gt; directory has all your drafts and posts and plugins and directories, but we will be creating the &amp;#39;static&amp;#39; website and pushing that to the &lt;code&gt;your-username.github.io&lt;/code&gt; directory for the master branch, to deploy to Github to publish. Wow, that came off a bit more complicated than I expected. Here&amp;#39;s the workflow.  We&amp;#39;ll go more into detail later on with this.&lt;/p&gt;
-
-&lt;p&gt;Start in your-sites-blog-name dir &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; create draft posts and stuff &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; rake publish draft &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; jekyll build site &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; copy &lt;em&gt;ONLY&lt;/em&gt; the &lt;code&gt;_site&lt;/code&gt; directory contents to your-username.github.io directory &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; cleanup anything you need and git add, commit &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; push to github &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; ??? &lt;i class=&quot;fa fa-angle-right&quot;&gt;&lt;/i&gt; profit!&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s start by adding in my favourite simple plugin, the &lt;a href=&quot;https://gist.github.com/23maverick23/8532525&quot;&gt;jekyll-font-awesome&lt;/a&gt; plugin. Create a file in &lt;code&gt;_plugins/&lt;/code&gt; called &lt;code&gt;font_awesome.rb&lt;/code&gt; and paste the contents from that gist into this file. If you&amp;#39;re not familiar with fontawesome.io, it&amp;#39;s a bunch of rad icons for everything. Paste the link below into your head.html file at around line 6: &lt;code&gt;_includes/head.html&lt;/code&gt;, just like that.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css&quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now you can add icons by using the syntax &lt;code&gt;{.% icon fa-something %}&lt;/code&gt; (without the period in there). Go buck-wild and add some icons and stuff to your site! Wahoo!&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-publishing&quot;&gt;&amp;gt; Publishing&lt;/h3&gt;
-
-&lt;p&gt;When you are ready to publish, build the site with Jekyll by running &lt;code&gt;jekyll build&lt;/code&gt;.  This creates a directory called &lt;code&gt;_site/&lt;/code&gt; which houses the raw ol&amp;#39; school HTML of your posts with a css directory that the pages reference.&lt;/p&gt;
-
-&lt;p&gt;OK. Remember the workflow up above? Let&amp;#39;s break it down into simpler steps. &lt;del&gt;I ended up using Automator on the Mac (it&amp;#39;s a native/default app and totally underrated IMO) to do this for me. The directions for that are beautifully written up &lt;a href=&quot;http://vincentp.me/blog/a-smarter-jekyll-workflow/&quot;&gt;in this blog post&lt;/a&gt;.&lt;/del&gt; &lt;em&gt;Edit: Automator let me down in the end. &lt;img class=&#39;emoji&#39; title=&#39;cry&#39; alt=&#39;cry&#39; src=&#39;https://github.global.ssl.fastly.net/images/icons/emoji/cry.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; &gt;&lt;/em&gt; Here is my updated workflow:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# starting in your-sites-blog-name directory&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rake publish
-&lt;span class=&quot;c&quot;&gt;# choose the draft post you want to publish&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# that moves down to _posts&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# make final checks and if all good then...&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;jekyll build
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git add .
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;yeah your awesome message about your post&quot;&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo cp -r _site/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ../your-username.github.io/
-&lt;span class=&quot;c&quot;&gt;# put in your password&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# this overrides everything in the other directory&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../your-username.github.io
-&lt;span class=&quot;c&quot;&gt;# confirm that the contents of _site were copied over&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# you may need to rm -rf Rakefile OR add a .gitignore file&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# and put Rakefile in it. Whatever you&#39;d like to do&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rm -rf Rakefile
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git add .
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;your msg about your post that&#39;s ready for Github&quot;&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;BOOM. You should be good to go now. Check out your site at &lt;a href=&quot;http://your-username.github.io&quot;&gt;http://your-username.github.io&lt;/a&gt; :)&lt;/p&gt;
-
-&lt;h3 id=&quot;gt-laziness&quot;&gt;&amp;gt; Laziness&lt;/h3&gt;
-
-&lt;p&gt;I like to make my workflow a lot easier by making aliases. The order of some of the commands won&amp;#39;t matter. So here&amp;#39;s the alias I created, using &lt;code&gt;sudo cp&lt;/code&gt; to overwrite things properly. It involves putting in my password but that&amp;#39;s still less typing overall. Easy peasy. This alias will be put into your &lt;code&gt;~/.bash_profile&lt;/code&gt; or &lt;code&gt;~/.zshrc&lt;/code&gt; or &lt;code&gt;~/.bashrc&lt;/code&gt; file.  &lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;copy-it&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;jekyll build;sudo cp -r _site/* ../your-username.github.io/;cd ../your-username.github.io;&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;=======================&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Jekyll cheats&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;=======================&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;make sure you are in correct directory before running this&#39;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;copy-it = jekyll build then copy contents of _site to your-username master&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Obviously change the directory names to fit your thing. Save it and source your file: &lt;code&gt;source ~/.bash_profile&lt;/code&gt; or &lt;code&gt;source ~/.zshrc&lt;/code&gt; or &lt;code&gt;source ~/.bashrc&lt;/code&gt;. You should see the commands displayed in your terminal.  Alternatively you can just restart terminal. &lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Note: If you run &lt;code&gt;copy-it&lt;/code&gt; you &lt;em&gt;MUST&lt;/em&gt; be in the correct directory (your-sites-blog-name)!! Don&amp;#39;t forget to git add and commit prior to running &lt;code&gt;copy-it&lt;/code&gt;, too!&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;After running the command, you end up in your-username.github.io directory. Confirm your changes with a &lt;code&gt;git diff&lt;/code&gt;. Then commit and push that sucker up! You are on your way to blogging freedom now. (And so am I!)&lt;/p&gt;
-
-&lt;p&gt;&lt;i class=&quot;fa fa-angle-double-up&quot;&gt;&lt;/i&gt; Level up +5&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Questions? Comments? Hit me up at &lt;a href=&quot;mailto:risaonrails@gmail.com&quot;&gt;risaonrails &lt;i class=&quot;fa fa-paper-plane-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;!&lt;/p&gt;
-</description>
-        <pubDate>Tue, 31 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://risaonrails.com/jekyll-the-blog-maker/</link>
-        <guid isPermaLink="true">http://risaonrails.com/jekyll-the-blog-maker/</guid>
-        
-        <category>jekyll</category>
-        
-        <category>guide</category>
-        
-        
-        <category>jekyll</category>
-        
-        <category>guide</category>
         
       </item>
     
